@@ -13,7 +13,7 @@ public class Aluno implements Cloneable{
     private String ra;
     private String email;
     private String telefone;
-    private Curso curso;
+    private String curso;
     private LocalDateTime ultimoLogin;
     private LocalDateTime atualizadoEm;
 
@@ -22,7 +22,7 @@ public class Aluno implements Cloneable{
         this.ra = ra;
         this.email = email;
         this.telefone = telefone;
-        this.curso = curso;
+        this.curso = curso.getNomeFormatado();
         this.ultimoLogin = ultimoLogin;
         this.atualizadoEm = atualizadoEm;
 
@@ -70,11 +70,11 @@ public class Aluno implements Cloneable{
         this.telefone = telefone;
     }
 
-    public Curso getCurso() {
+    public String getCurso() {
         return curso;
     }
 
-    public void setCurso(Curso curso) {
+    public void setCurso(String curso) {
         this.curso = curso;
     }
 
@@ -114,7 +114,7 @@ public class Aluno implements Cloneable{
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Aluno aluno = (Aluno) o;
-        return Objects.equals(id, aluno.id) && Objects.equals(nome, aluno.nome) && Objects.equals(ra, aluno.ra) && Objects.equals(email, aluno.email) && Objects.equals(telefone, aluno.telefone) && curso == aluno.curso && Objects.equals(ultimoLogin, aluno.ultimoLogin) && Objects.equals(atualizadoEm, aluno.atualizadoEm);
+        return Objects.equals(id, aluno.id) && Objects.equals(nome, aluno.nome) && Objects.equals(ra, aluno.ra) && Objects.equals(email, aluno.email) && Objects.equals(telefone, aluno.telefone) && Objects.equals(curso, aluno.curso) && Objects.equals(ultimoLogin, aluno.ultimoLogin) && Objects.equals(atualizadoEm, aluno.atualizadoEm);
     }
 
     @Override
