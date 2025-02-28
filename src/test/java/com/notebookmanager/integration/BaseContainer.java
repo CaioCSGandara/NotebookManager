@@ -1,6 +1,7 @@
 package com.notebookmanager.integration;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -18,6 +19,7 @@ public abstract class BaseContainer {
         mongoDBContainer.start();
         String mongoUri = mongoDBContainer.getConnectionString();
         registry.add("spring.data.mongodb.uri", ()-> mongoUri);
+        registry.add("spring.data.mongodb.database", ()-> "test");
     }
 
 }
