@@ -6,6 +6,7 @@ import com.notebookmanager.integration.BaseContainer;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
 import com.notebookmanager.model.repositories.AlunoRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +38,11 @@ public class AlunoControllerTest extends BaseContainer {
         return Stream.of(new Aluno("Caio Gandara", "22415616", "caio.cgs2@gmail.com", "(19)99414-8554",
                 Curso.ENFERMAGEM, LocalDateTime.of(2025, 2, 27, 16, 51, 11),
                 LocalDateTime.of(2025, 2, 27, 16, 51, 11)));
+    }
+
+    @AfterEach
+    public void limparColecao() {
+        alunoRepository.deleteAll();
     }
 
     @ParameterizedTest
