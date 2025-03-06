@@ -1,7 +1,9 @@
 package com.notebookmanager.contract;
 
+import com.notebookmanager.generator.AlunoGenerator;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
+import org.assertj.core.data.TemporalUnitOffset;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.json.JacksonTester;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,12 +21,14 @@ public class AlunoJsonTest {
     @Autowired
     private JacksonTester<Aluno> json;
 
+    @Autowired
+    private JacksonTester<ArrayList<Aluno>> jsonList;
+
     @Test
     void alunoSerializationTest() throws IOException {
-        Aluno aluno = new Aluno("Caio Gandara", "22415616", "caio.cgs@gmail.com", "(19)99414-8554",
-                Curso.ENFERMAGEM, LocalDateTime.of(2010, 12, 30, 12, 14, 22), LocalDateTime.of(2010, 12, 30, 12, 14, 22));
+        Aluno aluno = AlunoGenerator.gerarAluno();
 
-        assertThat(json.write(aluno)).isStrictlyEqualToJson("aluno-contract.json");
+        assertThat(json.write(aluno)).isStrictlyEqualToJson("aluno.json");
     }
 
     @Test
@@ -40,9 +45,59 @@ public class AlunoJsonTest {
                 "atualizadoEm": "2010-12-30T12:14:22"
                 }""";
 
-        assertThat(json.parseObject(expected))
-                .isEqualTo(new Aluno("Caio Gandara", "22415616", "caio.cgs@gmail.com", "(19)99414-8554",
-                        Curso.ENFERMAGEM, LocalDateTime.of(2010, 12, 30, 12, 14, 22), LocalDateTime.of(2010, 12, 30, 12, 14, 22)));
+        assertThat(json.parseObject(expected)).isEqualTo(AlunoGenerator.gerarAluno());
 
+    }
+
+
+    @Test
+    void alunoListSerializationTest() throws IOException {
+
+        ArrayList<Aluno> lista = AlunoGenerator.gerarArrayListDeAlunos();
+
+        assertThat(jsonList.write(lista)).isStrictlyEqualToJson("aluno-list.json");
+
+    }
+
+    @Test
+    void alunoListDeserialitazionTest() throws IOException {
+        String expected = """
+                [
+                  {
+                    "id": null,
+                    "nome": "Julio Correa",
+                    "ra": "09135616",
+                    "email": "jcorrea@gmail.com",
+                    "telefone": "(19)90914-3014",
+                    "curso": "Medicina",
+                    "ultimoLogin": "2012-11-10T21:12:37",
+                    "atualizadoEm": "2012-11-10T21:12:37"
+                  },
+                  {
+                    "id": null,
+                    "nome": "Maria Ferreira",
+                    "ra": "03781923",
+                    "email": "maria.ferreira@gmail.com",
+                    "telefone": "(19)90814-2314",
+                    "curso": "Terapia Ocupacional",
+                    "ultimoLogin": "2021-08-12T21:21:45",
+                    "atualizadoEm": "2021-08-12T21:21:45"
+                  },
+                  {
+                    "id": null,
+                    "nome": "Fernando Pontes",
+                    "ra": "90174823",
+                    "email": "fernandohpontes@gmail.com",
+                    "telefone": "(19)83914-0945",
+                    "curso": "Biomedicina",
+                    "ultimoLogin": "2013-01-10T21:12:37",
+                    "atualizadoEm": "2013-01-10T21:12:37"
+                  }
+                ]
+                """;
+
+        ArrayList<Aluno> lista = AlunoGenerator.gerarArrayListDeAlunos();
+
+        assertThat(jsonList.parseObject(expected)).isEqualTo(lista);
     }
 }
