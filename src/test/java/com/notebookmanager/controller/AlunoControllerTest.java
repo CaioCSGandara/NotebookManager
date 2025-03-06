@@ -2,6 +2,7 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.notebookmanager.generator.AlunoGenerator;
 import com.notebookmanager.integration.BaseContainer;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
@@ -34,20 +35,16 @@ public class AlunoControllerTest extends BaseContainer {
     @Autowired
     AlunoRepository alunoRepository;
 
-    private static Stream<Aluno> retornaAluno() {
-        return Stream.of(new Aluno("Caio Gandara", "22415616", "caio.cgs2@gmail.com", "(19)99414-8554",
-                Curso.ENFERMAGEM, LocalDateTime.of(2025, 2, 27, 16, 51, 11),
-                LocalDateTime.of(2025, 2, 27, 16, 51, 11)));
-    }
 
     @AfterEach
     public void limparColecao() {
         alunoRepository.deleteAll();
     }
 
-    @ParameterizedTest
-    @MethodSource("retornaAluno")
-    void retornaAlunoComRaValido(Aluno aluno) {
+    @Test
+    void retornaAlunoComRaValido() {
+
+        Aluno aluno = AlunoGenerator.gerarAluno();
 
         alunoRepository.save(aluno);
 
@@ -70,10 +67,10 @@ public class AlunoControllerTest extends BaseContainer {
         assertThat(response.getBody()).isBlank();
 
     }
+    @Test
+    void salvaAlunoNoBanco() {
+        Aluno aluno = AlunoGenerator.gerarAluno();
 
-    @ParameterizedTest
-    @MethodSource("retornaAluno")
-    void salvaAlunoNoBanco(Aluno aluno) {
         ResponseEntity<Void> response = restTemplate.postForEntity("/alunos", aluno, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);

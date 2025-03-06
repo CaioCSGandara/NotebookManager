@@ -26,6 +26,7 @@ public class AlunoJsonTest {
 
     @Test
     void alunoSerializationTest() throws IOException {
+
         Aluno aluno = AlunoGenerator.gerarAluno();
 
         assertThat(json.write(aluno)).isStrictlyEqualToJson("aluno.json");
