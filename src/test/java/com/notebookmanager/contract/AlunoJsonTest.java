@@ -12,6 +12,7 @@ import org.springframework.boot.test.json.JacksonTester;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ public class AlunoJsonTest {
     private JacksonTester<Aluno> json;
 
     @Autowired
-    private JacksonTester<ArrayList<Aluno>> jsonList;
+    private JacksonTester<List<Aluno>> jsonList;
 
     @Test
     void alunoSerializationTest() throws IOException {
@@ -54,7 +55,7 @@ public class AlunoJsonTest {
     @Test
     void alunoListSerializationTest() throws IOException {
 
-        ArrayList<Aluno> lista = AlunoGenerator.gerarArrayListDeAlunos();
+        List<Aluno> lista = AlunoGenerator.gerarListDeAlunos();
 
         assertThat(jsonList.write(lista)).isStrictlyEqualToJson("aluno-list.json");
 
@@ -97,7 +98,7 @@ public class AlunoJsonTest {
                 ]
                 """;
 
-        ArrayList<Aluno> lista = AlunoGenerator.gerarArrayListDeAlunos();
+        List<Aluno> lista = AlunoGenerator.gerarListDeAlunos();
 
         assertThat(jsonList.parseObject(expected)).isEqualTo(lista);
     }

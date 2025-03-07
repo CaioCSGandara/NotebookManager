@@ -5,6 +5,7 @@ import com.notebookmanager.model.entities.enums.Curso;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AlunoGenerator {
 
@@ -14,7 +15,7 @@ public class AlunoGenerator {
                 LocalDateTime.of(2010, 12, 30, 12, 14, 22));
     }
 
-    public static ArrayList<Aluno> gerarArrayListDeAlunos() {
+    public static List<Aluno> gerarListDeAlunos() {
         ArrayList<Aluno> lista = new ArrayList<Aluno>();
         lista.add(new Aluno("Julio Correa", "09135616", "jcorrea@gmail.com", "(19)90914-3014",
                 Curso.MEDICINA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),

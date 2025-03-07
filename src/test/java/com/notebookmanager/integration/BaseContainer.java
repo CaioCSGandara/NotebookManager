@@ -11,13 +11,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @SpringBootTest
 public abstract class BaseContainer {
-    @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0").withExposedPorts(27017);
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.7").withExposedPorts(27017);
+
+    static {
+        mongoDBContainer.start();
+    }
 
     @DynamicPropertySource
     static void containersProperties(DynamicPropertyRegistry registry) {
-        mongoDBContainer.start();
-        String mongoUri = mongoDBContainer.getConnectionString();
+        String mongoUri = mongoDBContainer.getReplicaSetUrl();
         registry.add("spring.data.mongodb.uri", ()-> mongoUri);
         registry.add("spring.data.mongodb.database", ()-> "test");
     }
