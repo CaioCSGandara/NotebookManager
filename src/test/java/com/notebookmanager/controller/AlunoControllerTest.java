@@ -6,7 +6,6 @@ import com.notebookmanager.generator.AlunoGenerator;
 import com.notebookmanager.integration.BaseContainer;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.repositories.AlunoRepository;
-import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.annotation.DirtiesContext.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AlunoControllerTest extends BaseContainer {
@@ -42,7 +37,7 @@ public class AlunoControllerTest extends BaseContainer {
     @Test
     void retornaAlunoComRaValido() {
 
-        Aluno aluno = AlunoGenerator.gerarAluno();
+        Aluno aluno = AlunoGenerator.getAluno();
 
         alunoRepository.save(aluno);
 
@@ -70,7 +65,7 @@ public class AlunoControllerTest extends BaseContainer {
     }
     @Test
     void salvaAlunoNoBanco() {
-        Aluno aluno = AlunoGenerator.gerarAluno();
+        Aluno aluno = AlunoGenerator.getAluno();
 
         ResponseEntity<Void> response = restTemplate.postForEntity("/alunos", aluno, Void.class);
 
@@ -92,7 +87,7 @@ public class AlunoControllerTest extends BaseContainer {
 
     @Test
     void retornaListaDeAlunos() {
-        List<Aluno> lista = AlunoGenerator.gerarListDeAlunos();
+        List<Aluno> lista = AlunoGenerator.getListaAlunos();
         alunoRepository.saveAll(lista);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos", String.class);
@@ -111,7 +106,7 @@ public class AlunoControllerTest extends BaseContainer {
 
     @Test
     void retornaPaginaDe02Alunos() {
-        List<Aluno> lista = AlunoGenerator.gerarListDeAlunos();
+        List<Aluno> lista = AlunoGenerator.getListaAlunos();
         alunoRepository.saveAll(lista);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos?page=0&size=2", String.class);
@@ -123,6 +118,45 @@ public class AlunoControllerTest extends BaseContainer {
         List<String> page = documentContext.read("$[*]");
 
         assertThat(page.size()).isEqualTo(2);
+    }
+
+    @Test
+    void retornaPaginaOrdenadaPorNome() {
+        List<Aluno> lista = AlunoGenerator.getListaAlunos();
+        alunoRepository.saveAll(lista);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/alunos?page=0&size=1&sort=nome,asc", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        List<String> read = documentContext.read("$[*]");
+
+        assertThat(read.size()).isEqualTo(1);
+
+        String nome = documentContext.read("$[0].nome");
+
+        assertThat(nome).isEqualTo("Fernando Pontes");
+
+    }
+
+    @Test
+    void RetornaPaginaComOrdenacaoDefault() {
+        List<Aluno> lista = AlunoGenerator.getListaAlunos();
+        alunoRepository.saveAll(lista);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/alunos", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        List<String> page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(3);
+
+        List<String> ras = documentContext.read("$..ra");
+        assertThat(ras).containsExactly("90174823", "09135616", "03781923");
     }
 
 }

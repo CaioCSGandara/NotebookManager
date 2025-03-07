@@ -28,7 +28,7 @@ public class AlunoJsonTest {
     @Test
     void alunoSerializationTest() throws IOException {
 
-        Aluno aluno = AlunoGenerator.gerarAluno();
+        Aluno aluno = AlunoGenerator.getAluno();
 
         assertThat(json.write(aluno)).isStrictlyEqualToJson("aluno.json");
     }
@@ -47,7 +47,7 @@ public class AlunoJsonTest {
                 "atualizadoEm": "2010-12-30T12:14:22"
                 }""";
 
-        assertThat(json.parseObject(expected)).isEqualTo(AlunoGenerator.gerarAluno());
+        assertThat(json.parseObject(expected)).isEqualTo(AlunoGenerator.getAluno());
 
     }
 
@@ -55,7 +55,7 @@ public class AlunoJsonTest {
     @Test
     void alunoListSerializationTest() throws IOException {
 
-        List<Aluno> lista = AlunoGenerator.gerarListDeAlunos();
+        List<Aluno> lista = AlunoGenerator.getListaAlunos();
 
         assertThat(jsonList.write(lista)).isStrictlyEqualToJson("aluno-list.json");
 
@@ -98,7 +98,7 @@ public class AlunoJsonTest {
                 ]
                 """;
 
-        List<Aluno> lista = AlunoGenerator.gerarListDeAlunos();
+        List<Aluno> lista = AlunoGenerator.getListaAlunos();
 
         assertThat(jsonList.parseObject(expected)).isEqualTo(lista);
     }
