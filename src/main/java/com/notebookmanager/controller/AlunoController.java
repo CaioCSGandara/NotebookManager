@@ -1,6 +1,7 @@
 package com.notebookmanager.controller;
 
 import com.notebookmanager.model.entities.Aluno;
+import com.notebookmanager.model.entities.enums.Curso;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,5 +59,26 @@ public class AlunoController {
         return ResponseEntity.ok(alunoPage.getContent());
     }
 
+    @PutMapping("/{requestedRa}")
+    private ResponseEntity<Void> updateAluno(@PathVariable String requestedRa, @RequestBody Aluno alunoUpdate) {
+        Optional <Aluno> aluno = alunoRepository.findByRa(requestedRa);
+        if(aluno.isPresent()) {
+        Aluno alunoAtualizado = new Aluno(
+                aluno.get().getId(),
+                alunoUpdate.getNome(),
+                aluno.get().getRa(),
+                aluno.get().getEmail(),
+                alunoUpdate.getTelefone(),
+                Curso.toCurso(alunoUpdate.getCurso()),
+                aluno.get().getUltimoLogin(),
+                alunoUpdate.getAtualizadoEm()
+        );
+
+        alunoRepository.save(alunoAtualizado);
+
+        return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.notFound().build();
+}
 
 }

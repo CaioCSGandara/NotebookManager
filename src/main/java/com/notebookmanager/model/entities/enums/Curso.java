@@ -24,7 +24,7 @@ public enum Curso {
         return nomeFormatado;
     }
 
-    public static Curso encontrarCursoPorString(String nome) {
+    public static Curso toCurso(String nome) {
         for(Curso c : Curso.values()) {
             if (c.getNomeFormatado().equals(nome)) {
                 return c;

@@ -28,6 +28,18 @@ public class Aluno implements Cloneable{
 
     }
 
+    public Aluno(String id, String nome, String ra, String email, String telefone, Curso curso, LocalDateTime ultimoLogin, LocalDateTime atualizadoEm) {
+        this.id = id;
+        this.nome = nome;
+        this.ra = ra;
+        this.email = email;
+        this.telefone = telefone;
+        this.curso = curso.getNomeFormatado();
+        this.ultimoLogin = ultimoLogin;
+        this.atualizadoEm = atualizadoEm;
+
+    }
+
     public Aluno() {}
 
     public String getId() {
