@@ -27,9 +27,9 @@ public class AlunoController {
 
     @GetMapping("/{requestedRa}")
     private ResponseEntity<Aluno> findByRa(@PathVariable String requestedRa) {
-        Optional<Aluno> alunoOptional = alunoRepository.findByRa(requestedRa);
-        if(alunoOptional.isPresent()) {
-            return ResponseEntity.ok(alunoOptional.get());
+        Aluno aluno = alunoRepository.findByRa(requestedRa);
+        if(aluno!=null) {
+            return ResponseEntity.ok(aluno);
         }
         return ResponseEntity.notFound().build();
 
@@ -61,16 +61,16 @@ public class AlunoController {
 
     @PutMapping("/{requestedRa}")
     private ResponseEntity<Void> updateAluno(@PathVariable String requestedRa, @RequestBody Aluno alunoUpdate) {
-        Optional <Aluno> aluno = alunoRepository.findByRa(requestedRa);
-        if(aluno.isPresent()) {
+        Aluno aluno = alunoRepository.findByRa(requestedRa);
+        if(aluno!=null) {
         Aluno alunoAtualizado = new Aluno(
-                aluno.get().getId(),
+                aluno.getId(),
                 alunoUpdate.getNome(),
-                aluno.get().getRa(),
-                aluno.get().getEmail(),
+                aluno.getRa(),
+                aluno.getEmail(),
                 alunoUpdate.getTelefone(),
                 Curso.toCurso(alunoUpdate.getCurso()),
-                aluno.get().getUltimoLogin(),
+                aluno.getUltimoLogin(),
                 alunoUpdate.getAtualizadoEm()
         );
 
