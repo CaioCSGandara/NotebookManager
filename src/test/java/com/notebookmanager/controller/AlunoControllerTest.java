@@ -175,7 +175,8 @@ public class AlunoControllerTest extends BaseContainer {
 
         HttpEntity<Aluno> request = new HttpEntity<Aluno>(alunoAtualizado);
 
-        ResponseEntity<Void> response = restTemplate.exchange("/alunos/22415616", HttpMethod.PUT, request, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange("/alunos/22415616", HttpMethod.PUT,
+                request, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
@@ -193,6 +194,29 @@ public class AlunoControllerTest extends BaseContainer {
 
         String atualizadoEm = documentContext.read("$.atualizadoEm");
         assertThat(atualizadoEm).isNotEqualTo("2010-12-30T12:14:22");
+    }
+
+
+    @Test
+    void deleteAlunoExistente() {
+        Aluno aluno = AlunoGenerator.getAluno();
+        alunoRepository.save(aluno);
+
+        ResponseEntity<Void> response = restTemplate.exchange("/alunos/22415616", HttpMethod.DELETE,
+                null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate.getForEntity("/alunos/22415616", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void naoDeleteAlunoNaoExistente() {
+        ResponseEntity<Void> response = restTemplate.exchange("/alunos/09128475", HttpMethod.DELETE,
+                null, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 }

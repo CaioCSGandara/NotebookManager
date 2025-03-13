@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/alunos")
@@ -80,5 +79,15 @@ public class AlunoController {
     }
     return ResponseEntity.notFound().build();
 }
+
+    @DeleteMapping("/{requestedRa}")
+    private ResponseEntity<Void> deleteAluno(@PathVariable String requestedRa) {
+
+        if(alunoRepository.existsByRa(requestedRa)) {
+            alunoRepository.deleteByRa(requestedRa);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 }

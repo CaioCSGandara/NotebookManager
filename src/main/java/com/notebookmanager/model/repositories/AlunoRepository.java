@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface AlunoRepository extends MongoRepository<Aluno, String> {
     Aluno findByRa(String ra);
+    void deleteByRa(String ra);
+    boolean existsByRa(String ra);
 }
