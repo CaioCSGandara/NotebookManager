@@ -68,7 +68,7 @@ public class AlunoController {
                 aluno.getRa(),
                 aluno.getEmail(),
                 alunoUpdate.getTelefone(),
-                Curso.toCurso(alunoUpdate.getCurso()),
+                alunoUpdate.getCurso(),
                 aluno.getUltimoLogin(),
                 alunoUpdate.getAtualizadoEm()
         );

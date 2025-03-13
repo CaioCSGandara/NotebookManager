@@ -2,6 +2,7 @@ package com.notebookmanager.generator;
 
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +10,9 @@ import java.util.List;
 
 public class AlunoGenerator {
 
+    @Getter
     private static Aluno aluno = null;
+    @Getter
     private static List<Aluno> listaAlunos = null;
 
     static {
@@ -30,11 +33,4 @@ public class AlunoGenerator {
                 LocalDateTime.of(2013, 1, 10, 21, 12, 37)));
     }
 
-    public static Aluno getAluno() {
-        return aluno;
-    }
-
-    public static List<Aluno> getListaAlunos() {
-        return listaAlunos;
-    }
 }
