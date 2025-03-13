@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -196,6 +197,16 @@ public class AlunoControllerTest extends BaseContainer {
         assertThat(atualizadoEm).isNotEqualTo("2010-12-30T12:14:22");
     }
 
+    @Test
+    void naoAtualizaAlunoNaoExistente() {
+        Aluno aluno = AlunoGenerator.getAluno();
+        HttpEntity<Aluno> request = new HttpEntity<Aluno>(aluno);
+
+        ResponseEntity<Void> response = restTemplate.exchange("/alunos/09812375", HttpMethod.PUT,
+                request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 
     @Test
     void deleteAlunoExistente() {
