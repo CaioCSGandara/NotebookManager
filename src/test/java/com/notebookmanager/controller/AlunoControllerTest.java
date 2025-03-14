@@ -57,6 +57,9 @@ public class AlunoControllerTest extends BaseContainer {
 
         String ra = documentContext.read("$.ra");
         assertThat(ra).isEqualTo("22415616");
+
+        String curso = documentContext.read("$.curso");
+        assertThat(curso).isEqualTo("Enfermagem");
     }
 
     @Test
@@ -169,7 +172,7 @@ public class AlunoControllerTest extends BaseContainer {
         Aluno aluno = AlunoGenerator.getAluno();
         alunoRepository.save(aluno);
 
-        Aluno alunoAtualizado = new Aluno("Caio Gandara dos Santos", "22415616", "caio.cgs@gmail.com", "(19)90123-9031",
+        Aluno alunoAtualizado = new Aluno("Caio Gandara dos Santos", "22415616", "caio.cgs@puccampinas.edu.br", "(19)90123-9031",
                 Curso.NUTRICAO, LocalDateTime.of(2010, 12, 30, 12, 14, 22),
                 LocalDateTime.of(2015, 4, 22, 18, 9, 12));
 

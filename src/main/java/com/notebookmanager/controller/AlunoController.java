@@ -3,6 +3,7 @@ package com.notebookmanager.controller;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
 import com.notebookmanager.model.repositories.AlunoRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class AlunoController {
     }
 
     @PostMapping
-    private ResponseEntity<Void> createAluno(@RequestBody Aluno newAlunoRequest, UriComponentsBuilder ucb) {
+    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno newAlunoRequest, UriComponentsBuilder ucb) {
         Aluno savedAluno = alunoRepository.save(newAlunoRequest);
 
         URI locationOfNewAluno = ucb
@@ -59,7 +60,7 @@ public class AlunoController {
     }
 
     @PutMapping("/{requestedRa}")
-    private ResponseEntity<Void> updateAluno(@PathVariable String requestedRa, @RequestBody Aluno alunoUpdate) {
+    private ResponseEntity<Void> updateAluno(@PathVariable String requestedRa, @RequestBody @Valid Aluno alunoUpdate) {
         Aluno aluno = alunoRepository.findByRa(requestedRa);
         if(aluno!=null) {
         Aluno alunoAtualizado = new Aluno(
