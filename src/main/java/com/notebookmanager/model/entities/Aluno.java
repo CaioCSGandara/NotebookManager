@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Aluno implements Cloneable{
+public class Aluno implements Cloneable {
     @Id
     private String id;
 
@@ -28,8 +28,8 @@ public class Aluno implements Cloneable{
     @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$")
     private String telefone;
 
-    @NotBlank
-    private String curso;
+    @NotNull
+    private Curso curso;
 
     @NotNull
     private LocalDateTime ultimoLogin;
@@ -39,7 +39,7 @@ public class Aluno implements Cloneable{
 
 
     public Aluno(String nome, String ra, String email, String telefone, Curso curso, LocalDateTime ultimoLogin, LocalDateTime atualizadoEm) {
-        this(null, nome, ra, email, telefone, curso.getNomeFormatado(), ultimoLogin, atualizadoEm);
+        this(null, nome, ra, email, telefone, curso, ultimoLogin, atualizadoEm);
     }
 
     public Aluno(Aluno aluno) {

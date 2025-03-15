@@ -59,7 +59,7 @@ public class AlunoControllerTest extends BaseContainer {
         assertThat(ra).isEqualTo("22415616");
 
         String curso = documentContext.read("$.curso");
-        assertThat(curso).isEqualTo("Enfermagem");
+        assertThat(curso).isEqualTo("ENFERMAGEM");
     }
 
     @Test
@@ -197,7 +197,7 @@ public class AlunoControllerTest extends BaseContainer {
         assertThat(telefone).isEqualTo("(19)90123-9031");
 
         String curso = documentContext.read("$.curso");
-        assertThat(curso).isEqualTo("Nutrição");
+        assertThat(curso).isEqualTo("NUTRICAO");
 
         String atualizadoEm = documentContext.read("$.atualizadoEm");
         assertThat(atualizadoEm).isNotEqualTo("2010-12-30T12:14:22");

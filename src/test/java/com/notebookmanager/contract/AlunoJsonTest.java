@@ -42,7 +42,7 @@ public class AlunoJsonTest {
                 "ra": "22415616",
                 "email": "caio.cgs@puccampinas.edu.br",
                 "telefone": "(19)99414-8554",
-                "curso": "Enfermagem",
+                "curso": "ENFERMAGEM",
                 "ultimoLogin": "2010-12-30T12:14:22",
                 "atualizadoEm": "2010-12-30T12:14:22"
                 }""";
@@ -71,7 +71,7 @@ public class AlunoJsonTest {
                     "ra": "09135616",
                     "email": "jcorrea@puccampinas.edu.br",
                     "telefone": "(19)90914-3014",
-                    "curso": "Medicina",
+                    "curso": "MEDICINA",
                     "ultimoLogin": "2012-11-10T21:12:37",
                     "atualizadoEm": "2012-11-10T21:12:37"
                   },
@@ -81,7 +81,7 @@ public class AlunoJsonTest {
                     "ra": "03781923",
                     "email": "maria.ferreira@puccampinas.edu.br",
                     "telefone": "(19)90814-2314",
-                    "curso": "Terapia Ocupacional",
+                    "curso": "TERAPIA_OCUPACIONAL",
                     "ultimoLogin": "2021-08-12T21:21:45",
                     "atualizadoEm": "2021-08-12T21:21:45"
                   },
@@ -91,7 +91,7 @@ public class AlunoJsonTest {
                     "ra": "90174823",
                     "email": "fernandohpontes@puccampinas.edu.br",
                     "telefone": "(19)83914-0945",
-                    "curso": "Biomedicina",
+                    "curso": "BIOMEDICINA",
                     "ultimoLogin": "2013-01-10T21:12:37",
                     "atualizadoEm": "2013-01-10T21:12:37"
                   }
