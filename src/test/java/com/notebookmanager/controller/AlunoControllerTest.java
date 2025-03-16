@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,6 +90,23 @@ public class AlunoControllerTest extends BaseContainer {
         assertThat(id).isNotNull();
 
 
+    }
+
+    @Test
+    void naoSalvaAlunoComRaRepetido() {
+        Aluno aluno = AlunoGenerator.getAluno();
+        alunoRepository.save(aluno);
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/alunos", aluno, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        String status =  documentContext.read("$.status");
+        assertThat(status).isEqualTo("CONFLICT");
+
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("O Aluno com este RA já está cadastrado.");
     }
 
     @Test
@@ -177,7 +193,7 @@ public class AlunoControllerTest extends BaseContainer {
                 LocalDateTime.of(2015, 4, 22, 18, 9, 12));
 
 
-        HttpEntity<Aluno> request = new HttpEntity<Aluno>(alunoAtualizado);
+        HttpEntity<Aluno> request = new HttpEntity<>(alunoAtualizado);
 
         ResponseEntity<Void> response = restTemplate.exchange("/alunos/22415616", HttpMethod.PUT,
                 request, Void.class);
@@ -206,12 +222,20 @@ public class AlunoControllerTest extends BaseContainer {
     @Test
     void naoAtualizaAlunoNaoExistente() {
         Aluno aluno = AlunoGenerator.getAluno();
-        HttpEntity<Aluno> request = new HttpEntity<Aluno>(aluno);
+        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-        ResponseEntity<Void> response = restTemplate.exchange("/alunos/09812375", HttpMethod.PUT,
-                request, Void.class);
+        ResponseEntity<String> response = restTemplate.exchange("/alunos/09812375", HttpMethod.PUT,
+                request, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        DocumentContext documentContext =  JsonPath.parse(response.getBody());
+
+        String status =  documentContext.read("$.status");
+        assertThat(status).isEqualTo("NOT_FOUND");
+
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Aluno não encontrado.");
     }
 
     @Test
@@ -231,9 +255,17 @@ public class AlunoControllerTest extends BaseContainer {
 
     @Test
     void naoDeleteAlunoNaoExistente() {
-        ResponseEntity<Void> response = restTemplate.exchange("/alunos/09128475", HttpMethod.DELETE,
-                null, Void.class);
+        ResponseEntity<String> response = restTemplate.exchange("/alunos/09128475", HttpMethod.DELETE,
+                null, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        DocumentContext documentContext =  JsonPath.parse(response.getBody());
+
+        String status =  documentContext.read("$.status");
+        assertThat(status).isEqualTo("NOT_FOUND");
+
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Aluno não encontrado.");
     }
 
 }

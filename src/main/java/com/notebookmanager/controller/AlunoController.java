@@ -1,5 +1,7 @@
 package com.notebookmanager.controller;
 
+import com.notebookmanager.exception.AlunoJaExistenteException;
+import com.notebookmanager.exception.AlunoNaoEncontradoException;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
 import com.notebookmanager.model.repositories.AlunoRepository;
@@ -25,6 +27,8 @@ public class AlunoController {
         this.alunoRepository = alunoRepository;
     }
 
+    //ra pode nao existir
+    //runtime exception
     @GetMapping("/{requestedRa}")
     private ResponseEntity<Aluno> findByRa(@PathVariable String requestedRa) {
         Aluno aluno = alunoRepository.findByRa(requestedRa);
@@ -36,15 +40,18 @@ public class AlunoController {
     }
 
     @PostMapping
-    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno newAlunoRequest, UriComponentsBuilder ucb) {
-        Aluno savedAluno = alunoRepository.save(newAlunoRequest);
+    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, UriComponentsBuilder ucb) {
+        if(!alunoRepository.existsByRa(aluno.getRa())) {
+            Aluno savedAluno = alunoRepository.save(aluno);
 
-        URI locationOfNewAluno = ucb
-                .path("alunos/{ra}")
-                .buildAndExpand(savedAluno.getRa())
-                .toUri();
+            URI locationOfNewAluno = ucb
+                    .path("alunos/{ra}")
+                    .buildAndExpand(savedAluno.getRa())
+                    .toUri();
 
-        return ResponseEntity.created(locationOfNewAluno).build();
+            return ResponseEntity.created(locationOfNewAluno).build();
+        }
+        throw new AlunoJaExistenteException();
     }
 
 
@@ -78,8 +85,9 @@ public class AlunoController {
 
         return ResponseEntity.noContent().build();
     }
-    return ResponseEntity.notFound().build();
+    throw new AlunoNaoEncontradoException();
 }
+
 
     @DeleteMapping("/{requestedRa}")
     private ResponseEntity<Void> deleteAluno(@PathVariable String requestedRa) {
@@ -88,7 +96,7 @@ public class AlunoController {
             alunoRepository.deleteByRa(requestedRa);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build();
+        throw new AlunoNaoEncontradoException();
     }
 
 }
