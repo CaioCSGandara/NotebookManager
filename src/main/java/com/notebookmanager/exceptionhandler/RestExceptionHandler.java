@@ -23,6 +23,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(value = {RuntimeException.class})
+    private ResponseEntity<RestErrorMessage> exceptionHandler(RuntimeException exception) {
+        RestErrorMessage response = new RestErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, "Ops! Ocorreu um erro interno no servidor.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
 
 
 
