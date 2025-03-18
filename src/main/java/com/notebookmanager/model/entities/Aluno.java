@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Aluno implements Cloneable {
     @Id
-    private String id;
+    private Integer id;
 
     @NotBlank @Size(min = 1, max = 30)
     private String nome;
