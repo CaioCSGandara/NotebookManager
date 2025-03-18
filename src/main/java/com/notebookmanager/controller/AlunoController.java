@@ -2,6 +2,7 @@ package com.notebookmanager.controller;
 
 import com.notebookmanager.exception.AlunoJaExistenteException;
 import com.notebookmanager.exception.AlunoNaoEncontradoException;
+import com.notebookmanager.exception.ValidationException;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,19 +41,22 @@ public class AlunoController {
     }
 
     @PostMapping
-    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, UriComponentsBuilder ucb) {
-        if(!alunoRepository.existsByRa(aluno.getRa())) {
-            Aluno savedAluno = alunoRepository.save(aluno);
-
-            URI locationOfNewAluno = ucb
-                    .path("alunos/{id}")
-                    .buildAndExpand(savedAluno.getId())
-                    .toUri();
-
-            return ResponseEntity.created(locationOfNewAluno).build();
+    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("Erro de validação ao criar Aluno.");
+        }
+        if(alunoRepository.existsByRa(aluno.getRa())) {
+            throw new AlunoJaExistenteException();
         }
 
-        throw new AlunoJaExistenteException();
+        Aluno savedAluno = alunoRepository.save(aluno);
+
+        URI locationOfNewAluno = ucb
+                .path("alunos/{id}")
+                .buildAndExpand(savedAluno.getId())
+                .toUri();
+
+        return ResponseEntity.created(locationOfNewAluno).build();
     }
 
 
@@ -67,10 +72,17 @@ public class AlunoController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Void> updateAluno(@PathVariable Integer id, @RequestBody @Valid Aluno alunoUpdate) {
-        Optional<Aluno> aluno = alunoRepository.findById(id);
-        if(aluno.isPresent()) {
-            Aluno alunoAtualizado = new Aluno(
+    private ResponseEntity<Void> updateAluno(@RequestBody @Valid Aluno alunoUpdate, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException("Erro de validação ao atualizar o aluno.");
+        }
+
+        Optional<Aluno> aluno = alunoRepository.findByRa(alunoUpdate.getRa());
+        if(aluno.isEmpty()) {
+            throw new AlunoNaoEncontradoException();
+    }
+        Aluno alunoAtualizado = new Aluno(
                 aluno.get().getId(),
                 alunoUpdate.getNome(),
                 aluno.get().getRa(),
@@ -84,8 +96,6 @@ public class AlunoController {
         alunoRepository.save(alunoAtualizado);
 
         return ResponseEntity.noContent().build();
-    }
-    throw new AlunoNaoEncontradoException();
 }
 
 

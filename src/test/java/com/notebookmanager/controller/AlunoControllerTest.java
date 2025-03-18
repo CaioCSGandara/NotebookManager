@@ -4,7 +4,6 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.model.entities.Aluno;
 import com.notebookmanager.model.entities.enums.Curso;
-import com.notebookmanager.model.repositories.AlunoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -200,7 +199,7 @@ public class AlunoControllerTest {
 
     @Test
     void naoAtualizaAlunoNaoExistente() {
-        Aluno aluno = new Aluno("Josue Nao Existe No Banco", "09135616", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
+        Aluno aluno = new Aluno("Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
                 Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
                 LocalDateTime.of(2012, 11, 10, 21, 12, 37));
         HttpEntity<Aluno> request = new HttpEntity<>(aluno);

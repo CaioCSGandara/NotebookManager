@@ -2,6 +2,7 @@ package com.notebookmanager.exceptionhandler;
 
 import com.notebookmanager.exception.AlunoJaExistenteException;
 import com.notebookmanager.exception.AlunoNaoEncontradoException;
+import com.notebookmanager.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +28,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<RestErrorMessage> exceptionHandler(RuntimeException exception) {
         RestErrorMessage response = new RestErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, "Ops! Ocorreu um erro interno no servidor.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(value = {ValidationException.class})
+    private ResponseEntity<RestErrorMessage> validationExceptionHandler(ValidationException exception) {
+        RestErrorMessage response = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
 

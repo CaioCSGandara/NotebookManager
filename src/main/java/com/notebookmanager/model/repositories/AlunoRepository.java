@@ -4,7 +4,10 @@ import com.notebookmanager.model.entities.Aluno;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Optional;
+
 
 public interface AlunoRepository extends CrudRepository<Aluno, Integer>, PagingAndSortingRepository<Aluno, Integer> {
-    public boolean existsByRa(String ra);
+    boolean existsByRa(String ra);
+    Optional<Aluno> findByRa(String ra);
 }
