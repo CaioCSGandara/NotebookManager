@@ -1,4 +1,4 @@
-package com.notebookmanager.model.entities.enums;
+package com.notebookmanager.model.enums;
 
 public enum Curso {
     BIOLOGIA,

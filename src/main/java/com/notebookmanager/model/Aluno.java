@@ -1,6 +1,6 @@
-package com.notebookmanager.model.entities;
+package com.notebookmanager.model;
 
-import com.notebookmanager.model.entities.enums.Curso;
+import com.notebookmanager.model.enums.Curso;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;

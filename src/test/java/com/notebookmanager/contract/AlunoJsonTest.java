@@ -1,7 +1,7 @@
 package com.notebookmanager.contract;
 
-import com.notebookmanager.model.entities.Aluno;
-import com.notebookmanager.model.entities.enums.Curso;
+import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.enums.Curso;
 import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

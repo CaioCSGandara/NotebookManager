@@ -2,8 +2,8 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.notebookmanager.model.entities.Aluno;
-import com.notebookmanager.model.entities.enums.Curso;
+import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

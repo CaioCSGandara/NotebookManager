@@ -2,8 +2,8 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.notebookmanager.model.entities.Aluno;
-import com.notebookmanager.model.entities.enums.Curso;
+import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -86,6 +86,128 @@ public class AlunoControllerFailureTest {
 
         String message = documentContext.read("$.message");
         assertThat(message).isEqualTo("Aluno não encontrado.");
+    }
+
+    // TESTES DE VALIDAÇÃO DE BODY:
+
+    @Test
+    void naoAceitaNomeInvalido() {
+
+        String[] nomesInvalidos = {"Jorge Ferreira de Lima Almeida Santos da Silva", "", " ", null};
+
+
+        for (String nomeInvalido : nomesInvalidos) {
+
+            Aluno aluno = new Aluno (nomeInvalido, "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
+                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+
+            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+
+        }
+    }
+
+
+    @Test
+    void naoAceitaRaInvalido() {
+        String[] rasInvalidos = {"1234567", "123456789", "", " ", null};
+
+        for (String raInvalido : rasInvalidos) {
+            Aluno aluno = new Aluno ("Jorge Flavio Silva", raInvalido, "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
+                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+
+            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+
+        }
+    }
+
+
+    @Test
+    void naoAceitaEmailInvalido() {
+        String[] emailsInvalidos = {"jorge^f@puccampinas.edu.br", "jorge.2f@gmail.com", "jorge#f@puccampinas.edu.br","", " ", null};
+
+        for (String emailInvalido : emailsInvalidos) {
+            Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", emailInvalido, "(19)99182-4125",
+                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+
+            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+
+        }
+    }
+
+
+    @Test
+    void naoAceitaTelefoneInvalido() {
+        String[] telefonesInvalidos = {"(d9)12345-0987", "(19)1$345-0987", "(11)12345-0h87", "(19)123450987", "11 12345-0987", "", " ", null};
+
+        for (String telefoneInvalido : telefonesInvalidos) {
+            Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", telefoneInvalido,
+                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+
+            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+
+        }
+    }
+
+
+    @Test
+    void naoAceitaCursoNulo() {
+        Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", "(19)99182-4125",
+                null, LocalDateTime.now(), LocalDateTime.now());
+
+        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+        testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+        testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+    }
+
+    @Test
+    void naoAceitaUltimoLoginNulo() {
+        Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", "(19)99182-4125",
+                Curso.NUTRICAO, null, LocalDateTime.now());
+
+        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+        testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+        testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+    }
+
+
+    @Test
+    void naoAceitaAtualizadoEmNulo() {
+        Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", "(19)99182-4125",
+                Curso.NUTRICAO, LocalDateTime.now(), null);
+
+        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+
+        testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+        testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+    }
+
+
+
+    private void testaBodyAlunoInvalido(String url, HttpMethod method, HttpEntity<Aluno> request, String errorMessage) {
+        ResponseEntity<String> response = restTemplate.exchange(url, method, request, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        String status = documentContext.read("$.status");
+        assertThat(status).isEqualTo("BAD_REQUEST");
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo(errorMessage);
     }
 
 

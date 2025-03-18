@@ -3,7 +3,7 @@ package com.notebookmanager.controller;
 import com.notebookmanager.exception.AlunoJaExistenteException;
 import com.notebookmanager.exception.AlunoNaoEncontradoException;
 import com.notebookmanager.exception.ValidationException;
-import com.notebookmanager.model.entities.Aluno;
+import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -43,7 +43,7 @@ public class AlunoController {
     @PostMapping
     private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
         if(bindingResult.hasErrors()) {
-            throw new ValidationException("Erro de validação ao criar Aluno.");
+            throw new ValidationException("Erro de validação ao criar aluno.");
         }
         if(alunoRepository.existsByRa(aluno.getRa())) {
             throw new AlunoJaExistenteException();
