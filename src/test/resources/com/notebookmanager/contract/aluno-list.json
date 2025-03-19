@@ -1,31 +1,31 @@
 [
   {
-    "id": null,
+    "id": 1,
     "nome": "Julio Correa",
     "ra": "09135616",
-    "email": "jcorrea@gmail.com",
+    "email": "jcorrea@puccampinas.edu.br",
     "telefone": "(19)90914-3014",
-    "curso": "Medicina",
+    "curso": "MEDICINA",
     "ultimoLogin": "2012-11-10T21:12:37",
     "atualizadoEm": "2012-11-10T21:12:37"
   },
   {
-    "id": null,
+    "id": 2,
     "nome": "Maria Ferreira",
     "ra": "03781923",
-    "email": "maria.ferreira@gmail.com",
+    "email": "maria.ferreira@puccampinas.edu.br",
     "telefone": "(19)90814-2314",
-    "curso": "Terapia Ocupacional",
+    "curso": "TERAPIA_OCUPACIONAL",
     "ultimoLogin": "2021-08-12T21:21:45",
     "atualizadoEm": "2021-08-12T21:21:45"
   },
   {
-    "id": null,
+    "id": 3,
     "nome": "Fernando Pontes",
     "ra": "90174823",
-    "email": "fernandohpontes@gmail.com",
+    "email": "fernandohpontes@puccampinas.edu.br",
     "telefone": "(19)83914-0945",
-    "curso": "Biomedicina",
+    "curso": "BIOMEDICINA",
     "ultimoLogin": "2013-01-10T21:12:37",
     "atualizadoEm": "2013-01-10T21:12:37"
   }
