@@ -29,7 +29,14 @@ public class AlunoControllerFailureTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
-        assertThat(response.getBody()).isBlank();
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        String status = documentContext.read("$.status");
+
+        assertThat(status).isEqualTo("NOT_FOUND");
+
+        String message =  documentContext.read("$.message");
+        assertThat(message).isEqualTo("Aluno não encontrado.");
 
     }
 

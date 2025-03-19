@@ -3,6 +3,7 @@ package com.notebookmanager.controller;
 import com.notebookmanager.exception.AlunoJaExistenteException;
 import com.notebookmanager.exception.AlunoNaoEncontradoException;
 import com.notebookmanager.exception.ValidationException;
+import com.notebookmanager.model.payload.Payload;
 import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import jakarta.validation.Valid;
@@ -10,13 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -31,17 +32,19 @@ public class AlunoController {
 
 
     @GetMapping("/{id}")
-    private ResponseEntity<Optional<Aluno>> findById(@PathVariable Integer id) {
+    private ResponseEntity<Payload> findById(@PathVariable Integer id) {
+
         Optional<Aluno> aluno = alunoRepository.findById(id);
-        if(aluno.isPresent()) {
-            return ResponseEntity.ok(aluno);
+        if(aluno.isEmpty()) {
+            throw new AlunoNaoEncontradoException();
         }
-        return ResponseEntity.notFound().build();
+        Payload payload = new Payload(HttpStatus.OK, aluno.get(), null);
+        return ResponseEntity.ok(payload);
 
     }
 
     @PostMapping
-    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
+    private ResponseEntity<Payload> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
         if(bindingResult.hasErrors()) {
             throw new ValidationException("Erro de validação ao criar aluno.");
         }
@@ -61,14 +64,15 @@ public class AlunoController {
 
 
     @GetMapping
-    private ResponseEntity<List<Aluno>> findAll(Pageable pageable)
+    private ResponseEntity<Payload> findAll(Pageable pageable)
     {
         Page<Aluno> alunoPage = alunoRepository.findAll(PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 pageable.getSortOr(Sort.by(Sort.Direction.ASC, "nome"))));
 
-        return ResponseEntity.ok(alunoPage.getContent());
+        Payload payload = new Payload(HttpStatus.OK, alunoPage.getContent(), null);
+        return ResponseEntity.ok(payload);
     }
 
     @PutMapping("/{id}")

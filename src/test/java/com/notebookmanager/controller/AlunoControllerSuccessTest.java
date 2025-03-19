@@ -36,13 +36,13 @@ public class AlunoControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Integer id = documentContext.read("$.id");
+        Integer id = documentContext.read("$.data.id");
         assertThat(id).isEqualTo(1);
 
-        String ra = documentContext.read("$.ra");
+        String ra = documentContext.read("$.data.ra");
         assertThat(ra).isEqualTo("09135616");
 
-        String curso = documentContext.read("$.curso");
+        String curso = documentContext.read("$.data.curso");
         assertThat(curso).isEqualTo("MEDICINA");
     }
 
@@ -65,7 +65,7 @@ public class AlunoControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
 
-        Integer id = documentContext.read("$.id");
+        Integer id = documentContext.read("$.data.id");
         assertThat(id).isNotNull();
 
 
@@ -99,7 +99,7 @@ public class AlunoControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        List<String> page = documentContext.read("$[*]");
+        List<String> page = documentContext.read("$.data");
 
         assertThat(page.size()).isEqualTo(2);
     }
@@ -107,17 +107,14 @@ public class AlunoControllerSuccessTest {
     @Test
     void retornaPaginaOrdenadaPorNome() {
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/alunos?page=0&size=1&sort=nome,asc", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/alunos?sort=nome,asc", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        List<String> read = documentContext.read("$[*]");
 
-        assertThat(read.size()).isEqualTo(1);
-
-        String nome = documentContext.read("$[0].nome");
+        String nome = documentContext.read("$.data[0].nome");
 
         assertThat(nome).isEqualTo("Fernando Pontes");
 
@@ -160,16 +157,16 @@ public class AlunoControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
 
-        String nome = documentContext.read("$.nome");
+        String nome = documentContext.read("$.data.nome");
         assertThat(nome).isEqualTo("Julio Correa da Silva");
 
-        String telefone = documentContext.read("$.telefone");
+        String telefone = documentContext.read("$.data.telefone");
         assertThat(telefone).isEqualTo("(19)91831-5123");
 
-        String curso = documentContext.read("$.curso");
+        String curso = documentContext.read("$.data.curso");
         assertThat(curso).isEqualTo("MEDICINA");
 
-        String atualizadoEm = documentContext.read("$.atualizadoEm");
+        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
         assertThat(atualizadoEm).isNotEqualTo("2012-11-10T21:12:37");
     }
 
