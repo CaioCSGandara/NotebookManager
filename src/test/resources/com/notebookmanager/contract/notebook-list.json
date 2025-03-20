@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "modelo": "Asus Vivobook 5",
+    "patrimonio": "49103423",
+    "status": "ALOCADO",
+    "qtd_emprestimos": 43,
+    "atualizadoEm": "2021-06-30T09:14:09"
+  },
+  {
+    "id": 2,
+    "modelo": "Acer Aspire 5",
+    "patrimonio": "98341099",
+    "status": "NAO_ALOCADO",
+    "qtd_emprestimos": 19,
+    "atualizadoEm": "2023-01-05T14:12:20"
+  },
+  {
+    "id": 3,
+    "modelo": "Acer Nitro",
+    "patrimonio": "12309845",
+    "status": "EMPRESTADO",
+    "qtd_emprestimos": 130,
+    "atualizadoEm": "2023-11-20T18:12:21"
+  }
+]

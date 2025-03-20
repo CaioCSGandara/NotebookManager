@@ -1,5 +1,6 @@
 package com.notebookmanager.model;
 
+import com.notebookmanager.model.enums.StatusEquipamento;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class Notebook implements Cloneable {
     private String patrimonio;
 
     @NotNull
-    private boolean status;
+    private StatusEquipamento status;
 
     @NotNull
     private Integer qtd_emprestimos;
@@ -32,7 +33,7 @@ public class Notebook implements Cloneable {
     private LocalDateTime atualizadoEm;
 
 
-    public Notebook(String modelo, String patrimonio,  boolean status, Integer qtd_emprestimos, LocalDateTime atualizadoEm) {
+    public Notebook(String modelo, String patrimonio,  StatusEquipamento status, Integer qtd_emprestimos, LocalDateTime atualizadoEm) {
         this(null, modelo, patrimonio, status, qtd_emprestimos, atualizadoEm);
     }
 
