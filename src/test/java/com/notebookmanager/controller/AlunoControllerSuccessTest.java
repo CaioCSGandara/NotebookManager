@@ -83,7 +83,7 @@ public class AlunoControllerSuccessTest {
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(documentContext.toString());
 
-        int alunoCount = documentContext.read("$.length()");
+        int alunoCount = documentContext.read("$.data.length()");
         assertThat(alunoCount).isEqualTo(3);
 
         List<String> ras = documentContext.read("$..ra");

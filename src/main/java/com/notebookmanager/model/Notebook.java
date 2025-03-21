@@ -1,6 +1,5 @@
 package com.notebookmanager.model;
 
-import com.notebookmanager.model.enums.StatusEquipamento;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,27 +23,27 @@ public class Notebook implements Cloneable {
     private String patrimonio;
 
     @NotNull
-    private StatusEquipamento status;
+    private boolean emprestado;
 
     @NotNull
-    private Integer qtd_emprestimos;
+    private Integer qtdEmprestimos;
 
     @NotNull
     private LocalDateTime atualizadoEm;
 
 
-    public Notebook(String modelo, String patrimonio,  StatusEquipamento status, Integer qtd_emprestimos, LocalDateTime atualizadoEm) {
-        this(null, modelo, patrimonio, status, qtd_emprestimos, atualizadoEm);
+    public Notebook(String modelo, String patrimonio,  boolean emprestado, Integer qtdEmprestimos, LocalDateTime atualizadoEm) {
+        this(null, modelo, patrimonio, emprestado, qtdEmprestimos, atualizadoEm);
     }
 
 
     public Notebook(Notebook notebook) {
-        this.id = notebook.id;
-        this.modelo = notebook.modelo;
-        this.patrimonio = notebook.patrimonio;
-        this.status = notebook.status;
-        this.qtd_emprestimos = notebook.qtd_emprestimos;
-        this.atualizadoEm = notebook.atualizadoEm;
+        this.id = notebook.getId();
+        this.modelo = notebook.getModelo();
+        this.patrimonio = notebook.getPatrimonio();
+        this.emprestado = notebook.isEmprestado();
+        this.qtdEmprestimos = notebook.getQtdEmprestimos();
+        this.atualizadoEm = notebook.getAtualizadoEm();
     }
 
     public Object clone() {
