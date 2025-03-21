@@ -54,7 +54,7 @@ public class NotebookController {
         Page<Notebook> notebooks = notebookRepository.findAll(PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                pageable.getSortOr(Sort.by(Sort.Direction.ASC,"emprestado"))));
+                pageable.getSortOr(Sort.by(Sort.Direction.ASC,"status"))));
 
         Payload payload = new Payload(HttpStatus.OK, notebooks.getContent(), null);
         return  ResponseEntity.ok(payload);
@@ -62,24 +62,24 @@ public class NotebookController {
     }
 
 
-    @PatchMapping("/{id}/alterar-estado-emprestimo")
-    private ResponseEntity<Payload> updateNotebook(@PathVariable Integer id, UriComponentsBuilder ucb) {
-        Optional<Notebook> optNotebookToUpdate = notebookRepository.findById(id);
-        Notebook notebookToUpdate = optNotebookToUpdate.get();
-
-        if(!notebookToUpdate.isEmprestado()) {
-            notebookToUpdate.setQtdEmprestimos(notebookToUpdate.getQtdEmprestimos()+1);
-        }
-
-        notebookToUpdate.setEmprestado(!notebookToUpdate.isEmprestado());
-        notebookToUpdate.setAtualizadoEm(LocalDateTime.now());
-
-        notebookRepository.save(notebookToUpdate);
-
-
-        return ResponseEntity.noContent().build();
-
-    }
+//    @PatchMapping("/{id}/alterar-estado-emprestimo")
+//    private ResponseEntity<Payload> updateNotebook(@PathVariable Integer id, UriComponentsBuilder ucb) {
+//        Optional<Notebook> optNotebookToUpdate = notebookRepository.findById(id);
+//        Notebook notebookToUpdate = optNotebookToUpdate.get();
+//
+//        if(!notebookToUpdate.isEmprestado()) {
+//            notebookToUpdate.setQtdEmprestimos(notebookToUpdate.getQtdEmprestimos()+1);
+//        }
+//
+//        notebookToUpdate.setEmprestado(!notebookToUpdate.isEmprestado());
+//        notebookToUpdate.setAtualizadoEm(LocalDateTime.now());
+//
+//        notebookRepository.save(notebookToUpdate);
+//
+//
+//        return ResponseEntity.noContent().build();
+//
+//    }
 
 
     @DeleteMapping("/{id}")

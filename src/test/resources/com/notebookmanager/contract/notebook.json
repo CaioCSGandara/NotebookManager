@@ -2,7 +2,7 @@
   "id": 4,
   "modelo": "Acer Aspire 5",
   "patrimonio": "02134918",
-  "emprestado": false,
+  "status": "DISPONIVEL",
   "qtdEmprestimos": 5,
   "atualizadoEm": "2025-03-17T22:34:45"
 }
