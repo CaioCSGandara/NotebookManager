@@ -1,6 +1,7 @@
 package com.notebookmanager.controller;
 
 import com.notebookmanager.model.Notebook;
+import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.payload.Payload;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import com.notebookmanager.model.repositories.NotebookRepository;
@@ -62,24 +63,32 @@ public class NotebookController {
     }
 
 
-//    @PatchMapping("/{id}/alterar-estado-emprestimo")
-//    private ResponseEntity<Payload> updateNotebook(@PathVariable Integer id, UriComponentsBuilder ucb) {
-//        Optional<Notebook> optNotebookToUpdate = notebookRepository.findById(id);
-//        Notebook notebookToUpdate = optNotebookToUpdate.get();
-//
-//        if(!notebookToUpdate.isEmprestado()) {
-//            notebookToUpdate.setQtdEmprestimos(notebookToUpdate.getQtdEmprestimos()+1);
-//        }
-//
-//        notebookToUpdate.setEmprestado(!notebookToUpdate.isEmprestado());
-//        notebookToUpdate.setAtualizadoEm(LocalDateTime.now());
-//
-//        notebookRepository.save(notebookToUpdate);
-//
-//
-//        return ResponseEntity.noContent().build();
-//
-//    }
+    @PatchMapping("/{id}/afastar")
+    private ResponseEntity<Payload> afastaNotebook(@PathVariable Integer id, @RequestBody StatusNotebook novoStatus) {
+        Optional<Notebook> optNotebook = notebookRepository.findById(id);
+        Notebook notebook = optNotebook.get();
+
+        notebook.setStatus(novoStatus);
+        notebook.setAtualizadoEm(LocalDateTime.now());
+
+        notebookRepository.save(notebook);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/reativar")
+    private ResponseEntity<Payload> reativaNotebook(@PathVariable Integer id, @RequestBody StatusNotebook novoStatus) {
+        Optional<Notebook> optNotebook = notebookRepository.findById(id);
+        Notebook notebook = optNotebook.get();
+
+        notebook.setStatus(novoStatus);
+        notebook.setAtualizadoEm(LocalDateTime.now());
+
+        notebookRepository.save(notebook);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 
     @DeleteMapping("/{id}")

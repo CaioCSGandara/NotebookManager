@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,54 +119,52 @@ public class NotebookControllerSuccessTest {
     }
 
 
-//    @Test
-//    void gerenciaDevolucao() {
-//        //https://stackoverflow.com/questions/29447382/resttemplate-patch-request
-//        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-//
-//
-//        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/alterar-estado-emprestimo", HttpMethod.PATCH, null, Void.class);
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-//
-//        ResponseEntity<String> responseGet =  restTemplate.getForEntity("/notebooks/1", String.class);
-//
-//        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
-//
-//        Integer id = documentContext.read("$.data.id");
-//        assertThat(id).isEqualTo(1);
-//
-//        boolean emprestado = documentContext.read("$.data.emprestado");
-//        assertThat(emprestado).isFalse();
-//
-//        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
-//        assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
-//    }
-//
-//    @Test
-//    void gerenciaEmprestimo() {
-//        //https://stackoverflow.com/questions/29447382/resttemplate-patch-request
-//        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-//
-//
-//        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/2/alterar-estado-emprestimo", HttpMethod.PATCH, null, Void.class);
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-//
-//        ResponseEntity<String> responseGet =  restTemplate.getForEntity("/notebooks/2", String.class);
-//
-//        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
-//
-//        Integer id = documentContext.read("$.data.id");
-//        assertThat(id).isEqualTo(2);
-//
-//        boolean emprestado = documentContext.read("$.data.emprestado");
-//        assertThat(emprestado).isTrue();
-//
-//        Integer qtdEmprestimos = documentContext.read("$.data.qtdEmprestimos");
-//        assertThat(qtdEmprestimos).isEqualTo(19+1);
-//
-//        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
-//        assertThat(atualizadoEm).isNotEqualTo("2023-01-05T14:12:20");
-//    }
+    @Test
+    void afastaNotebookDisponivel() {
+        //https://stackoverflow.com/questions/29447382/resttemplate-patch-request
+        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+        StatusNotebook statusNotebook = StatusNotebook.AFASTADO;
+        HttpEntity request = new HttpEntity(statusNotebook);
+
+        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/afastar", HttpMethod.PATCH, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> responseGet =  restTemplate.getForEntity("/notebooks/1", String.class);
+
+        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
+
+        String status = documentContext.read("$.data.status");
+        assertThat(status).isEqualTo("AFASTADO");
+
+        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
+        assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
+    }
+
+
+    @Test
+    void reativaNotebookAfastado() {
+        //https://stackoverflow.com/questions/29447382/resttemplate-patch-request
+        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+        StatusNotebook statusNotebook = StatusNotebook.DISPONIVEL;
+        HttpEntity request = new HttpEntity(statusNotebook);
+
+        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/3/afastar", HttpMethod.PATCH, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> responseGet =  restTemplate.getForEntity("/notebooks/3", String.class);
+
+        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
+
+        String status = documentContext.read("$.data.status");
+        assertThat(status).isEqualTo("DISPONIVEL");
+
+        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
+        assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
+    }
 
     @Test
     void deletaNotebookPorId() {
