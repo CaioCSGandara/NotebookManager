@@ -1,7 +1,7 @@
 package com.notebookmanager.exceptionhandler;
 
-import com.notebookmanager.exception.AlunoJaExistenteException;
-import com.notebookmanager.exception.AlunoNaoEncontradoException;
+import com.notebookmanager.exception.RecursoJaExistenteException;
+import com.notebookmanager.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.exception.ValidationException;
 import com.notebookmanager.model.payload.Payload;
 import org.springframework.http.HttpStatus;
@@ -13,15 +13,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {AlunoJaExistenteException.class})
-    private ResponseEntity<Payload> alunoJaExistenteHandler(AlunoJaExistenteException exception) {
-        Payload payload = new Payload(HttpStatus.CONFLICT, null,"O Aluno com este RA já está cadastrado.");
+    @ExceptionHandler(value = {RecursoJaExistenteException.class})
+    private ResponseEntity<Payload> recursoJaExistenteHandler(RecursoJaExistenteException exception) {
+        Payload payload = new Payload(HttpStatus.CONFLICT, null, exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(payload);
     }
 
-    @ExceptionHandler(value = {AlunoNaoEncontradoException.class})
-    private ResponseEntity<Payload> alunoNaoEncontradoHandler(AlunoNaoEncontradoException exception) {
-        Payload payload = new Payload(HttpStatus.NOT_FOUND, null, "Aluno não encontrado.");
+    @ExceptionHandler(value = {RecursoNaoEncontradoException.class})
+    private ResponseEntity<Payload> recursoNaoEncontradoHandler(RecursoNaoEncontradoException exception) {
+        Payload payload = new Payload(HttpStatus.NOT_FOUND, null, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(payload);
     }
 

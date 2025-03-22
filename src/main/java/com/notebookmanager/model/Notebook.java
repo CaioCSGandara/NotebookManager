@@ -17,7 +17,7 @@ public class Notebook implements Cloneable {
     @Id
     private Integer id;
 
-    @NotBlank
+    @NotBlank @Size(min = 5, max = 50)
     private String modelo;
 
     @NotNull @Size(min = 8, max = 8)
@@ -26,7 +26,7 @@ public class Notebook implements Cloneable {
     @NotNull
     private StatusNotebook status;
 
-    @NotNull
+    @NotNull @Min(0)
     private Integer qtdEmprestimos;
 
     @NotNull

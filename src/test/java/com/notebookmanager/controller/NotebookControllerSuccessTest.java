@@ -120,53 +120,35 @@ public class NotebookControllerSuccessTest {
 
 
     @Test
-    void afastaNotebookDisponivel() {
-        //https://stackoverflow.com/questions/29447382/resttemplate-patch-request
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    @DirtiesContext
+    void gerenciaAfastamento() {
 
-        StatusNotebook statusNotebook = StatusNotebook.AFASTADO;
-        HttpEntity request = new HttpEntity(statusNotebook);
+        StatusNotebook[] statusNotebookList = {StatusNotebook.AFASTADO, StatusNotebook.DISPONIVEL};
 
-        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/afastar", HttpMethod.PATCH, request, Void.class);
+        for(StatusNotebook statusNotebook : statusNotebookList) {
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+            HttpEntity<StatusNotebook> request = new HttpEntity<StatusNotebook>(statusNotebook);
 
-        ResponseEntity<String> responseGet =  restTemplate.getForEntity("/notebooks/1", String.class);
+            ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/gerenciar-afastamento", HttpMethod.PATCH, request, Void.class);
 
-        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        String status = documentContext.read("$.data.status");
-        assertThat(status).isEqualTo("AFASTADO");
+            ResponseEntity<String> responseGet = restTemplate.getForEntity("/notebooks/1", String.class);
 
-        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
-        assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
+            DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
+
+            String status = documentContext.read("$.data.status");
+            assertThat(status).isEqualTo(statusNotebook.toString());
+
+            String atualizadoEm = documentContext.read("$.data.atualizadoEm");
+            assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
+        }
     }
 
 
-    @Test
-    void reativaNotebookAfastado() {
-        //https://stackoverflow.com/questions/29447382/resttemplate-patch-request
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-
-        StatusNotebook statusNotebook = StatusNotebook.DISPONIVEL;
-        HttpEntity request = new HttpEntity(statusNotebook);
-
-        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/3/afastar", HttpMethod.PATCH, request, Void.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-        ResponseEntity<String> responseGet =  restTemplate.getForEntity("/notebooks/3", String.class);
-
-        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
-
-        String status = documentContext.read("$.data.status");
-        assertThat(status).isEqualTo("DISPONIVEL");
-
-        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
-        assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
-    }
 
     @Test
+    @DirtiesContext
     void deletaNotebookPorId() {
         ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1", HttpMethod.DELETE, null, Void.class);
 
