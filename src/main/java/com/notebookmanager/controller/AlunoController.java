@@ -1,7 +1,7 @@
 package com.notebookmanager.controller;
 
-import com.notebookmanager.exception.AlunoJaExistenteException;
-import com.notebookmanager.exception.AlunoNaoEncontradoException;
+import com.notebookmanager.exception.RecursoJaExistenteException;
+import com.notebookmanager.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.exception.ValidationException;
 import com.notebookmanager.model.payload.Payload;
 import com.notebookmanager.model.Aluno;
@@ -36,7 +36,7 @@ public class AlunoController {
 
         Optional<Aluno> aluno = alunoRepository.findById(id);
         if(aluno.isEmpty()) {
-            throw new AlunoNaoEncontradoException();
+            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
         }
         Payload payload = new Payload(HttpStatus.OK, aluno.get(), null);
         return ResponseEntity.ok(payload);
@@ -49,7 +49,7 @@ public class AlunoController {
             throw new ValidationException("Erro de validação ao criar aluno.");
         }
         if(alunoRepository.existsByRa(aluno.getRa())) {
-            throw new AlunoJaExistenteException();
+            throw new RecursoJaExistenteException("O Aluno com este RA já está cadastrado.");
         }
 
         Aluno savedAluno = alunoRepository.save(aluno);
@@ -84,7 +84,7 @@ public class AlunoController {
 
         Optional<Aluno> aluno = alunoRepository.findByRa(alunoUpdate.getRa());
         if(aluno.isEmpty()) {
-            throw new AlunoNaoEncontradoException();
+            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
     }
         Aluno alunoAtualizado = new Aluno(
                 aluno.get().getId(),
@@ -111,7 +111,7 @@ public class AlunoController {
 
             return ResponseEntity.noContent().build();
         }
-        throw new AlunoNaoEncontradoException();
+        throw new RecursoNaoEncontradoException("Aluno não encontrado.");
     }
 
 }

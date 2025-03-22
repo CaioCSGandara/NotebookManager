@@ -24,7 +24,7 @@ public class AlunoControllerFailureTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void naoRetornaAlunoComRaInvalido() {
+    void naoRetornaAlunoComIdInvalido() {
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos/96", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
