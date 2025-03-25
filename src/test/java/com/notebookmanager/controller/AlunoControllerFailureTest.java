@@ -2,8 +2,10 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
 import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.enums.Curso;
+import org.hibernate.validator.internal.metadata.location.ParameterConstraintLocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,12 +33,7 @@ public class AlunoControllerFailureTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status = documentContext.read("$.status");
-
-        assertThat(status).isEqualTo("NOT_FOUND");
-
-        String message =  documentContext.read("$.message");
-        assertThat(message).isEqualTo("Aluno não encontrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "NOT_FOUND");
 
     }
 
@@ -50,11 +47,7 @@ public class AlunoControllerFailureTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("CONFLICT");
-
-        String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("O Aluno com este RA já está cadastrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "CONFLICT");
     }
 
 
@@ -72,11 +65,7 @@ public class AlunoControllerFailureTest {
 
         DocumentContext documentContext =  JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("NOT_FOUND");
-
-        String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("Aluno não encontrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "NOT_FOUND");
     }
 
 
@@ -88,11 +77,7 @@ public class AlunoControllerFailureTest {
 
         DocumentContext documentContext =  JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("NOT_FOUND");
-
-        String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("Aluno não encontrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "NOT_FOUND");
     }
 
     // TESTES DE VALIDAÇÃO DE BODY:
@@ -211,8 +196,8 @@ public class AlunoControllerFailureTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status = documentContext.read("$.status");
-        assertThat(status).isEqualTo("BAD_REQUEST");
+        PayloadValidator.validateErrorPayload(documentContext, "BAD_REQUEST");
+
         String message = documentContext.read("$.message");
         assertThat(message).isEqualTo(errorMessage);
     }

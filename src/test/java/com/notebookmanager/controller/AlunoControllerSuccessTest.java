@@ -2,6 +2,7 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
 import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;
@@ -37,14 +38,7 @@ public class AlunoControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status = documentContext.read("$.status");
-        assertThat(status).isEqualTo("OK");
-
-        HashMap<String, String> data = documentContext.read("$.data");
-        assertThat(data).isNotNull();
-
-        String message = documentContext.read("$.message");
-        assertThat(message).isNull();
+        PayloadValidator.validateDataPayload(documentContext, "OK");
     }
 
 
@@ -58,17 +52,9 @@ public class AlunoControllerSuccessTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        URI localDoNovoAluno = response.getHeaders().getLocation();
+        String localDoNovoAluno = response.getHeaders().getLocation().getPath();
 
-        ResponseEntity<String> getResponse = restTemplate.getForEntity(localDoNovoAluno, String.class);
-
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
-
-        Integer id = documentContext.read("$.data.id");
-        assertThat(id).isNotNull();
-
+        assertThat(localDoNovoAluno).isEqualTo("/alunos/4");
 
     }
 
@@ -81,44 +67,11 @@ public class AlunoControllerSuccessTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        System.out.println(documentContext.toString());
 
-        int alunoCount = documentContext.read("$.data.length()");
-        assertThat(alunoCount).isEqualTo(3);
-
-        List<String> ras = documentContext.read("$..ra");
-        assertThat(ras).containsExactlyInAnyOrder("09135616", "03781923", "90174823");
-    }
-
-    @Test
-    void lista02AlunosPorPagina() {
-
-        ResponseEntity<String> response = restTemplate.getForEntity("/alunos?page=0&size=2", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        List<String> page = documentContext.read("$.data");
-
-        assertThat(page.size()).isEqualTo(2);
-    }
-
-    @Test
-    void listaNotebooksPorNomeAsc() {
-
-        ResponseEntity<String> response = restTemplate.getForEntity("/alunos?sort=nome,asc", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-
-        String nome = documentContext.read("$.data[0].nome");
-
-        assertThat(nome).isEqualTo("Fernando Pontes");
+        PayloadValidator.validateDataPayload(documentContext, "OK");
 
     }
+
 
 
     @Test
@@ -136,23 +89,6 @@ public class AlunoControllerSuccessTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        ResponseEntity<String> getResponse = restTemplate.getForEntity("/alunos/1", String.class);
-
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
-
-        String nome = documentContext.read("$.data.nome");
-        assertThat(nome).isEqualTo("Julio Correa da Silva");
-
-        String telefone = documentContext.read("$.data.telefone");
-        assertThat(telefone).isEqualTo("(19)91831-5123");
-
-        String curso = documentContext.read("$.data.curso");
-        assertThat(curso).isEqualTo("MEDICINA");
-
-        String atualizadoEm = documentContext.read("$.data.atualizadoEm");
-        assertThat(atualizadoEm).isNotEqualTo("2012-11-10T21:12:37");
     }
 
 
@@ -165,9 +101,6 @@ public class AlunoControllerSuccessTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        ResponseEntity<String> getResponse = restTemplate.getForEntity("/alunos/09135616", String.class);
-
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 

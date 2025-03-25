@@ -46,6 +46,9 @@ public class AlunoServiceSuccessTest {
     void listaAlunosDefault() {
         List<Aluno> listaAlunos = alunoService.listaPaginaDeAlunos(PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nome")));
         assertThat(listaAlunos.size()).isEqualTo(3);
+        assertThat(listaAlunos.get(0).getRa()).isEqualTo("90174823");
+        assertThat(listaAlunos.get(1).getRa()).isEqualTo("09135616");
+        assertThat(listaAlunos.get(2).getRa()).isEqualTo("03781923");
     }
 
     @Test
