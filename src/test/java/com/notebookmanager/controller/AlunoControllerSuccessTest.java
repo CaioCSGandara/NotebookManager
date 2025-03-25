@@ -16,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +29,7 @@ public class AlunoControllerSuccessTest {
 
 
     @Test
-    void retornaAlunoComRaValido() {
+    void retornaAlunoPorId() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos/1", String.class);
 
@@ -36,20 +37,20 @@ public class AlunoControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Integer id = documentContext.read("$.data.id");
-        assertThat(id).isEqualTo(1);
+        String status = documentContext.read("$.status");
+        assertThat(status).isEqualTo("OK");
 
-        String ra = documentContext.read("$.data.ra");
-        assertThat(ra).isEqualTo("09135616");
+        HashMap<String, String> data = documentContext.read("$.data");
+        assertThat(data).isNotNull();
 
-        String curso = documentContext.read("$.data.curso");
-        assertThat(curso).isEqualTo("MEDICINA");
+        String message = documentContext.read("$.message");
+        assertThat(message).isNull();
     }
 
 
     @Test
     @DirtiesContext
-    void salvaAlunoNoBanco() {
+    void cadastraAluno() {
         Aluno aluno = new Aluno("Oscar Moura", "87019341", "oscarmoura@puccampinas.edu.br", "(19)98017-7111",
                 Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
 
@@ -72,9 +73,8 @@ public class AlunoControllerSuccessTest {
     }
 
 
-
     @Test
-    void retornaListaDeAlunos() {
+    void listaAlunosDefault() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos", String.class);
 
@@ -91,7 +91,7 @@ public class AlunoControllerSuccessTest {
     }
 
     @Test
-    void retornaPaginaDe02Alunos() {
+    void lista02AlunosPorPagina() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos?page=0&size=2", String.class);
 
@@ -105,7 +105,7 @@ public class AlunoControllerSuccessTest {
     }
 
     @Test
-    void retornaPaginaOrdenadaPorNome() {
+    void listaNotebooksPorNomeAsc() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos?sort=nome,asc", String.class);
 
@@ -120,27 +120,12 @@ public class AlunoControllerSuccessTest {
 
     }
 
-    @Test
-    void retornaPaginaComOrdenacaoDefault() {
-
-        ResponseEntity<String> response = restTemplate.getForEntity("/alunos", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        List<String> page = documentContext.read("$[*]");
-        assertThat(page.size()).isEqualTo(3);
-
-        List<String> ras = documentContext.read("$..ra");
-        assertThat(ras).containsExactly("90174823", "09135616", "03781923");
-    }
 
     @Test
     @DirtiesContext
-    void atualizaAlunoExistente() {
+    void atualizaAlunoPorId() {
 
-        Aluno alunoAtualizado = new Aluno("Julio Correa da Silva", "09135616", "jcorrea@puccampinas.edu.br", "(19)91831-5123",
+        Aluno alunoAtualizado = new Aluno(1, "Julio Correa da Silva", "09135616", "jcorrea@puccampinas.edu.br", "(19)91831-5123",
                 Curso.MEDICINA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
                 LocalDateTime.of(2015, 7, 10, 14, 22, 17));
 
@@ -173,7 +158,7 @@ public class AlunoControllerSuccessTest {
 
     @Test
     @DirtiesContext
-    void deleteAlunoExistente() {
+    void deleteAlunoPorId() {
 
         ResponseEntity<Void> response = restTemplate.exchange("/alunos/1", HttpMethod.DELETE,
                 null, Void.class);

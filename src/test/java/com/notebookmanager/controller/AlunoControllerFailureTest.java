@@ -60,7 +60,7 @@ public class AlunoControllerFailureTest {
 
     @Test
     void naoAtualizaAlunoNaoExistente() {
-        Aluno aluno = new Aluno("Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
+        Aluno aluno = new Aluno(90, "Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
                 Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
                 LocalDateTime.of(2012, 11, 10, 21, 12, 37));
         HttpEntity<Aluno> request = new HttpEntity<>(aluno);
@@ -81,7 +81,7 @@ public class AlunoControllerFailureTest {
 
 
     @Test
-    void naoDeleteAlunoNaoExistente() {
+    void naoDeletaAlunoNaoExistente() {
         ResponseEntity<String> response = restTemplate.exchange("/alunos/31", HttpMethod.DELETE,
                 null, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -110,8 +110,8 @@ public class AlunoControllerFailureTest {
 
             HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
 
         }
     }
@@ -127,8 +127,8 @@ public class AlunoControllerFailureTest {
 
             HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
 
         }
     }
@@ -144,8 +144,8 @@ public class AlunoControllerFailureTest {
 
             HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
 
         }
     }
@@ -161,8 +161,8 @@ public class AlunoControllerFailureTest {
 
             HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-            testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
 
         }
     }
@@ -175,8 +175,8 @@ public class AlunoControllerFailureTest {
 
         HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-        testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-        testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
     }
 
     @Test
@@ -186,8 +186,8 @@ public class AlunoControllerFailureTest {
 
         HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-        testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-        testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
     }
 
 
@@ -198,13 +198,13 @@ public class AlunoControllerFailureTest {
 
         HttpEntity<Aluno> request = new HttpEntity<>(aluno);
 
-        testaBodyAlunoInvalido("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-        testaBodyAlunoInvalido("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
     }
 
 
 
-    private void testaBodyAlunoInvalido(String url, HttpMethod method, HttpEntity<Aluno> request, String errorMessage) {
+    private void assertResponseParaPropriedadeInvalida(String url, HttpMethod method, HttpEntity<Aluno> request, String errorMessage) {
         ResponseEntity<String> response = restTemplate.exchange(url, method, request, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

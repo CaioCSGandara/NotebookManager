@@ -73,7 +73,7 @@ public class NotebookControllerFailureTest {
         String status =  documentContext.read("$.status");
         assertThat(status).isEqualTo("BAD_REQUEST");
 
-        String message = (String) documentContext.read("$.message");
+        String message = documentContext.read("$.message");
         assertThat(message).isEqualTo("Não é possível alterar o status enquanto notebook está emprestado.");
     }
 
