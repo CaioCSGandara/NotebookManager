@@ -51,7 +51,7 @@ public class AlunoService {
         Optional<Aluno> optAlunoAtualizado = alunoRepository.findById(id);
 
         if (optAlunoAtualizado.isEmpty()) {
-            throw new RecursoNaoEncontradoException("Aluno não encontrado");
+            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
         }
 
         Aluno alunoAtualizado = optAlunoAtualizado.get();
@@ -66,7 +66,7 @@ public class AlunoService {
 
     public void deletaAlunoPorId(Integer id) {
         if(!alunoRepository.existsById(id)) {
-            throw new RecursoNaoEncontradoException("Aluno não encontrado");
+            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
         }
         alunoRepository.deleteById(id);
     }
