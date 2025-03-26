@@ -3,11 +3,9 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
 import com.notebookmanager.model.updatefields.AlunoUpdateFields;
-import org.hibernate.validator.internal.metadata.location.ParameterConstraintLocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,10 +37,10 @@ public class AlunoControllerFailureTest {
 
     @Test
     void cadastrarAlunoPorIdStatus409() {
-        Aluno aluno = new Aluno("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br", "(19)94291-7013",
-                Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br",
+                "(19)94291-7013", Curso.NUTRICAO);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/alunos", aluno, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/alunos", alunoCreateFields, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -55,10 +51,8 @@ public class AlunoControllerFailureTest {
 
     @Test
     void atualizarAlunoPorIdStatus404() {
-        Aluno aluno = new Aluno(90, "Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
-                Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
-                LocalDateTime.of(2012, 11, 10, 21, 12, 37));
-        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA);
+        HttpEntity<AlunoUpdateFields> request = new HttpEntity<>(alunoUpdateFields);
 
         ResponseEntity<String> response = restTemplate.exchange("/alunos/90", HttpMethod.PUT,
                 request, String.class);
