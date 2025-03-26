@@ -2,6 +2,7 @@ package com.notebookmanager.contract;
 
 import com.notebookmanager.model.Payload;
 import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,10 @@ public class PayloadJsonTest {
     @Test
     void payloadSerializationTest() throws IOException {
 
-        Aluno aluno = new Aluno(1,"Caio Gandara", "22415616", "caio.cgs@puccampinas.edu.br", "(19)99414-8554",
-                Curso.ENFERMAGEM, LocalDateTime.of(2010, 12, 30, 12, 14, 22),
-                LocalDateTime.of(2010, 12, 30, 12, 14, 22));
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Caio Gandara", "22415616", "caio.cgs@puccampinas.edu.br", "(19)99414-8554",
+                Curso.ENFERMAGEM);
 
-        Payload payload = new Payload(HttpStatus.OK, aluno, null);
+        Payload payload = new Payload(HttpStatus.OK, alunoCreateFields, null);
 
         assertThat(json.write(payload)).isStrictlyEqualToJson("payload.json");
     }
