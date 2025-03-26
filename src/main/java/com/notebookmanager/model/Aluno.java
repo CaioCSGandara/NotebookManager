@@ -1,7 +1,6 @@
 package com.notebookmanager.model;
 
 import com.notebookmanager.model.enums.Curso;
-import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
@@ -13,28 +12,18 @@ public class Aluno implements Cloneable {
     @Id
     private Integer id;
 
-    @NotBlank @Size(min = 1, max = 30)
     private String nome;
 
-    @NotBlank
-    @Size(min = 8, max = 8)
     private String ra;
 
-    @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9._-]+@puccampinas\\.edu\\.br$")
     private String email;
 
-    @NotBlank
-    @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$")
     private String telefone;
 
-    @NotNull
     private Curso curso;
 
-    @NotNull
     private LocalDateTime ultimoLogin;
 
-    @NotNull
     private LocalDateTime atualizadoEm;
 
 

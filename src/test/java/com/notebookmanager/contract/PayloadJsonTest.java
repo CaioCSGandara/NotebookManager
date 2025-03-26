@@ -1,6 +1,6 @@
 package com.notebookmanager.contract;
 
-import com.notebookmanager.model.payload.Payload;
+import com.notebookmanager.model.Payload;
 import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;

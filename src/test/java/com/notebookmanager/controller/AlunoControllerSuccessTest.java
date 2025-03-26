@@ -4,7 +4,9 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
 import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
+import com.notebookmanager.model.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,10 +47,10 @@ public class AlunoControllerSuccessTest {
     @Test
     @DirtiesContext
     void cadastraAlunoStatus201() {
-        Aluno aluno = new Aluno("Oscar Moura", "87019341", "oscarmoura@puccampinas.edu.br", "(19)98017-7111",
-                Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Oscar Moura", "87019341", "oscarmoura@puccampinas.edu.br", "(19)98017-7111",
+                Curso.NUTRICAO);
 
-        ResponseEntity<Void> response = restTemplate.postForEntity("/alunos", aluno, Void.class);
+        ResponseEntity<Void> response = restTemplate.postForEntity("/alunos", alunoCreateFields, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -78,11 +80,10 @@ public class AlunoControllerSuccessTest {
     @DirtiesContext
     void atualizaAlunoPorIdStatus204() {
 
-        Aluno alunoAtualizado = new Aluno(1, "Julio Correa da Silva", "09135616", "jcorrea@puccampinas.edu.br", "(19)91831-5123",
-                Curso.MEDICINA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
-                LocalDateTime.of(2015, 7, 10, 14, 22, 17));
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Julio Correa da Silva", "(19)91831-5123",
+                Curso.MEDICINA);
 
-        HttpEntity<Aluno> request = new HttpEntity<>(alunoAtualizado);
+        HttpEntity<AlunoUpdateFields> request = new HttpEntity<>(alunoUpdateFields);
 
         ResponseEntity<Void> response = restTemplate.exchange("/alunos/1", HttpMethod.PUT,
                 request, Void.class);

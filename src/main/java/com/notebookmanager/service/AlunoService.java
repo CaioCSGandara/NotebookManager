@@ -3,7 +3,9 @@ package com.notebookmanager.service;
 import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.repositories.AlunoRepository;
+import com.notebookmanager.model.updatefields.AlunoUpdateFields;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +32,13 @@ public class AlunoService {
         return aluno.get();
     }
 
-    public Aluno cadastrarAluno(Aluno aluno) {
-        if(alunoRepository.existsByRa(aluno.getRa())) {
+    public Aluno cadastrarAluno(AlunoCreateFields alunoCreateFields) {
+        if(alunoRepository.existsByRa(alunoCreateFields.getRa())) {
             throw new RecursoJaExistenteException("O Aluno com este RA já está cadastrado.");
         }
+        
+        Aluno aluno = new Aluno(alunoCreateFields.getNome(), alunoCreateFields.getRa(), alunoCreateFields.getEmail(),
+                alunoCreateFields.getTelefone(), alunoCreateFields.getCurso(), LocalDateTime.now(), LocalDateTime.now());
         return alunoRepository.save(aluno);
     }
 
@@ -46,7 +52,7 @@ public class AlunoService {
         return alunoPage.getContent();
     }
     
-    public void atualizaDadosDoAlunoPorId(Integer id, Aluno alunoNovosDados) {
+    public void atualizaDadosDoAlunoPorId(Integer id, AlunoUpdateFields alunoUpdateFields) {
         
         Optional<Aluno> optAlunoAtualizado = alunoRepository.findById(id);
 
@@ -56,10 +62,10 @@ public class AlunoService {
 
         Aluno alunoAtualizado = optAlunoAtualizado.get();
 
-        alunoAtualizado.setNome(alunoNovosDados.getNome());
-        alunoAtualizado.setTelefone(alunoNovosDados.getTelefone());
-        alunoAtualizado.setCurso(alunoNovosDados.getCurso());
-        alunoAtualizado.setAtualizadoEm(alunoNovosDados.getAtualizadoEm());
+        alunoAtualizado.setNome(alunoUpdateFields.getNome());
+        alunoAtualizado.setTelefone(alunoUpdateFields.getTelefone());
+        alunoAtualizado.setCurso(alunoUpdateFields.getCurso());
+        alunoAtualizado.setAtualizadoEm(LocalDateTime.now());
         
         alunoRepository.save(alunoAtualizado);
     }

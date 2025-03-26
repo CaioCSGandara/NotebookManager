@@ -1,8 +1,10 @@
 package com.notebookmanager.controller;
 
 import com.notebookmanager.infra.exception.ValidationException;
-import com.notebookmanager.model.payload.Payload;
+import com.notebookmanager.model.Payload;
 import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
+import com.notebookmanager.model.updatefields.AlunoUpdateFields;
 import com.notebookmanager.service.AlunoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,12 +34,12 @@ public class AlunoController {
     }
 
     @PostMapping
-    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
+    private ResponseEntity<Void> createAluno(@RequestBody @Valid AlunoCreateFields alunoCreateFields, BindingResult bindingResult, UriComponentsBuilder ucb) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException("Erro de validação ao criar aluno.");
         }
 
-        Aluno savedAluno = alunoService.cadastrarAluno(aluno);
+        Aluno savedAluno = alunoService.cadastrarAluno(alunoCreateFields);
 
         URI locationOfNewAluno = ucb
                 .path("alunos/{id}")
@@ -56,13 +58,13 @@ public class AlunoController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Void> updateAluno(@PathVariable Integer id, @RequestBody @Valid Aluno alunoNovosDados, BindingResult bindingResult) {
+    private ResponseEntity<Void> updateAluno(@PathVariable Integer id, @RequestBody @Valid AlunoUpdateFields alunoUpdateFields, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new ValidationException("Erro de validação ao atualizar o aluno.");
         }
 
-        alunoService.atualizaDadosDoAlunoPorId(id, alunoNovosDados);
+        alunoService.atualizaDadosDoAlunoPorId(id, alunoUpdateFields);
 
         return ResponseEntity.noContent().build();
     }

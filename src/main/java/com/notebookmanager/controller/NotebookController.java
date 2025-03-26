@@ -3,7 +3,7 @@ package com.notebookmanager.controller;
 import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.payload.Payload;
+import com.notebookmanager.model.Payload;
 import com.notebookmanager.service.NotebookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

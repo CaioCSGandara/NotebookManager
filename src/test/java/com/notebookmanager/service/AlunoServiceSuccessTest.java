@@ -2,8 +2,10 @@ package com.notebookmanager.service;
 
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
 import com.notebookmanager.model.repositories.AlunoRepository;
+import com.notebookmanager.model.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,11 +37,12 @@ public class AlunoServiceSuccessTest {
     @Test
     @DirtiesContext
     void cadastraAluno() {
-        Aluno aluno = new Aluno("Mario Souza", "09318492", "marios2@puccampinas.edu.br", "(19)99083-2415",
-                Curso.MEDICINA_VETERINARIA, LocalDateTime.now(), LocalDateTime.now());
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Mario Souza", "09318492", "marios2@puccampinas.edu.br", "(19)99083-2415",
+                Curso.MEDICINA_VETERINARIA);
 
-        Aluno alunoCadastrado = alunoService.cadastrarAluno(aluno);
-        assertEquals(aluno, alunoCadastrado);
+        Aluno alunoCadastrado = alunoService.cadastrarAluno(alunoCreateFields);
+
+        assertThat(alunoCadastrado.getNome()).isEqualTo(alunoCreateFields.getNome());
     }
 
     @Test
@@ -63,14 +66,16 @@ public class AlunoServiceSuccessTest {
     @Test
     @DirtiesContext
     void atualizaAlunoPorId() {
-        Aluno aluno = new Aluno(1,"Julio Correa das Neves", "09135616", "jcorrea@puccampinas.edu.br", "(19)98312-3215",
-                Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37), LocalDateTime.of(2015, 11, 10, 21, 12, 37));
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Julio Correa das Neves", "(19)98312-3215",
+                Curso.ODONTOLOGIA);
 
-        alunoService.atualizaDadosDoAlunoPorId(aluno.getId(), aluno);
+        alunoService.atualizaDadosDoAlunoPorId(1, alunoUpdateFields);
 
-        Aluno alunoAtualizado = alunoService.encontrarAlunoPorId(aluno.getId());
+        Aluno alunoAtualizado = alunoService.encontrarAlunoPorId(1);
 
-        assertEquals(aluno, alunoAtualizado);
+        assertThat(alunoAtualizado.getNome()).isEqualTo(alunoUpdateFields.getNome());
+        assertThat(alunoAtualizado.getTelefone()).isEqualTo(alunoUpdateFields.getTelefone());
+        assertThat(alunoAtualizado.getCurso()).isEqualTo(alunoUpdateFields.getCurso());
     }
 
     @Test
