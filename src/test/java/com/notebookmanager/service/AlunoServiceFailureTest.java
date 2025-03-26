@@ -65,4 +65,6 @@ public class AlunoServiceFailureTest {
         assertThat(exception.getMessage()).isEqualTo("Aluno não encontrado.");
     }
 
+
+
 }

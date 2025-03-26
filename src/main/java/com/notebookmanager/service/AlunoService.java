@@ -48,8 +48,14 @@ public class AlunoService {
     
     public void atualizaDadosDoAlunoPorId(Integer id, Aluno alunoNovosDados) {
         
-        Aluno alunoAtualizado = encontrarAlunoPorId(id);
-        
+        Optional<Aluno> optAlunoAtualizado = alunoRepository.findById(id);
+
+        if (optAlunoAtualizado.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Aluno não encontrado");
+        }
+
+        Aluno alunoAtualizado = optAlunoAtualizado.get();
+
         alunoAtualizado.setNome(alunoNovosDados.getNome());
         alunoAtualizado.setTelefone(alunoNovosDados.getTelefone());
         alunoAtualizado.setCurso(alunoNovosDados.getCurso());
@@ -59,7 +65,9 @@ public class AlunoService {
     }
 
     public void deletaAlunoPorId(Integer id) {
-        encontrarAlunoPorId(id);
+        if(!alunoRepository.existsById(id)) {
+            throw new RecursoNaoEncontradoException("Aluno não encontrado");
+        }
         alunoRepository.deleteById(id);
     }
 }
