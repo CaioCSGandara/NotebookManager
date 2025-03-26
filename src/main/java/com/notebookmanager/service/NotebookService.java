@@ -72,6 +72,10 @@ public class NotebookService {
             throw new ValidationException("Para tornar um notebook EMPRESTADO ou AFASTADO, ele deve estar DISPONIVEL.");
         }
 
+        if(statusAtualizado.equals(StatusNotebook.EMPRESTADO)) {
+            notebookExistente.setQtdEmprestimos(notebookExistente.getQtdEmprestimos()+1);
+        }
+
         notebookExistente.setStatus(statusAtualizado);
         notebookExistente.setAtualizadoEm(LocalDateTime.now());
         notebookRepository.save(notebookExistente);
