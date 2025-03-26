@@ -1,11 +1,10 @@
 package com.notebookmanager.service;
 
-import com.notebookmanager.exception.RecursoJaExistenteException;
-import com.notebookmanager.exception.RecursoNaoEncontradoException;
-import com.notebookmanager.exception.ValidationException;
+import com.notebookmanager.infra.exception.RecursoJaExistenteException;
+import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
+import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.repositories.AlunoRepository;
 import com.notebookmanager.model.repositories.NotebookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

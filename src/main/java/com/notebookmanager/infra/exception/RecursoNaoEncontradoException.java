@@ -1,4 +1,4 @@
-package com.notebookmanager.exception;
+package com.notebookmanager.infra.exception;
 
 public class RecursoNaoEncontradoException extends RuntimeException {
   public RecursoNaoEncontradoException(String message) {

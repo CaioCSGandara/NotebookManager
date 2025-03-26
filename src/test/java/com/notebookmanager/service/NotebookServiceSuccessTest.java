@@ -1,6 +1,6 @@
 package com.notebookmanager.service;
 
-import com.notebookmanager.exception.RecursoNaoEncontradoException;
+import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.repositories.NotebookRepository;

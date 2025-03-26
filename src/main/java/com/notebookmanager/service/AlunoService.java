@@ -1,7 +1,7 @@
 package com.notebookmanager.service;
 
-import com.notebookmanager.exception.RecursoJaExistenteException;
-import com.notebookmanager.exception.RecursoNaoEncontradoException;
+import com.notebookmanager.infra.exception.RecursoJaExistenteException;
+import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import lombok.AllArgsConstructor;

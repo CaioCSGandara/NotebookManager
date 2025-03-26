@@ -1,18 +1,12 @@
 package com.notebookmanager.controller;
 
-import com.notebookmanager.exception.RecursoJaExistenteException;
-import com.notebookmanager.exception.RecursoNaoEncontradoException;
-import com.notebookmanager.exception.ValidationException;
+import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.payload.Payload;
 import com.notebookmanager.model.Aluno;
-import com.notebookmanager.model.repositories.AlunoRepository;
 import com.notebookmanager.service.AlunoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
