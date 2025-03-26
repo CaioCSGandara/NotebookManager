@@ -1,8 +1,8 @@
-package com.notebookmanager.exceptionhandler;
+package com.notebookmanager.infra.exceptionhandler;
 
-import com.notebookmanager.exception.RecursoJaExistenteException;
-import com.notebookmanager.exception.RecursoNaoEncontradoException;
-import com.notebookmanager.exception.ValidationException;
+import com.notebookmanager.infra.exception.RecursoJaExistenteException;
+import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
+import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.payload.Payload;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

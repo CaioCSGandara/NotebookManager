@@ -1,4 +1,4 @@
-package com.notebookmanager.exception;
+package com.notebookmanager.infra.exception;
 
 public class ValidationException extends RuntimeException {
     public ValidationException(String message) {

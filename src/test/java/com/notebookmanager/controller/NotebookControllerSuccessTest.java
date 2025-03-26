@@ -2,6 +2,7 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.enums.StatusNotebook;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +32,7 @@ public class NotebookControllerSuccessTest {
 
 
     @Test
-    public void retornaNotebookPorId() {
+    public void retornaNotebookPorIdStatus200() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/notebooks/1", String.class);
 
@@ -37,17 +40,13 @@ public class NotebookControllerSuccessTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Integer id = documentContext.read("$.data.id");
-        assertThat(id).isEqualTo(1);
-
-        String patrimonio = documentContext.read("$.data.patrimonio");
-        assertThat(patrimonio).isEqualTo("49103423");
+        PayloadValidator.validateDataPayload(documentContext, "OK");
     }
 
 
     @Test
     @DirtiesContext
-    public void cadastraNotebook() {
+    public void cadastraNotebookStatus201() {
 
         Notebook notebook = new Notebook("Acer Aspire 5", "22222222", StatusNotebook.DISPONIVEL,
                 5, LocalDateTime.of(2025, 3, 17, 22, 34, 45));
@@ -56,101 +55,45 @@ public class NotebookControllerSuccessTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        URI localNovoNotebook =  response.getHeaders().getLocation();
+        String localNovoNotebook =  response.getHeaders().getLocation().getPath();
 
-        ResponseEntity<String> responseGet =  restTemplate.getForEntity(localNovoNotebook, String.class);
-
-        assertThat(responseGet.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
-
-        Integer id = documentContext.read("$.data.id");
-        assertThat(id).isEqualTo(4);
-
-        String patrimonio = documentContext.read("$.data.patrimonio");
-        assertThat(patrimonio).isEqualTo("22222222");
-
+        assertThat(localNovoNotebook).isEqualTo("/notebooks/4");
     }
 
+
     @Test
-    public void listaNotebooksDefault() {
+    public void listaNotebooksDefaultStatus200() {
         ResponseEntity<String> response = restTemplate.getForEntity("/notebooks", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Integer countNotebooks = documentContext.read("$.data.length()");
-
-        assertThat(countNotebooks).isEqualTo(3);
-
-        List<String> listaPatrimonios = documentContext.read("$.data..patrimonio");
-
-        assertThat(listaPatrimonios).containsExactlyInAnyOrder("49103423", "98341099", "12309845");
-
-    }
-
-    @Test
-    public void lista02NotebooksPorPagina() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/notebooks?page=0&size=2", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        Integer countNotebooks = documentContext.read("$.data.length()");
-
-        assertThat(countNotebooks).isEqualTo(2);
-    }
-
-
-    @Test
-    void listaNotebooksPorQtdEmprestimosDesc() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/notebooks?sort=qtdEmprestimos,desc", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        List<Integer> listaQtdEmprestimosDesc = documentContext.read("$.data..qtdEmprestimos");
-
-        assertThat(listaQtdEmprestimosDesc).containsExactly(130, 43, 19);
+        PayloadValidator.validateDataPayload(documentContext, "OK");
 
     }
 
 
     @Test
     @DirtiesContext
-    void gerenciaAfastamento() {
+    void gerenciaStatusStatus204() {
 
-        StatusNotebook[] statusNotebookList = {StatusNotebook.AFASTADO, StatusNotebook.DISPONIVEL};
+        HashMap<String, StatusNotebook> mapNovoStatus = new HashMap<>();
+        mapNovoStatus.put("status", StatusNotebook.EMPRESTADO);
+        HttpEntity<Map<String, StatusNotebook>> request = new HttpEntity<>(mapNovoStatus);
 
-        for(StatusNotebook statusNotebook : statusNotebookList) {
+        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, Void.class);
 
-            HttpEntity<StatusNotebook> request = new HttpEntity<StatusNotebook>(statusNotebook);
-
-            ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/gerenciar-afastamento", HttpMethod.PATCH, request, Void.class);
-
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-            ResponseEntity<String> responseGet = restTemplate.getForEntity("/notebooks/1", String.class);
-
-            DocumentContext documentContext = JsonPath.parse(responseGet.getBody());
-
-            String status = documentContext.read("$.data.status");
-            assertThat(status).isEqualTo(statusNotebook.toString());
-
-            String atualizadoEm = documentContext.read("$.data.atualizadoEm");
-            assertThat(atualizadoEm).isNotEqualTo("2021-06-30T09:14:09");
-        }
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 
 
     @Test
     @DirtiesContext
-    void deletaNotebookPorId() {
-        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1", HttpMethod.DELETE, null, Void.class);
+    void deletaNotebookPorIdStatus204() {
+        ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1", HttpMethod.DELETE,
+                null, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

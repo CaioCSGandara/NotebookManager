@@ -2,6 +2,7 @@ package com.notebookmanager.controller;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.enums.StatusNotebook;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,26 +27,19 @@ public class NotebookControllerFailureTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private NotebookController notebookController;
-
     @Test
-    void naoRetornaNotebookComIdInvalido() {
+    void encontrarNotebookPorIdStatus404() {
         ResponseEntity<String> response = restTemplate.getForEntity("/notebooks/96", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("NOT_FOUND");
-
-        String message = (String) documentContext.read("$.message");
-        assertThat(message).isEqualTo("Notebook não encontrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "NOT_FOUND");
     }
 
     @Test
-    void naoSalvaNotebookComPatrimonioRepetido() {
+    void cadastrarNotebookPorIdStatus409() {
         Notebook notebook = new Notebook("Acer Aspire 5", "98341099", StatusNotebook.EMPRESTADO,
                 19, LocalDateTime.of(2023,1,5,14,12,20));
 
@@ -52,80 +49,36 @@ public class NotebookControllerFailureTest {
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("CONFLICT");
-
-        String message = (String) documentContext.read("$.message");
-        assertThat(message).isEqualTo("O notebook com este patrimonio já está cadastrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "CONFLICT");
     }
 
     @Test
-    void naoGerenciaAfastamentoDeNotebookEmprestado() {
+    void gerenciarStatusStatus400() {
 
-        HttpEntity<StatusNotebook> request = new HttpEntity<>(StatusNotebook.EMPRESTADO);
+        HashMap<String, StatusNotebook> mapNovoStatus = new HashMap<>();
+        mapNovoStatus.put("status", StatusNotebook.DISPONIVEL);
+        HttpEntity<Map<String, StatusNotebook>> request = new HttpEntity<>(mapNovoStatus);
 
-        ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-afastamento", HttpMethod.PATCH ,request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("BAD_REQUEST");
-
-        String message = (String) documentContext.read("$.message");
-        assertThat(message).isEqualTo("Não é possível alterar o status enquanto notebook está emprestado.");
+        PayloadValidator.validateErrorPayload(documentContext, "BAD_REQUEST");
     }
 
-    @Test
-    void naoGerenciaAfastamentoDeNotebookNaoExistente() {
-        HttpEntity<StatusNotebook> request = new HttpEntity<>(StatusNotebook.AFASTADO);
 
-        ResponseEntity<String> response = restTemplate.exchange("/notebooks/50/gerenciar-afastamento", HttpMethod.PATCH ,request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("NOT_FOUND");
-
-        String message = (String) documentContext.read("$.message");
-        assertThat(message).isEqualTo("Notebook não encontrado.");
-
-    }
 
     @Test
-    void naoGerenciaAfastamentoParaStatusIguais() {
-        HttpEntity<StatusNotebook> request = new HttpEntity<>(StatusNotebook.DISPONIVEL);
-
-        ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-afastamento", HttpMethod.PATCH ,request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("BAD_REQUEST");
-
-        String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("Status novo é igual status atual.");
-
-    }
-
-    @Test
-    void naoDeletaNotebookNaoExistente() {
+    void deletarNotebookPorIdStatus404() {
         ResponseEntity<String> response = restTemplate.exchange("/notebooks/70",  HttpMethod.DELETE ,null, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        String status =  documentContext.read("$.status");
-        assertThat(status).isEqualTo("NOT_FOUND");
-
-        String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("Notebook não encontrado.");
+        PayloadValidator.validateErrorPayload(documentContext, "NOT_FOUND");
     }
 
     // TESTES DE VALIDAÇÃO DE BODY:

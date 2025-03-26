@@ -1,16 +1,12 @@
 package com.notebookmanager.controller;
 
-import com.notebookmanager.exception.RecursoJaExistenteException;
-import com.notebookmanager.exception.RecursoNaoEncontradoException;
-import com.notebookmanager.exception.ValidationException;
+import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.payload.Payload;
 import com.notebookmanager.model.Aluno;
-import com.notebookmanager.model.repositories.AlunoRepository;
+import com.notebookmanager.service.AlunoService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,41 +14,30 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
+import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/alunos")
 public class AlunoController {
 
-    private final AlunoRepository alunoRepository;
-
-    private AlunoController(AlunoRepository alunoRepository) {
-        this.alunoRepository = alunoRepository;
-    }
+    private final AlunoService alunoService;
 
 
     @GetMapping("/{id}")
-    private ResponseEntity<Payload> findById(@PathVariable Integer id) {
+    private ResponseEntity<Payload> findAlunoById(@PathVariable Integer id) {
 
-        Optional<Aluno> aluno = alunoRepository.findById(id);
-        if(aluno.isEmpty()) {
-            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
-        }
-        Payload payload = new Payload(HttpStatus.OK, aluno.get(), null);
-        return ResponseEntity.ok(payload);
-
+        Aluno aluno = alunoService.encontrarAlunoPorId(id);
+        return ResponseEntity.ok(new Payload(HttpStatus.OK, aluno, null));
     }
 
     @PostMapping
-    private ResponseEntity<Payload> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
-        if(bindingResult.hasErrors()) {
+    private ResponseEntity<Void> createAluno(@RequestBody @Valid Aluno aluno, BindingResult bindingResult, UriComponentsBuilder ucb) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationException("Erro de validação ao criar aluno.");
         }
-        if(alunoRepository.existsByRa(aluno.getRa())) {
-            throw new RecursoJaExistenteException("O Aluno com este RA já está cadastrado.");
-        }
 
-        Aluno savedAluno = alunoRepository.save(aluno);
+        Aluno savedAluno = alunoService.cadastrarAluno(aluno);
 
         URI locationOfNewAluno = ucb
                 .path("alunos/{id}")
@@ -64,54 +49,30 @@ public class AlunoController {
 
 
     @GetMapping
-    private ResponseEntity<Payload> findAll(Pageable pageable)
-    {
-        Page<Aluno> alunoPage = alunoRepository.findAll(PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "nome"))));
+    private ResponseEntity<Payload> findAllAlunos(Pageable pageable) {
 
-        Payload payload = new Payload(HttpStatus.OK, alunoPage.getContent(), null);
-        return ResponseEntity.ok(payload);
+        List<Aluno> page = alunoService.listaPaginaDeAlunos(pageable);
+        return ResponseEntity.ok(new Payload(HttpStatus.OK, page, null));
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Void> updateAluno(@RequestBody @Valid Aluno alunoUpdate, BindingResult bindingResult) {
+    private ResponseEntity<Void> updateAluno(@PathVariable Integer id, @RequestBody @Valid Aluno alunoNovosDados, BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationException("Erro de validação ao atualizar o aluno.");
         }
 
-        Optional<Aluno> aluno = alunoRepository.findByRa(alunoUpdate.getRa());
-        if(aluno.isEmpty()) {
-            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
-    }
-        Aluno alunoAtualizado = new Aluno(
-                aluno.get().getId(),
-                alunoUpdate.getNome(),
-                aluno.get().getRa(),
-                aluno.get().getEmail(),
-                alunoUpdate.getTelefone(),
-                alunoUpdate.getCurso(),
-                aluno.get().getUltimoLogin(),
-                alunoUpdate.getAtualizadoEm()
-        );
-
-        alunoRepository.save(alunoAtualizado);
+        alunoService.atualizaDadosDoAlunoPorId(id, alunoNovosDados);
 
         return ResponseEntity.noContent().build();
-}
+    }
 
 
     @DeleteMapping("/{id}")
     private ResponseEntity<Void> deleteAluno(@PathVariable Integer id) {
 
-        if(alunoRepository.existsById(id)) {
-            alunoRepository.deleteById(id);
+        alunoService.deletaAlunoPorId(id);
+        return ResponseEntity.noContent().build();
 
-            return ResponseEntity.noContent().build();
-        }
-        throw new RecursoNaoEncontradoException("Aluno não encontrado.");
     }
-
 }
