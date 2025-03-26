@@ -30,7 +30,7 @@ public class AlunoControllerSuccessTest {
 
 
     @Test
-    void retornaAlunoPorId() {
+    void retornaAlunoPorIdStatus200() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos/1", String.class);
 
@@ -44,7 +44,7 @@ public class AlunoControllerSuccessTest {
 
     @Test
     @DirtiesContext
-    void cadastraAluno() {
+    void cadastraAlunoStatus201() {
         Aluno aluno = new Aluno("Oscar Moura", "87019341", "oscarmoura@puccampinas.edu.br", "(19)98017-7111",
                 Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
 
@@ -60,7 +60,7 @@ public class AlunoControllerSuccessTest {
 
 
     @Test
-    void listaAlunosDefault() {
+    void listaAlunosDefaultStatus200() {
 
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos", String.class);
 
@@ -76,7 +76,7 @@ public class AlunoControllerSuccessTest {
 
     @Test
     @DirtiesContext
-    void atualizaAlunoPorId() {
+    void atualizaAlunoPorIdStatus204() {
 
         Aluno alunoAtualizado = new Aluno(1, "Julio Correa da Silva", "09135616", "jcorrea@puccampinas.edu.br", "(19)91831-5123",
                 Curso.MEDICINA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
@@ -94,7 +94,7 @@ public class AlunoControllerSuccessTest {
 
     @Test
     @DirtiesContext
-    void deleteAlunoPorId() {
+    void deleteAlunoPorIdStatus204() {
 
         ResponseEntity<Void> response = restTemplate.exchange("/alunos/1", HttpMethod.DELETE,
                 null, Void.class);

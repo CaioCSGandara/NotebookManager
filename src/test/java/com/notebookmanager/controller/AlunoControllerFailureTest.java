@@ -26,7 +26,7 @@ public class AlunoControllerFailureTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void naoRetornaAlunoComIdInvalido() {
+    void encontrarAlunoPorIdStatus404() {
         ResponseEntity<String> response = restTemplate.getForEntity("/alunos/96", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ public class AlunoControllerFailureTest {
     }
 
     @Test
-    void naoSalvaAlunoComRaRepetido() {
+    void cadastrarAlunoPorIdStatus409() {
         Aluno aluno = new Aluno("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br", "(19)94291-7013",
                 Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
 
@@ -52,7 +52,7 @@ public class AlunoControllerFailureTest {
 
 
     @Test
-    void naoAtualizaAlunoNaoExistente() {
+    void atualizarAlunoPorIdStatus404() {
         Aluno aluno = new Aluno(90, "Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
                 Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
                 LocalDateTime.of(2012, 11, 10, 21, 12, 37));
@@ -70,7 +70,7 @@ public class AlunoControllerFailureTest {
 
 
     @Test
-    void naoDeletaAlunoNaoExistente() {
+    void deletarAlunoPorIdStatus404() {
         ResponseEntity<String> response = restTemplate.exchange("/alunos/31", HttpMethod.DELETE,
                 null, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

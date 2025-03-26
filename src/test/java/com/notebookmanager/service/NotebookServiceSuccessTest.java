@@ -48,6 +48,7 @@ public class NotebookServiceSuccessTest {
                 0,
                 10,
                 Sort.by(Sort.Direction.ASC, "status")));
+        assertThat(listaNotebooks.size()).isEqualTo(3);
         assertThat(listaNotebooks.get(0).getPatrimonio()).isEqualTo("12309845");
         assertThat(listaNotebooks.get(1).getPatrimonio()).isEqualTo("49103423");
         assertThat(listaNotebooks.get(2).getPatrimonio()).isEqualTo("98341099");

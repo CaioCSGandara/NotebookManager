@@ -8,6 +8,8 @@ import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.payload.Payload;
 import com.notebookmanager.model.repositories.AlunoRepository;
 import com.notebookmanager.model.repositories.NotebookRepository;
+import com.notebookmanager.service.AlunoService;
+import com.notebookmanager.service.NotebookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -29,17 +33,13 @@ import java.util.Optional;
 @RequestMapping("/notebooks")
 public class NotebookController {
 
-    private final NotebookRepository notebookRepository;
+    private final NotebookService notebookService;
 
     @GetMapping("/{id}")
     private ResponseEntity<Payload> findById(@PathVariable Integer id) {
 
-        Optional<Notebook> notebook = notebookRepository.findById(id);
-        if (notebook.isEmpty()) {
-            throw new RecursoNaoEncontradoException("Notebook não encontrado.");
-        }
-        Payload payload = new Payload(HttpStatus.OK, notebook.get(), null);
-        return ResponseEntity.ok(payload);
+        Notebook notebook = notebookService.encontraNotebookPorId(id);
+        return ResponseEntity.ok(new Payload(HttpStatus.OK, notebook, null));
 
     }
 
@@ -50,11 +50,7 @@ public class NotebookController {
             throw new ValidationException("Erro de validação ao criar notebook.");
         }
 
-        if(notebookRepository.existsByPatrimonio(notebook.getPatrimonio())) {
-            throw new RecursoJaExistenteException("O notebook com este patrimonio já está cadastrado.");
-        }
-
-        Notebook savedNotebook = notebookRepository.save(notebook);
+        Notebook savedNotebook = notebookService.cadastrarNotebook(notebook);
 
         URI locationOfNewNotebook = ucb
                 .path("notebooks/{id}")
@@ -67,39 +63,17 @@ public class NotebookController {
 
     @GetMapping
     private ResponseEntity<Payload> listaNotebooks(Pageable pageable) {
-        Page<Notebook> notebooks = notebookRepository.findAll(PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                pageable.getSortOr(Sort.by(Sort.Direction.ASC,"status"))));
 
-        Payload payload = new Payload(HttpStatus.OK, notebooks.getContent(), null);
-        return  ResponseEntity.ok(payload);
+        List<Notebook> listaNotebooks = notebookService.listaPaginaDeNotebooks(pageable);
+        return  ResponseEntity.ok(new Payload(HttpStatus.OK, listaNotebooks, null));
 
     }
 
 
-    @PatchMapping("/{id}/gerenciar-afastamento")
-    private ResponseEntity<Payload> gerenciaAfastamentoNotebook(@PathVariable Integer id, @RequestBody StatusNotebook novoStatus) {
+    @PatchMapping("/{id}/gerenciar-status")
+    private ResponseEntity<Payload> gerenciaAfastamentoNotebook(@PathVariable Integer id, @RequestBody Map<String, StatusNotebook> mapNovoStatus) {
 
-        if(novoStatus.equals(StatusNotebook.EMPRESTADO)) {
-            throw new ValidationException("Não é possível alterar o status enquanto notebook está emprestado.");
-        }
-
-        Optional<Notebook> optNotebook = notebookRepository.findById(id);
-        if (optNotebook.isEmpty()) {
-            throw new RecursoNaoEncontradoException("Notebook não encontrado.");
-        }
-        Notebook notebook = optNotebook.get();
-
-        if(notebook.getStatus().equals(novoStatus)) {
-            throw new ValidationException("Status novo é igual status atual.");
-        }
-
-        notebook.setStatus(novoStatus);
-        notebook.setAtualizadoEm(LocalDateTime.now());
-
-        notebookRepository.save(notebook);
-
+        notebookService.alteraStatusNotebook(id, mapNovoStatus);
         return ResponseEntity.noContent().build();
     }
 
@@ -108,12 +82,7 @@ public class NotebookController {
     @DeleteMapping("/{id}")
     private ResponseEntity<Payload> deleteNotebook(@PathVariable Integer id) {
 
-        if(!notebookRepository.existsById(id)) {
-            throw new RecursoNaoEncontradoException("Notebook não encontrado.");
-        }
-
-        notebookRepository.deleteById(id);
-
+        notebookService.deletaNotebookPorId(id);
         return ResponseEntity.noContent().build();
     }
 }

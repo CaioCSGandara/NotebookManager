@@ -50,19 +50,19 @@ public class NotebookService {
         return notebookPage.getContent();
     }
 
-    public void alteraStatusNotebook(Integer id, Map<String, StatusNotebook> fields) {
+    public void alteraStatusNotebook(Integer id, Map<String, StatusNotebook> mapNovoStatus) {
         Optional<Notebook> optNotebook = notebookRepository.findById(id);
         if (optNotebook.isEmpty()) {
             throw new RecursoNaoEncontradoException("Notebook não encontrado.");
         }
         Notebook notebookExistente = optNotebook.get();
 
-        if (fields.get("status") == null) {
-            throw new ValidationException("Novo status não encontrado em: " + fields);
+        if (mapNovoStatus.get("status") == null) {
+            throw new ValidationException("Novo status deve ter o formato: {\"status\": \"AFASTADO\" ou \"EMPRESTADO\" ou \"DISPONIVEL\" } ");
         }
 
         StatusNotebook statusAtual = notebookExistente.getStatus();
-        StatusNotebook statusAtualizado = fields.get("status");
+        StatusNotebook statusAtualizado = mapNovoStatus.get("status");
 
         if (statusAtualizado.equals(StatusNotebook.DISPONIVEL) && statusAtual.equals(StatusNotebook.DISPONIVEL)) {
             throw new ValidationException("Para tornar um notebook DISPONIVEL, ele deve estar EMPRESTADO ou AFASTADO.");

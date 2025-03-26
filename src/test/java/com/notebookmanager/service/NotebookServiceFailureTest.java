@@ -80,7 +80,7 @@ public class NotebookServiceFailureTest {
             alunoService.alteraStatusNotebook(1, map);
                 });
 
-        assertThat(exception.getMessage()).isEqualTo("Novo status não encontrado em: {status=null}");
+        assertThat(exception.getMessage()).isEqualTo("Novo status deve ter o formato: {\"status\": \"AFASTADO\" ou \"EMPRESTADO\" ou \"DISPONIVEL\" } ");
     }
 
     @Test
