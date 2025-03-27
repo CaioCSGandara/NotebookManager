@@ -3,7 +3,6 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.updatefields.NotebookUpdateFields;
@@ -15,14 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

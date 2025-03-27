@@ -1,7 +1,6 @@
 package com.notebookmanager.model;
 
 import com.notebookmanager.model.enums.StatusNotebook;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

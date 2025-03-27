@@ -4,7 +4,6 @@ import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
 import com.notebookmanager.model.updatefields.AlunoUpdateFields;
-import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;

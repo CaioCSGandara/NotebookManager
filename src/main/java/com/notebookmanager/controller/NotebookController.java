@@ -3,7 +3,6 @@ package com.notebookmanager.controller;
 import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.createfields.NotebookCreateFields;
-import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.Payload;
 import com.notebookmanager.model.updatefields.NotebookUpdateFields;
 import com.notebookmanager.service.NotebookService;
@@ -18,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @AllArgsConstructor
 @RestController

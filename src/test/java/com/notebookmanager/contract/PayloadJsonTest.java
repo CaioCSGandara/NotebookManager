@@ -1,7 +1,6 @@
 package com.notebookmanager.contract;
 
 import com.notebookmanager.model.Payload;
-import com.notebookmanager.model.Aluno;
 import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;
@@ -11,8 +10,6 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
