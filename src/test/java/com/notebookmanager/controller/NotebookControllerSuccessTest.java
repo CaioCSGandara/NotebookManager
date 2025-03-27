@@ -3,8 +3,9 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.Notebook;
+import com.notebookmanager.model.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
+import com.notebookmanager.model.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,14 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,10 +42,9 @@ public class NotebookControllerSuccessTest {
     @DirtiesContext
     public void cadastraNotebookStatus201() {
 
-        Notebook notebook = new Notebook("Acer Aspire 5", "22222222", StatusNotebook.DISPONIVEL,
-                5, LocalDateTime.of(2025, 3, 17, 22, 34, 45));
+        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", "222222");
 
-        ResponseEntity<Void> response = restTemplate.postForEntity("/notebooks", notebook, Void.class);
+        ResponseEntity<Void> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -78,9 +71,8 @@ public class NotebookControllerSuccessTest {
     @DirtiesContext
     void gerenciaStatusStatus204() {
 
-        HashMap<String, StatusNotebook> mapNovoStatus = new HashMap<>();
-        mapNovoStatus.put("status", StatusNotebook.EMPRESTADO);
-        HttpEntity<Map<String, StatusNotebook>> request = new HttpEntity<>(mapNovoStatus);
+        NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(StatusNotebook.EMPRESTADO);
+        HttpEntity<NotebookUpdateFields> request = new HttpEntity<>(notebookUpdateFields);
 
         ResponseEntity<Void> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, Void.class);
 

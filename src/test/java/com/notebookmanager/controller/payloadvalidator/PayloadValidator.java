@@ -1,8 +1,6 @@
 package com.notebookmanager.controller.payloadvalidator;
 import com.jayway.jsonpath.DocumentContext;
 
-import java.util.HashMap;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PayloadValidator {

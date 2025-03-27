@@ -1,4 +1,4 @@
-package com.notebookmanager.model.payload;
+package com.notebookmanager.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

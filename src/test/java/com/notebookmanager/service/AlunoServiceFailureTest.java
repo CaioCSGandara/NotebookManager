@@ -2,14 +2,13 @@ package com.notebookmanager.service;
 
 import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
-import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
+import com.notebookmanager.model.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,25 +30,40 @@ public class AlunoServiceFailureTest {
     }
 
     @Test
-    void naoCadastraAlunoComRaRepetido() {
+    void naoCadastraAlunoRepetido() {
 
-        RecursoJaExistenteException exception =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
-            alunoService.cadastrarAluno(new Aluno(1,"Julio Correa", "09135616", "jcorrea@puccampinas.edu.br", "(19)90914-3014",
-                    Curso.MEDICINA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
-                    LocalDateTime.of(2012, 11, 10, 21, 12, 37)));
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Julio Correa", "09135616", "jcorrea@puccampinas.edu.br",
+                "(19)90914-3014", Curso.MEDICINA);
+
+        RecursoJaExistenteException exceptionRa =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
+
+            alunoService.cadastrarAluno(alunoCreateFields);
         });
 
-        assertThat(exception.getMessage()).isEqualTo("O Aluno com este RA já está cadastrado.");
+        assertThat(exceptionRa.getMessage()).isEqualTo("O Aluno com este RA e/ou e-mail já está cadastrado.");
+
+        String raValido = "83415692";
+        String emailRepetido = "jcorrea@puccampinas.edu.br";
+
+        alunoCreateFields.setRa(raValido);
+        alunoCreateFields.setEmail(emailRepetido);
+
+        RecursoJaExistenteException exceptionEmail =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
+
+            alunoService.cadastrarAluno(alunoCreateFields);
+        });
+
+        assertThat(exceptionEmail.getMessage()).isEqualTo("O Aluno com este RA e/ou e-mail já está cadastrado.");
     }
+
+
 
     @Test
     void naoAlteraAlunoComIdInvalido() {
 
         RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {
             alunoService.atualizaDadosDoAlunoPorId(90,
-                    new Aluno(90, "Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
-                    Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
-                    LocalDateTime.of(2012, 11, 10, 21, 12, 37)));
+                    new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA));
         });
 
         assertThat(exception.getMessage()).isEqualTo("Aluno não encontrado.");

@@ -3,9 +3,9 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.Aluno;
+import com.notebookmanager.model.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
-import org.hibernate.validator.internal.metadata.location.ParameterConstraintLocation;
+import com.notebookmanager.model.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,11 +36,11 @@ public class AlunoControllerFailureTest {
     }
 
     @Test
-    void cadastrarAlunoPorIdStatus409() {
-        Aluno aluno = new Aluno("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br", "(19)94291-7013",
-                Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+    void cadastrarAlunoStatus409() {
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br",
+                "(19)94291-7013", Curso.NUTRICAO);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/alunos", aluno, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/alunos", alunoCreateFields, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -53,10 +51,8 @@ public class AlunoControllerFailureTest {
 
     @Test
     void atualizarAlunoPorIdStatus404() {
-        Aluno aluno = new Aluno(90, "Josue Nao Existe No Banco", "02020202", "josuenenb@puccampinas.edu.br", "(19)93123-4231",
-                Curso.ODONTOLOGIA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
-                LocalDateTime.of(2012, 11, 10, 21, 12, 37));
-        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA);
+        HttpEntity<AlunoUpdateFields> request = new HttpEntity<>(alunoUpdateFields);
 
         ResponseEntity<String> response = restTemplate.exchange("/alunos/90", HttpMethod.PUT,
                 request, String.class);
@@ -90,13 +86,17 @@ public class AlunoControllerFailureTest {
 
         for (String nomeInvalido : nomesInvalidos) {
 
-            Aluno aluno = new Aluno (nomeInvalido, "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
-                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+            AlunoCreateFields alunoCreateFields = new AlunoCreateFields (nomeInvalido, "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
+                    Curso.NUTRICAO);
 
-            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+            HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields(nomeInvalido, "(19)99182-4125", Curso.NUTRICAO);
+
+            HttpEntity<AlunoUpdateFields> requestUpdate = new  HttpEntity<>(alunoUpdateFields);
+
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, requestCreate, "Erro de validação ao criar aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, requestUpdate, "Erro de validação ao atualizar o aluno.");
 
         }
     }
@@ -107,13 +107,12 @@ public class AlunoControllerFailureTest {
         String[] rasInvalidos = {"1234567", "123456789", "", " ", null};
 
         for (String raInvalido : rasInvalidos) {
-            Aluno aluno = new Aluno ("Jorge Flavio Silva", raInvalido, "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
-                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+            AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", raInvalido, "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
+                    Curso.NUTRICAO);
 
-            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+            HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, requestCreate, "Erro de validação ao criar aluno.");
 
         }
     }
@@ -124,13 +123,12 @@ public class AlunoControllerFailureTest {
         String[] emailsInvalidos = {"jorge^f@puccampinas.edu.br", "jorge.2f@gmail.com", "jorge#f@puccampinas.edu.br","", " ", null};
 
         for (String emailInvalido : emailsInvalidos) {
-            Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", emailInvalido, "(19)99182-4125",
-                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+            AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", emailInvalido, "(19)99182-4125",
+                    Curso.NUTRICAO);
 
-            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+            HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, requestCreate, "Erro de validação ao criar aluno.");
 
         }
     }
@@ -141,13 +139,16 @@ public class AlunoControllerFailureTest {
         String[] telefonesInvalidos = {"(d9)12345-0987", "(19)1$345-0987", "(11)12345-0h87", "(19)123450987", "11 12345-0987", "", " ", null};
 
         for (String telefoneInvalido : telefonesInvalidos) {
-            Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", telefoneInvalido,
-                    Curso.NUTRICAO, LocalDateTime.now(), LocalDateTime.now());
+            AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", "jorgefdlass@puccampinas.edu.br", telefoneInvalido, Curso.NUTRICAO);
 
-            HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+            HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+            AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Jorge Flavio Silva", telefoneInvalido, Curso.NUTRICAO);
+
+            HttpEntity<AlunoUpdateFields> requestUpdate = new  HttpEntity<>(alunoUpdateFields);
+
+            assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, requestCreate, "Erro de validação ao criar aluno.");
+            assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, requestUpdate, "Erro de validação ao atualizar o aluno.");
 
         }
     }
@@ -155,41 +156,22 @@ public class AlunoControllerFailureTest {
 
     @Test
     void naoAceitaCursoNulo() {
-        Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", "(19)99182-4125",
-                null, LocalDateTime.now(), LocalDateTime.now());
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125", null);
 
-        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
+        HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
-    }
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Jorge Flavio Silva", "(19)99182-4125", null);
 
-    @Test
-    void naoAceitaUltimoLoginNulo() {
-        Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", "(19)99182-4125",
-                Curso.NUTRICAO, null, LocalDateTime.now());
+        HttpEntity<AlunoUpdateFields> requestUpdate = new  HttpEntity<>(alunoUpdateFields);
 
-        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
-
-        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
-    }
-
-
-    @Test
-    void naoAceitaAtualizadoEmNulo() {
-        Aluno aluno = new Aluno ("Jorge Flavio Silva", "12345678", "jorge.fs@puccampinas.edu.br", "(19)99182-4125",
-                Curso.NUTRICAO, LocalDateTime.now(), null);
-
-        HttpEntity<Aluno> request = new HttpEntity<>(aluno);
-
-        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, request, "Erro de validação ao criar aluno.");
-        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, request, "Erro de validação ao atualizar o aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos", HttpMethod.POST, requestCreate, "Erro de validação ao criar aluno.");
+        assertResponseParaPropriedadeInvalida("/alunos/3", HttpMethod.PUT, requestUpdate, "Erro de validação ao atualizar o aluno.");
     }
 
 
 
-    private void assertResponseParaPropriedadeInvalida(String url, HttpMethod method, HttpEntity<Aluno> request, String errorMessage) {
+
+    private void assertResponseParaPropriedadeInvalida(String url, HttpMethod method, HttpEntity request, String errorMessage) {
         ResponseEntity<String> response = restTemplate.exchange(url, method, request, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

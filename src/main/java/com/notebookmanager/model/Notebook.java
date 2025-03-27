@@ -1,7 +1,6 @@
 package com.notebookmanager.model;
 
 import com.notebookmanager.model.enums.StatusNotebook;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,19 +16,14 @@ public class Notebook implements Cloneable {
     @Id
     private Integer id;
 
-    @NotBlank @Size(min = 5, max = 50)
     private String modelo;
 
-    @NotNull @Size(min = 8, max = 8)
     private String patrimonio;
 
-    @NotNull
     private StatusNotebook status;
 
-    @NotNull @Min(0)
     private Integer qtdEmprestimos;
 
-    @NotNull
     private LocalDateTime atualizadoEm;
 
 

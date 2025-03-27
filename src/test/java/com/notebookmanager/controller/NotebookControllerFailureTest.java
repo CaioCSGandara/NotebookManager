@@ -3,8 +3,9 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.Notebook;
+import com.notebookmanager.model.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
+import com.notebookmanager.model.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,11 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,11 +35,10 @@ public class NotebookControllerFailureTest {
     }
 
     @Test
-    void cadastrarNotebookPorIdStatus409() {
-        Notebook notebook = new Notebook("Acer Aspire 5", "98341099", StatusNotebook.EMPRESTADO,
-                19, LocalDateTime.of(2023,1,5,14,12,20));
+    void cadastrarNotebookStatus409() {
+        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", "983410");
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebook, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
@@ -55,17 +50,21 @@ public class NotebookControllerFailureTest {
     @Test
     void gerenciarStatusStatus400() {
 
-        HashMap<String, StatusNotebook> mapNovoStatus = new HashMap<>();
-        mapNovoStatus.put("status", StatusNotebook.DISPONIVEL);
-        HttpEntity<Map<String, StatusNotebook>> request = new HttpEntity<>(mapNovoStatus);
+        StatusNotebook[] statusInvalidos = {StatusNotebook.DISPONIVEL, null};
 
-        ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, String.class);
+        for(StatusNotebook statusInvalido : statusInvalidos) {
+            NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(statusInvalido);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            HttpEntity<NotebookUpdateFields> request = new HttpEntity<>(notebookUpdateFields);
 
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
+            ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, String.class);
 
-        PayloadValidator.validateErrorPayload(documentContext, "BAD_REQUEST");
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+            DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+            PayloadValidator.validateErrorPayload(documentContext, "BAD_REQUEST");
+        }
     }
 
 
@@ -88,10 +87,9 @@ public class NotebookControllerFailureTest {
         String[] modelosInvalidos = {"mod", "", "NomeComMaisDe50CaracteresNomeComMaisDe50Caracteres2", null};
 
         for (String modelo : modelosInvalidos) {
-            Notebook notebook = new Notebook(modelo, "12345678", StatusNotebook.EMPRESTADO,
-                    19, LocalDateTime.of(2023,1,5,14,12,20));
+            NotebookCreateFields notebookCreateFields = new NotebookCreateFields(modelo, "123456");
 
-            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebook, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
 
             assertResponseParaPropriedadeInvalida(response);
 
@@ -101,56 +99,16 @@ public class NotebookControllerFailureTest {
 
     @Test
     void naoAceitaPatrimonioInvalido() {
-        String[] patrimoniosInvalidos = {"1234567", "123456789" , "", null};
+        String[] patrimoniosInvalidos = {"12345", "1234567" , "", null};
 
         for (String patrimonio : patrimoniosInvalidos) {
-            Notebook notebook = new Notebook("Acer Aspire 5", patrimonio, StatusNotebook.EMPRESTADO,
-                    19, LocalDateTime.of(2023,1,5,14,12,20));
+            NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", patrimonio);
 
-            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebook, String.class);
-
-            assertResponseParaPropriedadeInvalida(response);
-
-        }
-    }
-
-    @Test
-    void naoAceitaStatusNotebookNull() {
-
-            Notebook notebook = new Notebook("Acer Aspire 5", "12345678", null,
-                    19, LocalDateTime.of(2023,1,5,14,12,20));
-
-            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebook, String.class);
-
-            assertResponseParaPropriedadeInvalida(response);
-    }
-
-
-    @Test
-    void naoAceitaQtdEmprestimosInvalida() {
-        Integer[] qtdEmprestimosInvalidas = {-1, -2};
-
-        for (Integer qtdEmprestimos : qtdEmprestimosInvalidas) {
-            Notebook notebook = new Notebook("Acer Aspire 5", "12345678", StatusNotebook.EMPRESTADO,
-                    qtdEmprestimos, LocalDateTime.of(2023,1,5,14,12,20));
-
-            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebook, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
 
             assertResponseParaPropriedadeInvalida(response);
 
         }
-    }
-
-
-    @Test
-    void naoAceitaAtualizadoEmNull() {
-
-        Notebook notebook = new Notebook("Acer Aspire 5", "12345678", StatusNotebook.AFASTADO,
-                19, null);
-
-        ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebook, String.class);
-
-        assertResponseParaPropriedadeInvalida(response);
     }
 
 
