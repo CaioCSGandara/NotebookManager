@@ -4,7 +4,9 @@ import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.Notebook;
+import com.notebookmanager.model.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
+import com.notebookmanager.model.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 public class NotebookServiceFailureTest {
 
-    @Autowired
-    private NotebookService alunoService;
     @Autowired
     private NotebookService notebookService;
 
@@ -39,8 +39,7 @@ public class NotebookServiceFailureTest {
 
         RecursoJaExistenteException exception = assertThrows(RecursoJaExistenteException.class,
                 () -> {
-                notebookService.cadastrarNotebook(new Notebook(1, "Asus Vivobook 5", "49103423", StatusNotebook.DISPONIVEL,
-                        43,  LocalDateTime.of(2021, 6, 30, 9, 14, 9)));
+                notebookService.cadastrarNotebook(new NotebookCreateFields("Asus Vivobook 5", "491034"));
                 });
 
         assertThat(exception.getMessage()).isEqualTo("O Notebook com este patrimonio já está cadastrado.");
@@ -49,46 +48,33 @@ public class NotebookServiceFailureTest {
     @Test
     public void naoAlteraStatusDeManeiraInvalida() {
 
-        HashMap<String, StatusNotebook> disponivelParaDisponivel = new HashMap<>();
-        disponivelParaDisponivel.put("status", StatusNotebook.DISPONIVEL);
+        NotebookUpdateFields disponivelParaDisponivel = new NotebookUpdateFields(StatusNotebook.DISPONIVEL);
 
         ValidationException disponivelParaDisponivelException = assertThrows(ValidationException.class,
                 ()-> {
-                    alunoService.alteraStatusNotebook(1, disponivelParaDisponivel);
+                    notebookService.alteraStatusNotebook(1, disponivelParaDisponivel);
                 });
         assertThat(disponivelParaDisponivelException.getMessage()).isEqualTo("Para tornar um notebook DISPONIVEL, ele deve estar EMPRESTADO ou AFASTADO.");
 
-        HashMap<String, StatusNotebook> naoDisponivelParaNaoDisponivel = new HashMap<>();
-        naoDisponivelParaNaoDisponivel.put("status", StatusNotebook.AFASTADO);
+        NotebookUpdateFields naoDisponivelParaNaoDisponivel = new NotebookUpdateFields(StatusNotebook.AFASTADO);
 
         ValidationException naoDisponivelParaNaoDisponivelException = assertThrows(ValidationException.class,
                 ()-> {
-            alunoService.alteraStatusNotebook(2, naoDisponivelParaNaoDisponivel);
+            notebookService.alteraStatusNotebook(2, naoDisponivelParaNaoDisponivel);
                 });
 
         assertThat(naoDisponivelParaNaoDisponivelException.getMessage()).isEqualTo("Para tornar um notebook EMPRESTADO ou AFASTADO, ele deve estar DISPONIVEL.");
 
     }
 
-    @Test
-    public void naoAtualizaStatusComNull() {
-        HashMap<String, StatusNotebook> map = new HashMap<>();
-        map.put("status", null);
 
-        ValidationException exception = assertThrows(ValidationException.class,
-                ()->{
-            alunoService.alteraStatusNotebook(1, map);
-                });
-
-        assertThat(exception.getMessage()).isEqualTo("Novo status deve ter o formato: {\"status\": \"AFASTADO\" ou \"EMPRESTADO\" ou \"DISPONIVEL\" } ");
-    }
 
     @Test
     public void naoDeletaNotebookComIdInvalido() {
 
         RecursoNaoEncontradoException exception = assertThrows(RecursoNaoEncontradoException.class,
                 ()-> {
-            alunoService.deletaNotebookPorId(314);
+            notebookService.deletaNotebookPorId(314);
                 });
 
         assertThat(exception.getMessage()).isEqualTo("Notebook não encontrado.");

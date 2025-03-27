@@ -2,8 +2,10 @@ package com.notebookmanager.controller;
 
 import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.Notebook;
+import com.notebookmanager.model.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.Payload;
+import com.notebookmanager.model.updatefields.NotebookUpdateFields;
 import com.notebookmanager.service.NotebookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -34,13 +36,13 @@ public class NotebookController {
     }
 
     @PostMapping
-    private ResponseEntity<Payload> createNotebook(@RequestBody @Valid Notebook notebook, BindingResult bindingResult, UriComponentsBuilder ucb) {
+    private ResponseEntity<Payload> createNotebook(@RequestBody @Valid NotebookCreateFields notebookCreateFields, BindingResult bindingResult, UriComponentsBuilder ucb) {
 
         if (bindingResult.hasErrors()) {
             throw new ValidationException("Erro de validação ao criar notebook.");
         }
 
-        Notebook savedNotebook = notebookService.cadastrarNotebook(notebook);
+        Notebook savedNotebook = notebookService.cadastrarNotebook(notebookCreateFields);
 
         URI locationOfNewNotebook = ucb
                 .path("notebooks/{id}")
@@ -61,9 +63,9 @@ public class NotebookController {
 
 
     @PatchMapping("/{id}/gerenciar-status")
-    private ResponseEntity<Payload> gerenciaAfastamentoNotebook(@PathVariable Integer id, @RequestBody Map<String, StatusNotebook> mapNovoStatus) {
+    private ResponseEntity<Payload> gerenciaAfastamentoNotebook(@PathVariable Integer id, @RequestBody NotebookUpdateFields notebookUpdateFields) {
 
-        notebookService.alteraStatusNotebook(id, mapNovoStatus);
+        notebookService.alteraStatusNotebook(id, notebookUpdateFields);
         return ResponseEntity.noContent().build();
     }
 

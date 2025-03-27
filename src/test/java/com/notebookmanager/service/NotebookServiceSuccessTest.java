@@ -2,8 +2,10 @@ package com.notebookmanager.service;
 
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Notebook;
+import com.notebookmanager.model.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
 import com.notebookmanager.model.repositories.NotebookRepository;
+import com.notebookmanager.model.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,16 +32,16 @@ public class NotebookServiceSuccessTest {
     public void retornaNotebookPorId() {
         Notebook notebook = notebookService.encontraNotebookPorId(1);
         assertThat(notebook.getId()).isEqualTo(1);
-        assertThat(notebook.getPatrimonio()).isEqualTo("49103423");
+        assertThat(notebook.getPatrimonio()).isEqualTo("491034");
     }
 
     @Test
     @DirtiesContext
     public void cadastraNotebook() {
-        Notebook notebook = new Notebook("MacBook Pro", "13518310", StatusNotebook.DISPONIVEL,
-                12, LocalDateTime.now());
-        Notebook savedNotebook = notebookService.cadastrarNotebook(notebook);
-        assertEquals(notebook, savedNotebook);
+        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("MacBook Pro", "135183");
+        Notebook savedNotebook = notebookService.cadastrarNotebook(notebookCreateFields);
+        assertThat(savedNotebook.getModelo()).isEqualTo("MacBook Pro");
+        assertThat(savedNotebook.getPatrimonio()).isEqualTo("135183");
     }
 
     @Test
@@ -49,9 +51,9 @@ public class NotebookServiceSuccessTest {
                 10,
                 Sort.by(Sort.Direction.ASC, "status")));
         assertThat(listaNotebooks.size()).isEqualTo(3);
-        assertThat(listaNotebooks.get(0).getPatrimonio()).isEqualTo("12309845");
-        assertThat(listaNotebooks.get(1).getPatrimonio()).isEqualTo("49103423");
-        assertThat(listaNotebooks.get(2).getPatrimonio()).isEqualTo("98341099");
+        assertThat(listaNotebooks.get(0).getPatrimonio()).isEqualTo("123098");
+        assertThat(listaNotebooks.get(1).getPatrimonio()).isEqualTo("491034");
+        assertThat(listaNotebooks.get(2).getPatrimonio()).isEqualTo("983410");
 
     }
 
@@ -72,15 +74,33 @@ public class NotebookServiceSuccessTest {
     public void alteraStatusNotebook() {
 
         StatusNotebook[] ordemDeAlteracao = {StatusNotebook.AFASTADO, StatusNotebook.DISPONIVEL, StatusNotebook.EMPRESTADO, StatusNotebook.DISPONIVEL};
-        HashMap<String, StatusNotebook> field = new HashMap<>();
         for (StatusNotebook novoStatus : ordemDeAlteracao) {
-            field.clear();
-            field.put("status", novoStatus);
-            notebookService.alteraStatusNotebook(1, field);
+            NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(novoStatus);
+            notebookService.alteraStatusNotebook(1, notebookUpdateFields);
             Notebook notebookAlterado = notebookService.encontraNotebookPorId(1);
             assertThat(notebookAlterado.getStatus()).isEqualTo(novoStatus);
         }
 
+    }
+
+    @Test
+    @DirtiesContext
+    public void incrementaQtdEmprestimos() {
+        NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(StatusNotebook.EMPRESTADO);
+        Integer qtdAnterior = notebookRepository.findById(1).get().getQtdEmprestimos();
+        notebookService.alteraStatusNotebook(1, notebookUpdateFields);
+        Integer qtdAposIncremento = notebookRepository.findById(1).get().getQtdEmprestimos();
+        assertThat(qtdAnterior).isEqualTo(qtdAposIncremento-1);
+    }
+
+    @Test
+    @DirtiesContext
+    public void naoIncrementaQtdEmprestimos() {
+        NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(StatusNotebook.AFASTADO);
+        Integer qtdAnterior = notebookRepository.findById(1).get().getQtdEmprestimos();
+        notebookService.alteraStatusNotebook(1, notebookUpdateFields);
+        Integer qtdAposAlteracao = notebookRepository.findById(1).get().getQtdEmprestimos();
+        assertThat(qtdAnterior).isEqualTo(qtdAposAlteracao);
     }
 
     @Test

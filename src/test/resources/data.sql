@@ -6,6 +6,6 @@ VALUES
 
 INSERT INTO notebook (modelo, patrimonio, status, qtd_emprestimos, atualizado_em)
 VALUES
-    ('Asus Vivobook 5', '49103423', 'DISPONIVEL', 43, '2021-06-30T09:14:09'),
-    ('Acer Aspire 5', '98341099', 'EMPRESTADO', 19, '2023-01-05T14:12:20'),
-    ('Acer Nitro', '12309845', 'AFASTADO', 130, '2023-11-20T18:12:21');
+    ('Asus Vivobook 5', '491034', 'DISPONIVEL', 43, '2021-06-30T09:14:09'),
+    ('Acer Aspire 5', '983410', 'EMPRESTADO', 19, '2023-01-05T14:12:20'),
+    ('Acer Nitro', '123098', 'AFASTADO', 130, '2023-11-20T18:12:21');
