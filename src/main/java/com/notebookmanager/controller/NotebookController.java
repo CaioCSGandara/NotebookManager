@@ -63,8 +63,10 @@ public class NotebookController {
 
 
     @PatchMapping("/{id}/gerenciar-status")
-    private ResponseEntity<Payload> gerenciaAfastamentoNotebook(@PathVariable Integer id, @RequestBody NotebookUpdateFields notebookUpdateFields) {
-
+    private ResponseEntity<Payload> gerenciaAfastamentoNotebook(@PathVariable Integer id, @RequestBody @Valid NotebookUpdateFields notebookUpdateFields, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException("Erro de validação ao atualizar notebook.");
+        }
         notebookService.alteraStatusNotebook(id, notebookUpdateFields);
         return ResponseEntity.noContent().build();
     }

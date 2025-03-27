@@ -36,7 +36,7 @@ public class AlunoControllerFailureTest {
     }
 
     @Test
-    void cadastrarAlunoPorIdStatus409() {
+    void cadastrarAlunoStatus409() {
         AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br",
                 "(19)94291-7013", Curso.NUTRICAO);
 

@@ -41,7 +41,7 @@ public class NotebookControllerFailureTest {
     }
 
     @Test
-    void cadastrarNotebookPorIdStatus409() {
+    void cadastrarNotebookStatus409() {
         NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", "983410");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
@@ -56,16 +56,21 @@ public class NotebookControllerFailureTest {
     @Test
     void gerenciarStatusStatus400() {
 
-        NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(StatusNotebook.DISPONIVEL);
-        HttpEntity<NotebookUpdateFields> request = new HttpEntity<>(notebookUpdateFields);
+        StatusNotebook[] statusInvalidos = {StatusNotebook.DISPONIVEL, null};
 
-        ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, String.class);
+        for(StatusNotebook statusInvalido : statusInvalidos) {
+            NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(statusInvalido);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            HttpEntity<NotebookUpdateFields> request = new HttpEntity<>(notebookUpdateFields);
 
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
+            ResponseEntity<String> response = restTemplate.exchange("/notebooks/1/gerenciar-status", HttpMethod.PATCH, request, String.class);
 
-        PayloadValidator.validateErrorPayload(documentContext, "BAD_REQUEST");
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+            DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+            PayloadValidator.validateErrorPayload(documentContext, "BAD_REQUEST");
+        }
     }
 
 
