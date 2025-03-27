@@ -33,8 +33,8 @@ public class AlunoService {
     }
 
     public Aluno cadastrarAluno(AlunoCreateFields alunoCreateFields) {
-        if(alunoRepository.existsByRa(alunoCreateFields.getRa())) {
-            throw new RecursoJaExistenteException("O Aluno com este RA já está cadastrado.");
+        if(alunoRepository.existsByRa(alunoCreateFields.getRa()) || alunoRepository.existsByEmail(alunoCreateFields.getEmail())) {
+            throw new RecursoJaExistenteException("O Aluno com este RA e/ou e-mail já está cadastrado.");
         }
         
         Aluno aluno = new Aluno(alunoCreateFields.getNome(), alunoCreateFields.getRa(), alunoCreateFields.getEmail(),

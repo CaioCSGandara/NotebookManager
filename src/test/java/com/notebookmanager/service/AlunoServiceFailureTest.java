@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,15 +34,33 @@ public class AlunoServiceFailureTest {
     }
 
     @Test
-    void naoCadastraAlunoComRaRepetido() {
+    void naoCadastraAlunoRepetido() {
 
-        RecursoJaExistenteException exception =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
-            alunoService.cadastrarAluno(new AlunoCreateFields("Julio Correa", "09135616", "jcorrea@puccampinas.edu.br", "(19)90914-3014",
-                    Curso.MEDICINA));
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Julio Correa", "09135616", "jcorrea@puccampinas.edu.br",
+                "(19)90914-3014", Curso.MEDICINA);
+
+        RecursoJaExistenteException exceptionRa =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
+
+            alunoService.cadastrarAluno(alunoCreateFields);
         });
 
-        assertThat(exception.getMessage()).isEqualTo("O Aluno com este RA já está cadastrado.");
+        assertThat(exceptionRa.getMessage()).isEqualTo("O Aluno com este RA e/ou e-mail já está cadastrado.");
+
+        String raValido = "83415692";
+        String emailRepetido = "jcorrea@puccampinas.edu.br";
+
+        alunoCreateFields.setRa(raValido);
+        alunoCreateFields.setEmail(emailRepetido);
+
+        RecursoJaExistenteException exceptionEmail =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
+
+            alunoService.cadastrarAluno(alunoCreateFields);
+        });
+
+        assertThat(exceptionEmail.getMessage()).isEqualTo("O Aluno com este RA e/ou e-mail já está cadastrado.");
     }
+
+
 
     @Test
     void naoAlteraAlunoComIdInvalido() {
