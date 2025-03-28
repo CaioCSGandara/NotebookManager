@@ -42,7 +42,7 @@ public class NotebookControllerSuccessTest {
     @DirtiesContext
     public void cadastraNotebookStatus201() {
 
-        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", "222222");
+        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("222222");
 
         ResponseEntity<Void> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, Void.class);
 

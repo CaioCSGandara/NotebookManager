@@ -36,7 +36,7 @@ public class NotebookControllerFailureTest {
 
     @Test
     void cadastrarNotebookStatus409() {
-        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", "983410");
+        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("983410");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
 
@@ -82,48 +82,29 @@ public class NotebookControllerFailureTest {
 
     // TESTES DE VALIDAÇÃO DE BODY:
 
-    @Test
-    void naoAceitaModeloInvalido() {
-        String[] modelosInvalidos = {"mod", "", "NomeComMaisDe50CaracteresNomeComMaisDe50Caracteres2", null};
-
-        for (String modelo : modelosInvalidos) {
-            NotebookCreateFields notebookCreateFields = new NotebookCreateFields(modelo, "123456");
-
-            ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
-
-            assertResponseParaPropriedadeInvalida(response);
-
-        }
-    }
-
 
     @Test
     void naoAceitaPatrimonioInvalido() {
         String[] patrimoniosInvalidos = {"12345", "1234567" , "", null};
 
         for (String patrimonio : patrimoniosInvalidos) {
-            NotebookCreateFields notebookCreateFields = new NotebookCreateFields("Acer Aspire 5", patrimonio);
+            NotebookCreateFields notebookCreateFields = new NotebookCreateFields(patrimonio);
 
             ResponseEntity<String> response = restTemplate.postForEntity("/notebooks", notebookCreateFields, String.class);
 
-            assertResponseParaPropriedadeInvalida(response);
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+            DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+            String status =  documentContext.read("$.status");
+
+            assertThat(status).isEqualTo("BAD_REQUEST");
+
+            String message = documentContext.read("$.message");
+
+            assertThat(message).isEqualTo("Erro de validação ao criar notebook.");
 
         }
     }
 
-
-
-    private void assertResponseParaPropriedadeInvalida(ResponseEntity<String> response) {
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-
-        String status =  documentContext.read("$.status");
-
-        assertThat(status).isEqualTo("BAD_REQUEST");
-
-        String message = documentContext.read("$.message");
-
-        assertThat(message).isEqualTo("Erro de validação ao criar notebook.");
-    }
 }

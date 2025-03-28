@@ -35,8 +35,7 @@ public class NotebookJsonTest {
     @Test
     void notebookSerializationTest() throws IOException {
 
-        Notebook notebook = new Notebook(4, "Acer Aspire 5", "02134918", StatusNotebook.DISPONIVEL,
-                5, LocalDateTime.of(2025, 3, 17, 22, 34, 45));
+        Notebook notebook = new Notebook(4, "021349", StatusNotebook.DISPONIVEL);
 
         assertThat(json.write(notebook)).isStrictlyEqualToJson("notebook.json");
 
@@ -47,12 +46,9 @@ public class NotebookJsonTest {
 
         List<Notebook> listaNotebooks = new ArrayList<>();
 
-        listaNotebooks.add(new Notebook(1, "Asus Vivobook 5", "49103423", StatusNotebook.DISPONIVEL,
-                43,  LocalDateTime.of(2021, 6, 30, 9, 14, 9)));
-        listaNotebooks.add(new Notebook(2, "Acer Aspire 5", "98341099", StatusNotebook.EMPRESTADO,
-                19, LocalDateTime.of(2023,1,5,14,12,20)));
-        listaNotebooks.add(new Notebook(3, "Acer Nitro", "12309845", StatusNotebook.AFASTADO,
-                130, LocalDateTime.of(2023, 11, 20, 18, 12, 21)));
+        listaNotebooks.add(new Notebook(1, "491034", StatusNotebook.DISPONIVEL));
+        listaNotebooks.add(new Notebook(2, "983410", StatusNotebook.EMPRESTADO));
+        listaNotebooks.add(new Notebook(3,"123098", StatusNotebook.AFASTADO));
 
         assertThat(jsonList.write(listaNotebooks)).isStrictlyEqualToJson("notebook-list.json");
     }
@@ -63,10 +59,10 @@ public class NotebookJsonTest {
         String expected = """
                 {
                     "modelo": "Acer Aspire 5",
-                    "patrimonio": "02134918"
+                    "patrimonio": "021349"
                 }
                 """;
-        assertThat(jsonCreate.parseObject(expected)).isEqualTo(new NotebookCreateFields("Acer Aspire 5", "02134918"));
+        assertThat(jsonCreate.parseObject(expected)).isEqualTo(new NotebookCreateFields("021349"));
     }
 
 

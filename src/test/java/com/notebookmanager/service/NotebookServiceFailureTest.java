@@ -35,7 +35,7 @@ public class NotebookServiceFailureTest {
 
         RecursoJaExistenteException exception = assertThrows(RecursoJaExistenteException.class,
                 () -> {
-                notebookService.cadastrarNotebook(new NotebookCreateFields("Asus Vivobook 5", "491034"));
+                notebookService.cadastrarNotebook(new NotebookCreateFields("491034"));
                 });
 
         assertThat(exception.getMessage()).isEqualTo("O Notebook com este patrimonio já está cadastrado.");
@@ -62,7 +62,6 @@ public class NotebookServiceFailureTest {
         assertThat(naoDisponivelParaNaoDisponivelException.getMessage()).isEqualTo("Para tornar um notebook EMPRESTADO ou AFASTADO, ele deve estar DISPONIVEL.");
 
     }
-
 
 
     @Test
