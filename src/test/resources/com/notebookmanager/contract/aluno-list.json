@@ -5,9 +5,7 @@
     "ra": "09135616",
     "email": "jcorrea@puccampinas.edu.br",
     "telefone": "(19)90914-3014",
-    "curso": "MEDICINA",
-    "ultimoLogin": "2012-11-10T21:12:37",
-    "atualizadoEm": "2012-11-10T21:12:37"
+    "curso": "MEDICINA"
   },
   {
     "id": 2,
@@ -15,9 +13,7 @@
     "ra": "03781923",
     "email": "maria.ferreira@puccampinas.edu.br",
     "telefone": "(19)90814-2314",
-    "curso": "TERAPIA_OCUPACIONAL",
-    "ultimoLogin": "2021-08-12T21:21:45",
-    "atualizadoEm": "2021-08-12T21:21:45"
+    "curso": "TERAPIA_OCUPACIONAL"
   },
   {
     "id": 3,
@@ -25,8 +21,6 @@
     "ra": "90174823",
     "email": "fernandohpontes@puccampinas.edu.br",
     "telefone": "(19)83914-0945",
-    "curso": "BIOMEDICINA",
-    "ultimoLogin": "2013-01-10T21:12:37",
-    "atualizadoEm": "2013-01-10T21:12:37"
+    "curso": "BIOMEDICINA"
   }
 ]

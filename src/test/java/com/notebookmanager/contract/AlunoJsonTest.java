@@ -38,8 +38,7 @@ public class AlunoJsonTest {
     void alunoSerializationTest() throws IOException {
 
         Aluno aluno = new Aluno(1,"Caio Gandara", "22415616", "caio.cgs@puccampinas.edu.br", "(19)99414-8554",
-                Curso.ENFERMAGEM, LocalDateTime.of(2010, 12, 30, 12, 14, 22),
-                LocalDateTime.of(2010, 12, 30, 12, 14, 22));
+                Curso.ENFERMAGEM);
 
 
         assertThat(json.write(aluno)).isStrictlyEqualToJson("aluno.json");
@@ -51,14 +50,11 @@ public class AlunoJsonTest {
         List<Aluno>listaAlunos = new ArrayList<Aluno>();
 
         listaAlunos.add(new Aluno(1,"Julio Correa", "09135616", "jcorrea@puccampinas.edu.br", "(19)90914-3014",
-                Curso.MEDICINA, LocalDateTime.of(2012, 11, 10, 21, 12, 37),
-                LocalDateTime.of(2012, 11, 10, 21, 12, 37)));
+                Curso.MEDICINA));
         listaAlunos.add(new Aluno(2,"Maria Ferreira", "03781923", "maria.ferreira@puccampinas.edu.br", "(19)90814-2314",
-                Curso.TERAPIA_OCUPACIONAL, LocalDateTime.of(2021, 8, 12, 21, 21, 45),
-                LocalDateTime.of(2021, 8, 12, 21, 21, 45)));
+                Curso.TERAPIA_OCUPACIONAL));
         listaAlunos.add(new Aluno(3,"Fernando Pontes", "90174823", "fernandohpontes@puccampinas.edu.br", "(19)83914-0945",
-                Curso.BIOMEDICINA, LocalDateTime.of(2013, 1, 10, 21, 12, 37),
-                LocalDateTime.of(2013, 1, 10, 21, 12, 37)));
+                Curso.BIOMEDICINA));
 
         assertThat(jsonList.write(listaAlunos)).isStrictlyEqualToJson("aluno-list.json");
 

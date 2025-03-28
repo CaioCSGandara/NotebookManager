@@ -35,9 +35,8 @@ public class NotebookServiceSuccessTest {
     @Test
     @DirtiesContext
     public void cadastraNotebook() {
-        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("MacBook Pro", "135183");
+        NotebookCreateFields notebookCreateFields = new NotebookCreateFields("135183");
         Notebook savedNotebook = notebookService.cadastrarNotebook(notebookCreateFields);
-        assertThat(savedNotebook.getModelo()).isEqualTo("MacBook Pro");
         assertThat(savedNotebook.getPatrimonio()).isEqualTo("135183");
     }
 
@@ -80,25 +79,6 @@ public class NotebookServiceSuccessTest {
 
     }
 
-    @Test
-    @DirtiesContext
-    public void incrementaQtdEmprestimos() {
-        NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(StatusNotebook.EMPRESTADO);
-        Integer qtdAnterior = notebookRepository.findById(1).get().getQtdEmprestimos();
-        notebookService.alteraStatusNotebook(1, notebookUpdateFields);
-        Integer qtdAposIncremento = notebookRepository.findById(1).get().getQtdEmprestimos();
-        assertThat(qtdAnterior).isEqualTo(qtdAposIncremento-1);
-    }
-
-    @Test
-    @DirtiesContext
-    public void naoIncrementaQtdEmprestimos() {
-        NotebookUpdateFields notebookUpdateFields = new NotebookUpdateFields(StatusNotebook.AFASTADO);
-        Integer qtdAnterior = notebookRepository.findById(1).get().getQtdEmprestimos();
-        notebookService.alteraStatusNotebook(1, notebookUpdateFields);
-        Integer qtdAposAlteracao = notebookRepository.findById(1).get().getQtdEmprestimos();
-        assertThat(qtdAnterior).isEqualTo(qtdAposAlteracao);
-    }
 
     @Test
     @DirtiesContext

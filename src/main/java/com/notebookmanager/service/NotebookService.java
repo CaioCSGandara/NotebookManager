@@ -38,8 +38,7 @@ public class NotebookService {
             throw new RecursoJaExistenteException("O Notebook com este patrimonio já está cadastrado.");
         }
 
-        Notebook notebook = new Notebook(notebookCreateFields.getModelo(), notebookCreateFields.getPatrimonio(), StatusNotebook.DISPONIVEL,
-                0, LocalDateTime.now());
+        Notebook notebook = new Notebook(notebookCreateFields.getPatrimonio(), StatusNotebook.DISPONIVEL);
 
         return notebookRepository.save(notebook);
     }
@@ -72,12 +71,7 @@ public class NotebookService {
             throw new ValidationException("Para tornar um notebook EMPRESTADO ou AFASTADO, ele deve estar DISPONIVEL.");
         }
 
-        if(statusAtualizado.equals(StatusNotebook.EMPRESTADO)) {
-            notebookExistente.setQtdEmprestimos(notebookExistente.getQtdEmprestimos()+1);
-        }
-
         notebookExistente.setStatus(statusAtualizado);
-        notebookExistente.setAtualizadoEm(LocalDateTime.now());
         notebookRepository.save(notebookExistente);
 
     }

@@ -38,7 +38,7 @@ public class AlunoService {
         }
         
         Aluno aluno = new Aluno(alunoCreateFields.getNome(), alunoCreateFields.getRa(), alunoCreateFields.getEmail(),
-                alunoCreateFields.getTelefone(), alunoCreateFields.getCurso(), LocalDateTime.now(), LocalDateTime.now());
+                alunoCreateFields.getTelefone(), alunoCreateFields.getCurso());
         return alunoRepository.save(aluno);
     }
 
@@ -65,7 +65,6 @@ public class AlunoService {
         alunoAtualizado.setNome(alunoUpdateFields.getNome());
         alunoAtualizado.setTelefone(alunoUpdateFields.getTelefone());
         alunoAtualizado.setCurso(alunoUpdateFields.getCurso());
-        alunoAtualizado.setAtualizadoEm(LocalDateTime.now());
         
         alunoRepository.save(alunoAtualizado);
     }

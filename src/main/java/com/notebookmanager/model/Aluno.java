@@ -4,7 +4,6 @@ import com.notebookmanager.model.enums.Curso;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,13 +21,9 @@ public class Aluno implements Cloneable {
 
     private Curso curso;
 
-    private LocalDateTime ultimoLogin;
 
-    private LocalDateTime atualizadoEm;
-
-
-    public Aluno(String nome, String ra, String email, String telefone, Curso curso, LocalDateTime ultimoLogin, LocalDateTime atualizadoEm) {
-        this(null, nome, ra, email, telefone, curso, ultimoLogin, atualizadoEm);
+    public Aluno(String nome, String ra, String email, String telefone, Curso curso) {
+        this(null, nome, ra, email, telefone, curso);
     }
 
     public Aluno(Aluno aluno) {
@@ -38,8 +33,6 @@ public class Aluno implements Cloneable {
         this.email = aluno.getEmail();
         this.telefone = aluno.getTelefone();
         this.curso = aluno.getCurso();
-        this.ultimoLogin = aluno.getUltimoLogin();
-        this.atualizadoEm = aluno.getAtualizadoEm();
     }
 
 

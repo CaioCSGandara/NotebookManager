@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,29 +15,21 @@ public class Notebook implements Cloneable {
     @Id
     private Integer id;
 
-    private String modelo;
-
     private String patrimonio;
 
     private StatusNotebook status;
 
-    private Integer qtdEmprestimos;
-
-    private LocalDateTime atualizadoEm;
 
 
-    public Notebook(String modelo, String patrimonio, StatusNotebook status, Integer qtdEmprestimos, LocalDateTime atualizadoEm) {
-        this(null, modelo, patrimonio, status, qtdEmprestimos, atualizadoEm);
+    public Notebook(String patrimonio, StatusNotebook status) {
+        this(null, patrimonio, status);
     }
 
 
     public Notebook(Notebook notebook) {
         this.id = notebook.getId();
-        this.modelo = notebook.getModelo();
         this.patrimonio = notebook.getPatrimonio();
         this.status = notebook.getStatus();
-        this.qtdEmprestimos = notebook.getQtdEmprestimos();
-        this.atualizadoEm = notebook.getAtualizadoEm();
     }
 
     public Object clone() {
