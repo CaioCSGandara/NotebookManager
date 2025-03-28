@@ -1,4 +1,5 @@
-package com.notebookmanager.model.dto.createfields;
+package com.notebookmanager.model.dto.updatefields;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,10 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotebookCreateFields {
+public class ReservaUpdateFields {
 
-    @NotBlank
+    @NotNull
     @Size(min = 6, max = 6)
-    private String patrimonio;
-
+    private String notebookPatrimonio;
 }

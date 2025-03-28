@@ -27,7 +27,7 @@ public class Notebook implements Cloneable {
 
 
     public Notebook(Notebook notebook) {
-        this.id = notebook.getId();
+        this.id = null;
         this.patrimonio = notebook.getPatrimonio();
         this.status = notebook.getStatus();
     }
