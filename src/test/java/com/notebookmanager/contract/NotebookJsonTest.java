@@ -1,16 +1,15 @@
 package com.notebookmanager.contract;
 
 import com.notebookmanager.model.Notebook;
-import com.notebookmanager.model.createfields.NotebookCreateFields;
+import com.notebookmanager.model.dto.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.updatefields.NotebookUpdateFields;
+import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

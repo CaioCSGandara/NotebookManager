@@ -1,4 +1,4 @@
-package com.notebookmanager.model.createfields;
+package com.notebookmanager.model.dto.createfields;
 
 import com.notebookmanager.model.enums.Curso;
 import jakarta.validation.constraints.NotBlank;

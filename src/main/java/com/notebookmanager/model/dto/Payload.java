@@ -1,4 +1,4 @@
-package com.notebookmanager.model;
+package com.notebookmanager.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

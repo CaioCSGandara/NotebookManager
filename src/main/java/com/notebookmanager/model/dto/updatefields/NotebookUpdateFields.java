@@ -1,4 +1,4 @@
-package com.notebookmanager.model.updatefields;
+package com.notebookmanager.model.dto.updatefields;
 
 import com.notebookmanager.model.enums.StatusNotebook;
 import jakarta.validation.constraints.NotNull;
