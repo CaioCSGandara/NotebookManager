@@ -50,7 +50,7 @@ public class AlunoControllerSuccessTest {
 
         String localDoNovoAluno = response.getHeaders().getLocation().getPath();
 
-        assertThat(localDoNovoAluno).isEqualTo("/alunos/4");
+        assertThat(localDoNovoAluno).isEqualTo("/alunos/8");
 
     }
 

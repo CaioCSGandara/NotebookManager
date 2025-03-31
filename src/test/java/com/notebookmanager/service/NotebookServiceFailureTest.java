@@ -31,6 +31,17 @@ public class NotebookServiceFailureTest {
     }
 
     @Test
+    public void naoRetornaNotebookComPatrimonioInvalido() {
+
+        RecursoNaoEncontradoException exception = assertThrows(RecursoNaoEncontradoException.class,
+                () -> {
+                    notebookService.encontraNotebookPorPatrimonio("000000");
+                });
+
+        assertThat(exception.getMessage()).isEqualTo("Notebook não encontrado.");
+    }
+
+    @Test
     public void naoCadastraNotebookComPatrimonioRepetido() {
 
         RecursoJaExistenteException exception = assertThrows(RecursoJaExistenteException.class,
@@ -56,7 +67,7 @@ public class NotebookServiceFailureTest {
 
         ValidationException naoDisponivelParaNaoDisponivelException = assertThrows(ValidationException.class,
                 ()-> {
-            notebookService.alteraStatusNotebook(2, naoDisponivelParaNaoDisponivel);
+            notebookService.alteraStatusNotebook(4, naoDisponivelParaNaoDisponivel);
                 });
 
         assertThat(naoDisponivelParaNaoDisponivelException.getMessage()).isEqualTo("Para tornar um notebook EMPRESTADO ou AFASTADO, ele deve estar DISPONIVEL.");

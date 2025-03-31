@@ -20,6 +20,15 @@ public class AlunoServiceFailureTest {
 
 
     @Test
+    void naoRetornaAlunoComRaInvalido() {
+
+        RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {
+            alunoService.encontrarAlunoPorRa("00000000");
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("Aluno não encontrado.");
+    }
+
     void naoRetornaAlunoComIdInvalido() {
 
         RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {

@@ -50,7 +50,7 @@ public class NotebookControllerSuccessTest {
 
         String localNovoNotebook =  response.getHeaders().getLocation().getPath();
 
-        assertThat(localNovoNotebook).isEqualTo("/notebooks/4");
+        assertThat(localNovoNotebook).isEqualTo("/notebooks/6");
     }
 
 

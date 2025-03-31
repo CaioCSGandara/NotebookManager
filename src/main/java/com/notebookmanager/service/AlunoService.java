@@ -31,6 +31,14 @@ public class AlunoService {
         return aluno.get();
     }
 
+    public Aluno encontrarAlunoPorRa(String ra) {
+        Optional<Aluno> aluno = alunoRepository.findByRa(ra);
+        if (aluno.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
+        }
+        return aluno.get();
+    }
+
     public Aluno cadastrarAluno(AlunoCreateFields alunoCreateFields) {
         if(alunoRepository.existsByRa(alunoCreateFields.getRa()) || alunoRepository.existsByEmail(alunoCreateFields.getEmail())) {
             throw new RecursoJaExistenteException("O Aluno com este RA e/ou e-mail já está cadastrado.");

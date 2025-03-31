@@ -33,6 +33,15 @@ public class NotebookService {
         return notebook.get();
     }
 
+    public Notebook encontraNotebookPorPatrimonio(String patrimonio) {
+
+        Optional<Notebook> notebook = notebookRepository.findByPatrimonio(patrimonio);
+        if(notebook.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Notebook não encontrado.");
+        }
+        return notebook.get();
+    }
+
     public Notebook cadastrarNotebook(NotebookCreateFields notebookCreateFields) {
         if(notebookRepository.existsByPatrimonio(notebookCreateFields.getPatrimonio())) {
             throw new RecursoJaExistenteException("O Notebook com este patrimonio já está cadastrado.");
