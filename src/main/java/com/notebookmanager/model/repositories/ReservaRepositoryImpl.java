@@ -116,19 +116,17 @@ public class ReservaRepositoryImpl implements ReservaRepository {
                 FROM reserva
                 JOIN aluno ON aluno.id = reserva.aluno
                 JOIN notebook ON notebook.id = reserva.notebook
-                WHERE notebook.status = ?
+                WHERE notebook.status = 'EMPRESTADO'
                 ORDER BY reserva.inicio_em ASC
                 LIMIT ?
                 OFFSET ?
                 """;
 
-        String statusQuery = "EMPRESTADO";
         Integer limit = pageable.getPageSize();
         Integer offset = (pageable.getPageNumber() - 1) * pageable.getPageSize();
 
         return jdbcClient
                 .sql(sql)
-                .param(statusQuery)
                 .param(limit)
                 .param(offset)
                 .query(new ReservaMapper())
