@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservaUpdateFields {
 
-    @NotNull
     @Size(min = 6, max = 6)
     private String notebookPatrimonio;
 }
