@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
+
 
 public class ReservaMapper implements RowMapper<Reserva> {
     public Reserva mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -4,7 +4,6 @@ import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Notebook;
 import com.notebookmanager.model.dto.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.repositories.NotebookRepository;
 import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

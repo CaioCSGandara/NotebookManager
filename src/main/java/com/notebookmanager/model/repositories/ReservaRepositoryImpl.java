@@ -4,7 +4,6 @@ package com.notebookmanager.model.repositories;
 import com.notebookmanager.model.Reserva;
 import com.notebookmanager.model.mapper.ReservaMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
