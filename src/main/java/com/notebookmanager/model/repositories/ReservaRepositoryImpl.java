@@ -18,26 +18,29 @@ public class ReservaRepositoryImpl implements ReservaRepository {
 
     JdbcClient jdbcClient;
 
+    private final static String SQL_STANDART_RESERVA_QUERY = """
+                            SELECT\s
+                                reserva.id,
+                                reserva.inicio_em,
+                                reserva.termino_em,
+                                aluno.id as aluno_id,
+                                aluno.nome,
+                                aluno.ra,
+                                aluno.email,
+                                aluno.telefone,
+                                aluno.curso,
+                                notebook.id as notebook_id,
+                                notebook.patrimonio,
+                                notebook.status
+                            FROM reserva
+                            JOIN aluno ON aluno.id = reserva.aluno
+                            JOIN notebook ON notebook.id = reserva.notebook
+            """;
+
     @Override
     public Optional<Reserva> findByNotebook(Integer notebookId) {
-        String sql = """
-                SELECT\s
-                    reserva.id,
-                    reserva.inicio_em,
-                    reserva.termino_em,
-                    aluno.id as aluno_id,
-                    aluno.nome,
-                    aluno.ra,
-                    aluno.email,
-                    aluno.telefone,
-                    aluno.curso,
-                    notebook.id as notebook_id,
-                    notebook.patrimonio,
-                    notebook.status
-                FROM reserva
-                JOIN aluno ON aluno.id = reserva.aluno
-                JOIN notebook ON notebook.id = reserva.notebook
-                WHERE notebook.id = ?""";
+
+        String sql = SQL_STANDART_RESERVA_QUERY + " WHERE notebook.id = ?";
 
 
         return jdbcClient
@@ -50,24 +53,8 @@ public class ReservaRepositoryImpl implements ReservaRepository {
 
     @Override
     public Optional<Reserva> findById(Integer id) {
-        String sql = """
-                SELECT\s
-                    reserva.id,
-                    reserva.inicio_em,
-                    reserva.termino_em,
-                    aluno.id as aluno_id,
-                    aluno.nome,
-                    aluno.ra,
-                    aluno.email,
-                    aluno.telefone,
-                    aluno.curso,
-                    notebook.id as notebook_id,
-                    notebook.patrimonio,
-                    notebook.status
-                FROM reserva
-                JOIN aluno ON aluno.id = reserva.aluno
-                JOIN notebook ON notebook.id = reserva.notebook
-                WHERE reserva.id = ?""";
+
+        String sql = SQL_STANDART_RESERVA_QUERY + " WHERE reserva.id = ?";
 
 
         return jdbcClient
@@ -99,28 +86,7 @@ public class ReservaRepositoryImpl implements ReservaRepository {
     @Override
     public List<Reserva> findAllReservasAtivas(Pageable pageable) {
 
-        String sql = """
-                SELECT\s
-                    reserva.id,
-                    reserva.inicio_em,
-                    reserva.termino_em,
-                    aluno.id as aluno_id,
-                    aluno.nome,
-                    aluno.ra,
-                    aluno.email,
-                    aluno.telefone,
-                    aluno.curso,
-                    notebook.id as notebook_id,
-                    notebook.patrimonio,
-                    notebook.status
-                FROM reserva
-                JOIN aluno ON aluno.id = reserva.aluno
-                JOIN notebook ON notebook.id = reserva.notebook
-                WHERE reserva.termino_em is NULL
-                ORDER BY reserva.inicio_em ASC
-                LIMIT ?
-                OFFSET ?
-                """;
+        String sql = SQL_STANDART_RESERVA_QUERY + " WHERE reserva.termino_em is NULL ORDER BY reserva.inicio_em ASC LIMIT ? OFFSET ?";
 
         Integer limit = pageable.getPageSize();
         Integer offset = (pageable.getPageNumber() - 1) * pageable.getPageSize();
