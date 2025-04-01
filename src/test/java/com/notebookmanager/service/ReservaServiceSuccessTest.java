@@ -48,7 +48,7 @@ public class ReservaServiceSuccessTest {
 
     @Test
     public void listaPaginaDeReservasAtivas() {
-        List<Reserva> reservas = reservaService.listarPaginaDeReservasAtivas(PageRequest.of(1, 10));
+        List<Reserva> reservas = reservaService.listarPaginaDeReservasAtivas(PageRequest.of(0, 10));
         assertThat(reservas.size()).isEqualTo(2);
         assertThat(reservas.get(0).getInicioEm()).isEqualTo("2025-03-28T12:21:03");
         assertThat(reservas.get(1).getInicioEm()).isEqualTo("2025-03-28T14:30");

@@ -170,7 +170,6 @@ public class AlunoControllerFailureTest {
 
 
 
-
     private void assertResponseParaPropriedadeInvalida(String url, HttpMethod method, HttpEntity request, String errorMessage) {
         ResponseEntity<String> response = restTemplate.exchange(url, method, request, String.class);
 
