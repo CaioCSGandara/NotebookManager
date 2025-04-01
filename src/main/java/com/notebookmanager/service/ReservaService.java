@@ -30,7 +30,7 @@ public class ReservaService {
     public Reserva encontrarReservaPorId(Integer id) {
         Optional<Reserva> reservaOpt = reservaRepository.findById(id);
         if(reservaOpt.isEmpty()){
-            throw new RecursoNaoEncontradoException("Reserva com o notebook especificado não foi encontrada.");
+            throw new RecursoNaoEncontradoException("Reserva com o id especificado não foi encontrada.");
         }
         return reservaOpt.get();
     }
