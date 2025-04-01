@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,7 +116,7 @@ public class ReservaRepositoryImpl implements ReservaRepository {
                 FROM reserva
                 JOIN aluno ON aluno.id = reserva.aluno
                 JOIN notebook ON notebook.id = reserva.notebook
-                WHERE notebook.status = 'EMPRESTADO'
+                WHERE reserva.termino_em is NULL
                 ORDER BY reserva.inicio_em ASC
                 LIMIT ?
                 OFFSET ?
@@ -133,6 +134,20 @@ public class ReservaRepositoryImpl implements ReservaRepository {
 
     }
 
+    @Override
+    public void update(Integer id, LocalDateTime termino_em) {
 
+        String sql = """
+                UPDATE reserva
+                SET termino_em = ?
+                WHERE id = ?
+                """;
+
+        jdbcClient
+                .sql(sql)
+                .param(termino_em)
+                .param(id)
+                .update();
+    }
 
 }

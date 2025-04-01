@@ -32,7 +32,7 @@ public class ReservaMapper implements RowMapper<Reserva> {
         reserva.setAluno(aluno);
         reserva.setNotebook(notebook);
         reserva.setInicioEm(rs.getTimestamp("inicio_em").toLocalDateTime());
-        reserva.setInicioEm(rs.getTimestamp("inicio_em").toLocalDateTime());
+        reserva.setTerminoEm(rs.getTimestamp("termino_em") != null ? rs.getTimestamp("termino_em").toLocalDateTime() : null);
 
         return reserva;
     }

@@ -27,6 +27,15 @@ public class ReservaService {
     private NotebookService notebookService;
 
 
+    public Reserva encontrarReservaPorId(Integer id) {
+        Optional<Reserva> reservaOpt = reservaRepository.findById(id);
+        if(reservaOpt.isEmpty()){
+            throw new RecursoNaoEncontradoException("Reserva com o notebook especificado não foi encontrada.");
+        }
+        return reservaOpt.get();
+    }
+
+
     public Reserva encontrarReservaPorNotebook(Integer notebookId) {
         Optional<Reserva> reservaOpt = reservaRepository.findByNotebook(notebookId);
         if(reservaOpt.isEmpty()){
@@ -58,22 +67,20 @@ public class ReservaService {
     }
 
 
-    public void encerrarReserva(Integer notebookId, NotebookUpdateFields notebookUpdateFields) {
+    public void encerrarReserva(Integer id, NotebookUpdateFields notebookUpdateFields) {
 
-        encontrarReservaPorNotebook(notebookId);
+        Reserva reserva = encontrarReservaPorId(id);
+
+        Integer notebookId = reserva.getNotebook().getId();
 
         notebookService.alteraStatusNotebook(notebookId, notebookUpdateFields);
+        reservaRepository.update(id, LocalDateTime.now());
 
     }
 
     public void trocarNotebookDuranteReserva(Integer id, ReservaUpdateFields reservaUpdateFields) {
 
-        Optional<Reserva> reservaAtualOpt = reservaRepository.findById(id);
-        if (reservaAtualOpt.isEmpty()) {
-            throw new RecursoNaoEncontradoException("Reserva não encontrada.");
-        }
-
-        Reserva reservaAtual = reservaAtualOpt.get();
+        Reserva reservaAtual = encontrarReservaPorId(id);
 
         Integer idNotebookAtual = reservaAtual.getNotebook().getId();
 
