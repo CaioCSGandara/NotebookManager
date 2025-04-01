@@ -89,7 +89,7 @@ public class ReservaRepositoryImpl implements ReservaRepository {
         String sql = SQL_STANDART_RESERVA_QUERY + " WHERE reserva.termino_em is NULL ORDER BY reserva.inicio_em ASC LIMIT ? OFFSET ?";
 
         Integer limit = pageable.getPageSize();
-        Integer offset = (pageable.getPageNumber() - 1) * pageable.getPageSize();
+        Integer offset = (pageable.getPageNumber()) * pageable.getPageSize();
 
         return jdbcClient
                 .sql(sql)
