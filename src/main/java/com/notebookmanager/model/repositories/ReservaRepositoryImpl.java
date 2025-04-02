@@ -69,17 +69,18 @@ public class ReservaRepositoryImpl implements ReservaRepository {
     @Override
     public Reserva save(Reserva reserva) {
 
-        String sql  = "INSERT INTO reserva (INICIO_EM, TERMINO_EM, ALUNO, NOTEBOOK) VALUES (?, ?, ?, ?)";
+        String sql  = "INSERT INTO reserva (INICIO_EM, TERMINO_EM, ALUNO, NOTEBOOK) VALUES (?, ?, ?, ?) RETURNING ID";
 
-        jdbcClient
+        Long id = jdbcClient
                 .sql(sql)
                 .param(reserva.getInicioEm())
                 .param(reserva.getTerminoEm())
                 .param(reserva.getAluno().getId())
                 .param(reserva.getNotebook().getId())
-                .update();
+                .query(Long.class)
+                .single();
 
-        return findByNotebook(reserva.getNotebook().getId()).get();
+        return findById((Integer.parseInt(id.toString()))).get();
     }
 
 

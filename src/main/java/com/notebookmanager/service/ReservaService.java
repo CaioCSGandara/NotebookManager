@@ -54,6 +54,8 @@ public class ReservaService {
             throw new ValidationException("Este notebook não está disponível para empréstimo no momento.");
         }
 
+        notebookService.alteraStatusNotebook(notebook.getId(), new NotebookUpdateFields(StatusNotebook.EMPRESTADO));
+
         Reserva reserva = new Reserva(aluno, notebook, LocalDateTime.now(), null);
 
         return reservaRepository.save(reserva);
@@ -82,9 +84,7 @@ public class ReservaService {
 
         Reserva reservaAtual = encontrarReservaPorId(id);
 
-        Integer idNotebookAtual = reservaAtual.getNotebook().getId();
-
-        encerrarReserva(idNotebookAtual, new NotebookUpdateFields(StatusNotebook.DISPONIVEL));
+        encerrarReserva(reservaAtual.getId(), new NotebookUpdateFields(StatusNotebook.DISPONIVEL));
 
         Notebook notebookNovo = notebookService.encontraNotebookPorPatrimonio(reservaUpdateFields.getNotebookPatrimonio());
 
