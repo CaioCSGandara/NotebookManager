@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "aluno": {
+      "id": 1,
+      "nome": "Julio Correa",
+      "ra": "09135616",
+      "email": "jcorrea@puccampinas.edu.br",
+      "telefone": "(19)90914-3014",
+      "curso": "MEDICINA"
+    },
+    "notebook":   {
+      "id": 1,
+      "patrimonio": "491034",
+      "status": "EMPRESTADO"
+    },
+    "inicioEm": "2021-12-21T19:50:13",
+    "terminoEm": "2021-12-21T22:33:04"
+  },
+
+  {
+    "id": 2,
+    "aluno": {
+    "id": 2,
+    "nome": "Maria Ferreira",
+    "ra": "03781923",
+    "email": "maria.ferreira@puccampinas.edu.br",
+    "telefone": "(19)90814-2314",
+    "curso": "TERAPIA_OCUPACIONAL"
+  },
+    "notebook":   {
+      "id": 2,
+      "patrimonio": "983410",
+      "status": "EMPRESTADO"
+    },
+    "inicioEm": "2021-12-21T09:13:25",
+    "terminoEm": "2021-12-21T12:54:47"
+  },
+
+  {
+    "id": 3,
+    "aluno":   {
+      "id": 3,
+      "nome": "Fernando Pontes",
+      "ra": "90174823",
+      "email": "fernandohpontes@puccampinas.edu.br",
+      "telefone": "(19)83914-0945",
+      "curso": "BIOMEDICINA"
+    },
+    "notebook":   {
+      "id": 3,
+      "patrimonio": "123098",
+      "status": "EMPRESTADO"
+    },
+    "inicioEm": "2021-12-21T12:30:23",
+    "terminoEm": "2021-12-21T16:14:54"
+  }
+
+]

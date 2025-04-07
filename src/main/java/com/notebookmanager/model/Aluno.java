@@ -27,7 +27,7 @@ public class Aluno implements Cloneable {
     }
 
     public Aluno(Aluno aluno) {
-        this.id = aluno.getId();
+        this.id = null;
         this.nome = aluno.getNome();
         this.ra = aluno.getRa();
         this.email = aluno.getEmail();

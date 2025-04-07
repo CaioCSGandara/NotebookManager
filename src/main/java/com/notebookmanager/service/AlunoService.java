@@ -3,9 +3,9 @@ package com.notebookmanager.service;
 import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Aluno;
-import com.notebookmanager.model.createfields.AlunoCreateFields;
+import com.notebookmanager.model.dto.createfields.AlunoCreateFields;
 import com.notebookmanager.model.repositories.AlunoRepository;
-import com.notebookmanager.model.updatefields.AlunoUpdateFields;
+import com.notebookmanager.model.dto.updatefields.AlunoUpdateFields;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +25,14 @@ public class AlunoService {
     public Aluno encontrarAlunoPorId(Integer id) {
 
         Optional<Aluno> aluno = alunoRepository.findById(id);
+        if (aluno.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Aluno não encontrado.");
+        }
+        return aluno.get();
+    }
+
+    public Aluno encontrarAlunoPorRa(String ra) {
+        Optional<Aluno> aluno = alunoRepository.findByRa(ra);
         if (aluno.isEmpty()) {
             throw new RecursoNaoEncontradoException("Aluno não encontrado.");
         }

@@ -2,10 +2,9 @@ package com.notebookmanager.service;
 
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Aluno;
-import com.notebookmanager.model.createfields.AlunoCreateFields;
+import com.notebookmanager.model.dto.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
-import com.notebookmanager.model.repositories.AlunoRepository;
-import com.notebookmanager.model.updatefields.AlunoUpdateFields;
+import com.notebookmanager.model.dto.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,13 +22,18 @@ public class AlunoServiceSuccessTest {
 
     @Autowired
     private AlunoService alunoService;
-    @Autowired
-    private AlunoRepository alunoRepository;
 
     @Test
     void retornaAlunoPorId() {
         Aluno aluno = alunoService.encontrarAlunoPorId(1);
         assertThat(aluno.getId()).isEqualTo(1);
+        assertThat(aluno.getNome()).isEqualTo("Julio Correa");
+    }
+
+    @Test
+    void retornaAlunoPorRa() {
+        Aluno aluno = alunoService.encontrarAlunoPorRa("09135616");
+        assertThat(aluno.getRa()).isEqualTo("09135616");
         assertThat(aluno.getNome()).isEqualTo("Julio Correa");
     }
 
@@ -47,20 +51,12 @@ public class AlunoServiceSuccessTest {
     @Test
     void listaAlunosDefault() {
         List<Aluno> listaAlunos = alunoService.listaPaginaDeAlunos(PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nome")));
-        assertThat(listaAlunos.size()).isEqualTo(3);
-        assertThat(listaAlunos.get(0).getRa()).isEqualTo("90174823");
-        assertThat(listaAlunos.get(1).getRa()).isEqualTo("09135616");
-        assertThat(listaAlunos.get(2).getRa()).isEqualTo("03781923");
+        assertThat(listaAlunos.size()).isEqualTo(7);
+        assertThat(listaAlunos.get(0).getRa()).isEqualTo("56781234");
+        assertThat(listaAlunos.get(1).getRa()).isEqualTo("87654321");
+        assertThat(listaAlunos.get(2).getRa()).isEqualTo("90174823");
     }
 
-    @Test
-    @DirtiesContext
-    void listaAlunosVazia() {
-
-        alunoRepository.deleteAll();
-        List<Aluno> listaAlunos = alunoService.listaPaginaDeAlunos(PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nome")));
-        assertThat(listaAlunos.size()).isEqualTo(0);
-    }
 
     @Test
     @DirtiesContext

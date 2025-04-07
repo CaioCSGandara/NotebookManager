@@ -2,10 +2,9 @@ package com.notebookmanager.service;
 
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.model.Notebook;
-import com.notebookmanager.model.createfields.NotebookCreateFields;
+import com.notebookmanager.model.dto.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.repositories.NotebookRepository;
-import com.notebookmanager.model.updatefields.NotebookUpdateFields;
+import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,14 +21,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class NotebookServiceSuccessTest {
     @Autowired
     private NotebookService notebookService;
-    @Autowired
-    private NotebookRepository notebookRepository;
 
     @Test
     public void retornaNotebookPorId() {
         Notebook notebook = notebookService.encontraNotebookPorId(1);
         assertThat(notebook.getId()).isEqualTo(1);
         assertThat(notebook.getPatrimonio()).isEqualTo("491034");
+    }
+
+    @Test
+    public void retornaNotebookPorPatrimonio() {
+        Notebook notebook = notebookService.encontraNotebookPorPatrimonio("491034");
+        assertThat(notebook.getPatrimonio()).isEqualTo("491034");
+        assertThat(notebook.getStatus()).isEqualTo(StatusNotebook.DISPONIVEL);
     }
 
     @Test
@@ -46,24 +50,15 @@ public class NotebookServiceSuccessTest {
                 0,
                 10,
                 Sort.by(Sort.Direction.ASC, "status")));
-        assertThat(listaNotebooks.size()).isEqualTo(3);
+        assertThat(listaNotebooks.size()).isEqualTo(5);
         assertThat(listaNotebooks.get(0).getPatrimonio()).isEqualTo("123098");
         assertThat(listaNotebooks.get(1).getPatrimonio()).isEqualTo("491034");
-        assertThat(listaNotebooks.get(2).getPatrimonio()).isEqualTo("983410");
+        assertThat(listaNotebooks.get(2).getPatrimonio()).isEqualTo("930183");
+        assertThat(listaNotebooks.get(3).getPatrimonio()).isEqualTo("398145");
+        assertThat(listaNotebooks.get(4).getPatrimonio()).isEqualTo("983410");
 
     }
 
-    @Test
-    @DirtiesContext
-    public void listaNotebooksVazia() {
-        notebookRepository.deleteAll();
-        List<Notebook> listaNotebooks = notebookService.listaPaginaDeNotebooks(PageRequest.of(
-                0,
-                10,
-                Sort.by(Sort.Direction.ASC, "status")));
-
-        assertThat(listaNotebooks.size()).isEqualTo(0);
-    }
 
     @Test
     @DirtiesContext

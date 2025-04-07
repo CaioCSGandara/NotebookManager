@@ -2,9 +2,9 @@ package com.notebookmanager.controller;
 
 import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.Notebook;
-import com.notebookmanager.model.createfields.NotebookCreateFields;
-import com.notebookmanager.model.Payload;
-import com.notebookmanager.model.updatefields.NotebookUpdateFields;
+import com.notebookmanager.model.dto.createfields.NotebookCreateFields;
+import com.notebookmanager.model.dto.Payload;
+import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import com.notebookmanager.service.NotebookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

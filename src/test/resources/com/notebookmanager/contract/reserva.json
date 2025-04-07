@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "aluno": {
+    "id": 1,
+    "nome": "Julio Correa",
+    "ra": "09135616",
+    "email": "jcorrea@puccampinas.edu.br",
+    "telefone": "(19)90914-3014",
+    "curso": "MEDICINA"
+  },
+  "notebook":   {
+    "id": 2,
+    "patrimonio": "983410",
+    "status": "EMPRESTADO"
+  },
+  "inicioEm": "2022-05-23T15:32:21",
+  "terminoEm": "2022-05-23T18:22:59"
+}

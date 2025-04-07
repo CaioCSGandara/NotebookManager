@@ -3,9 +3,9 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.createfields.NotebookCreateFields;
+import com.notebookmanager.model.dto.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.updatefields.NotebookUpdateFields;
+import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,7 +50,7 @@ public class NotebookControllerSuccessTest {
 
         String localNovoNotebook =  response.getHeaders().getLocation().getPath();
 
-        assertThat(localNovoNotebook).isEqualTo("/notebooks/4");
+        assertThat(localNovoNotebook).isEqualTo("/notebooks/6");
     }
 
 

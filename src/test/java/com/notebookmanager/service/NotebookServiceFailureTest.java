@@ -3,9 +3,9 @@ package com.notebookmanager.service;
 import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
 import com.notebookmanager.infra.exception.ValidationException;
-import com.notebookmanager.model.createfields.NotebookCreateFields;
+import com.notebookmanager.model.dto.createfields.NotebookCreateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
-import com.notebookmanager.model.updatefields.NotebookUpdateFields;
+import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +25,17 @@ public class NotebookServiceFailureTest {
         RecursoNaoEncontradoException exception = assertThrows(RecursoNaoEncontradoException.class,
                 () -> {
             notebookService.encontraNotebookPorId(312);
+                });
+
+        assertThat(exception.getMessage()).isEqualTo("Notebook não encontrado.");
+    }
+
+    @Test
+    public void naoRetornaNotebookComPatrimonioInvalido() {
+
+        RecursoNaoEncontradoException exception = assertThrows(RecursoNaoEncontradoException.class,
+                () -> {
+                    notebookService.encontraNotebookPorPatrimonio("000000");
                 });
 
         assertThat(exception.getMessage()).isEqualTo("Notebook não encontrado.");
@@ -56,7 +67,7 @@ public class NotebookServiceFailureTest {
 
         ValidationException naoDisponivelParaNaoDisponivelException = assertThrows(ValidationException.class,
                 ()-> {
-            notebookService.alteraStatusNotebook(2, naoDisponivelParaNaoDisponivel);
+            notebookService.alteraStatusNotebook(4, naoDisponivelParaNaoDisponivel);
                 });
 
         assertThat(naoDisponivelParaNaoDisponivelException.getMessage()).isEqualTo("Para tornar um notebook EMPRESTADO ou AFASTADO, ele deve estar DISPONIVEL.");

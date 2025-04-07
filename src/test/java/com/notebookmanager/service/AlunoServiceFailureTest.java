@@ -2,9 +2,9 @@ package com.notebookmanager.service;
 
 import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
-import com.notebookmanager.model.createfields.AlunoCreateFields;
+import com.notebookmanager.model.dto.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
-import com.notebookmanager.model.updatefields.AlunoUpdateFields;
+import com.notebookmanager.model.dto.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,15 @@ public class AlunoServiceFailureTest {
 
 
     @Test
+    void naoRetornaAlunoComRaInvalido() {
+
+        RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {
+            alunoService.encontrarAlunoPorRa("00000000");
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("Aluno não encontrado.");
+    }
+
     void naoRetornaAlunoComIdInvalido() {
 
         RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {

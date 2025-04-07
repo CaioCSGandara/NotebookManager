@@ -1,7 +1,7 @@
 package com.notebookmanager.contract;
 
-import com.notebookmanager.model.Payload;
-import com.notebookmanager.model.createfields.AlunoCreateFields;
+import com.notebookmanager.model.dto.Payload;
+import com.notebookmanager.model.dto.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

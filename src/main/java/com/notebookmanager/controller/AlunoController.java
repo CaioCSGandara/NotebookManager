@@ -1,10 +1,10 @@
 package com.notebookmanager.controller;
 
 import com.notebookmanager.infra.exception.ValidationException;
-import com.notebookmanager.model.Payload;
+import com.notebookmanager.model.dto.Payload;
 import com.notebookmanager.model.Aluno;
-import com.notebookmanager.model.createfields.AlunoCreateFields;
-import com.notebookmanager.model.updatefields.AlunoUpdateFields;
+import com.notebookmanager.model.dto.createfields.AlunoCreateFields;
+import com.notebookmanager.model.dto.updatefields.AlunoUpdateFields;
 import com.notebookmanager.service.AlunoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

@@ -3,9 +3,9 @@ package com.notebookmanager.controller;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.notebookmanager.controller.payloadvalidator.PayloadValidator;
-import com.notebookmanager.model.createfields.AlunoCreateFields;
+import com.notebookmanager.model.dto.createfields.AlunoCreateFields;
 import com.notebookmanager.model.enums.Curso;
-import com.notebookmanager.model.updatefields.AlunoUpdateFields;
+import com.notebookmanager.model.dto.updatefields.AlunoUpdateFields;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,7 +50,7 @@ public class AlunoControllerSuccessTest {
 
         String localDoNovoAluno = response.getHeaders().getLocation().getPath();
 
-        assertThat(localDoNovoAluno).isEqualTo("/alunos/4");
+        assertThat(localDoNovoAluno).isEqualTo("/alunos/8");
 
     }
 
