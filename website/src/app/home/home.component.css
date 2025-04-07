@@ -1,0 +1,120 @@
+.home-container {
+  max-width: 600px; /* Ajuste a largura conforme necessário */
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.action-section {
+  background-color: #f9f9f9;
+  padding: 25px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 30px; /* Espaço entre as seções */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.action-section h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.action-section p {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 0.95em;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9em;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  min-height: 1.1em;
+}
+
+.modal-error { /* Estilo específico para erro na modal, se necessário */
+   margin-top: -10px;
+   margin-bottom: 15px;
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.section-divider {
+  border: none;
+  border-top: 2px dashed #ccc; /* Linha tracejada como separador */
+  margin: 40px 0; /* Mais espaço vertical */
+}
+
+/* --- Estilos da Modal (Garantir que estão presentes) --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1050;
+}
+.modal-content {
+  background-color: #fff; padding: 30px; border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  min-width: 300px; max-width: 90%;
+  z-index: 1051; text-align: left;
+}
+.modal-content h2 { margin-top: 0; margin-bottom: 15px; text-align: center;}
+.modal-content p { margin-bottom: 15px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;}
+
+/* Estilos de botões (garantir que .btn, .btn-primary, .btn-secondary, .btn-light estão definidos) */
+.btn { /* ... estilos base ... */ }
+.btn-primary { /* ... estilos ... */ }
+.btn-primary:disabled { /* ... estilos ... */ }
+.btn-secondary { background-color: #6c757d; color: white; /* ... outros estilos ... */ }
+.btn-secondary:hover { background-color: #5a6268; }
+.btn-light { /* ... estilos ... */ }
+
+/* Estilo opcional para diferenciar a modal de confirmação */
+.modal-confirm p {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-confirm strong {
+  font-weight: bold;
+  color: #0056b3; /* Exemplo de cor para o RA destacado */
+}
+
+/* Estilo para o botão "Sim, Cadastrar" (Bootstrap 'success' como exemplo) */
+.btn-success {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+.btn-success:hover {
+  color: #fff;
+  background-color: #218838;
+  border-color: #1e7e34;
+}

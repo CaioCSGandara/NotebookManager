@@ -1,0 +1,33 @@
+/* src/app/cadastro-usuario/cadastro-usuario.component.css */
+.cadastro-container {
+    max-width: 700px; /* Um pouco mais largo para mais campos */
+    margin: 30px auto;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .cadastro-container h2 { text-align: center; margin-bottom: 10px; color: #333; }
+  .cadastro-container p { text-align: center; margin-bottom: 25px; color: #666; }
+  .cadastro-container p strong { font-weight: bold; color: #0056b3; }
+  
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: #444; }
+  .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.95rem; }
+  .form-control:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); }
+  .form-control[readonly][disabled] { background-color: #e9ecef; opacity: 1; cursor: not-allowed; } /* Estilo para campo RA readonly */
+  
+  .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+  
+  /* Estilos de Botão (reutilize/adapte) */
+  .btn { /* ... estilos base ... */ }
+  .btn-primary { /* ... estilos ... */ }
+  .btn-primary:disabled { /* ... estilos ... */ }
+  .btn-light { /* ... estilos ... */ }
+  
+  /* Mensagens de status (reutilize/adapte) */
+  .status-message { /* ... estilos ... */ }
+  .status-success { /* ... estilos ... */ }
+  .status-error { /* ... estilos ... */ }

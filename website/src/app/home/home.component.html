@@ -1,0 +1,54 @@
+<div class="home-container">
+
+  <div class="action-section">
+    <h2>Registrar Novo Empréstimo</h2>
+    <p>Insira seu RA para iniciar o registro de um empréstimo de notebook.</p>
+    <div class="form-group">
+      <label for="ra">RA:</label>
+      <input type="text" id="ra" name="ra" [(ngModel)]="ra" placeholder="Digite seu RA" class="form-control" required [disabled]="isLoadingRA" (keyup.enter)="validarRAeNavegar()"/>
+    </div>
+    <p *ngIf="loginErrorMessage" class="error-message">{{ loginErrorMessage }}</p> <div class="actions">
+      <button (click)="validarRAeNavegar()" class="btn btn-primary" [disabled]="isLoadingRA || !ra || ra.trim() === ''">
+        <span *ngIf="!isLoadingRA">Verificar RA e Registrar Empréstimo</span>
+        <span *ngIf="isLoadingRA">Verificando RA...</span>
+      </button>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="action-section">
+    <h2>Consultar Empréstimos</h2>
+    <p>Acesse a lista dos seus empréstimos ativos (requer senha).</p>
+    <div class="actions">
+      <button (click)="abrirModalSenha()" class="btn btn-secondary">Ver Empréstimos Ativos</button>
+    </div>
+  </div>
+
+</div> <div *ngIf="isModalVisible" class="modal-backdrop" (click)="fecharModalSenha()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Acesso Restrito</h2>
+    <p>Digite a senha para ver seus empréstimos ativos:</p>
+    <div class="form-group">
+      <label for="password">Senha:</label>
+      <input type="password" id="password" name="password" [(ngModel)]="enteredPassword" placeholder="Digite a senha" class="form-control" required (keyup.enter)="verificarSenhaEEntrarEmprestimosAtivos()"/>
+    </div>
+    <p *ngIf="modalErrorMessage" class="error-message modal-error">{{ modalErrorMessage }}</p>
+    <div class="modal-actions">
+      <button (click)="fecharModalSenha()" class="btn btn-light">Cancelar</button>
+      <button (click)="verificarSenhaEEntrarEmprestimosAtivos()" class="btn btn-primary" [disabled]="!enteredPassword">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="isCadastroModalVisible" class="modal-backdrop" (click)="cancelarCadastro()">
+    <div class="modal-content modal-confirm" (click)="$event.stopPropagation()">
+        <h2>RA Não Encontrado</h2>
+        <p>O RA <strong>{{ raParaCadastrar }}</strong> não foi encontrado em nossa base de dados.</p>
+        <p>Deseja cadastrar este RA agora?</p>
+        <div class="modal-actions">
+            <button (click)="cancelarCadastro()" class="btn btn-light">Não</button>
+            <button (click)="confirmarCadastro()" class="btn btn-success">Sim, Cadastrar</button> </div>
+    </div>
+</div>

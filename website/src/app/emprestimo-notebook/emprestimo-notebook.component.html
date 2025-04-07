@@ -1,0 +1,31 @@
+<div class="emprestimo-container">
+    <h2>Registrar Empréstimo de Notebook</h2>
+    <p>Insira o número de patrimônio do notebook a ser emprestado.</p>
+  
+    <div class="form-group">
+      <label for="patrimonio">Número do Patrimônio:</label>
+      <input
+        type="text"
+        id="patrimonio"
+        name="patrimonio"
+        [(ngModel)]="numeroPatrimonio"
+        placeholder="Digite o nº de patrimônio"
+        class="form-control"
+        required
+      />
+    </div>
+  
+    <p *ngIf="mensagemStatus"
+        [ngClass]="{'status-success': mensagemStatus.startsWith('Sucesso'), 'status-error': mensagemStatus.startsWith('Erro')}"
+        class="status-message">
+       {{ mensagemStatus }}
+     </p>
+  
+    <div class="actions">
+      <a routerLink="/" class="btn btn-light">Voltar</a>
+      <button (click)="registrarEmprestimo()" class="btn btn-primary" [disabled]="!numeroPatrimonio || numeroPatrimonio.trim() === ''">
+        Registrar Empréstimo
+      </button>
+    </div>
+  
+  </div>

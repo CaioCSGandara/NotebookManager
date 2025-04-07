@@ -1,0 +1,50 @@
+// src/app/emprestimos-ativos/emprestimos-ativos.component.ts
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Importe se usar diretivas comuns
+
+// Opcional: Importar ActivatedRoute para ler parâmetros da URL
+// import { ActivatedRoute } from '@angular/router';
+// import { Observable } from 'rxjs';
+// import { map } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-emprestimos-ativos',
+  standalone: true,         // Marca como standalone
+  imports: [CommonModule],  // Módulos que este componente usa
+  template: `
+    <div class="emprestimos-container">
+      <h2>Meus Empréstimos Ativos</h2>
+      <p>
+        Aqui serão listados os empréstimos ativos para o RA fornecido.
+      </p>
+      <a routerLink="/">Voltar para o Login</a> </div>
+  `,
+  styles: [`
+    .emprestimos-container {
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  `]
+})
+export class EmprestimosAtivosComponent {
+
+  // // Opcional: Código para ler query param 'usuario' da URL
+  // usuarioRa$: Observable<string | null>;
+  // constructor(private route: ActivatedRoute) {
+  //   this.usuarioRa$ = this.route.queryParamMap.pipe(
+  //     map(params => params.get('usuario'))
+  //   );
+  // }
+
+}
