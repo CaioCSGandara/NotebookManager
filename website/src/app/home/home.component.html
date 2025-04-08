@@ -52,3 +52,23 @@
             <button (click)="confirmarCadastro()" class="btn btn-success">Sim, Cadastrar</button> </div>
     </div>
 </div>
+
+<div *ngIf="isConfirmacaoAlunoModalVisible" class="modal-backdrop" (click)="fecharConfirmacaoAlunoModal()">
+  <div class="modal-content modal-confirm-aluno" (click)="$event.stopPropagation()">
+    <h2>Confirmar Dados</h2>
+    <p>Verifique se os dados abaixo estão corretos antes de prosseguir:</p>
+
+    <div class="aluno-details" *ngIf="alunoConfirmado">
+      <div><strong>Nome:</strong> {{ nomeMascarado }}</div>
+      <div><strong>RA:</strong> {{ alunoConfirmado.ra }}</div>
+      <div><strong>E-mail:</strong> {{ emailMascarado }}</div>
+      <div *ngIf="alunoConfirmado.telefone"><strong>Telefone:</strong> {{ telefoneMascarado }}</div>
+      <div><strong>Curso:</strong> {{ cursoDisplay }}</div>
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="fecharConfirmacaoAlunoModal()" type="button" class="btn btn-light">Cancelar</button>
+      <button (click)="confirmarAlunoENavegar()" type="button" class="btn btn-primary">Confirmar e Continuar</button>
+    </div>
+  </div>
+</div>

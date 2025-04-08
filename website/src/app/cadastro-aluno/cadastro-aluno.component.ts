@@ -3,13 +3,16 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AlunoService, AlunoCreatePayload } from '../core/services/aluno.service'; // <-- 1. Importar Serviço e Payload Type
-import { finalize } from 'rxjs/operators'; // Para o loading
+import { AlunoService, AlunoCreatePayload } from '../core/services/aluno.service';
+import { ApiResponse, Aluno } from '../core/models/aluno.model';
+import { finalize } from 'rxjs/operators';
+import { NgxMaskDirective } from 'ngx-mask';
+import { CURSOS_LISTA } from '../core/constants/cursos.constants'; // Importar a constante da lista de cursos
 
 @Component({
   selector: 'app-cadastro-aluno',
   standalone: true,
-  imports: [ CommonModule, FormsModule, RouterLink ],
+  imports: [ CommonModule, FormsModule, RouterLink , NgxMaskDirective],
   templateUrl: './cadastro-aluno.component.html',
   styleUrls: ['./cadastro-aluno.component.css']
 })
@@ -20,35 +23,20 @@ export class CadastroAlunoComponent implements OnInit, OnDestroy {
   email: string = '';
   telefone: string = '';
   curso: string = '';
-
-  // ---> NOVA LISTA DE CURSOS <---
-  readonly cursosDisponiveis: string[] = [
-    "BIOLOGIA",
-    "BIOMEDICINA",
-    "ENFERMAGEM",
-    "FARMACIA",
-    "FISIOTERAPIA",
-    "FONOAUDIOLOGIA",
-    "MEDICINA",
-    "MEDICINA_VETERINARIA", // Atenção: na API estava como MEDICINA_VETERINARIA
-    "NUTRICAO",           // Atenção: na API estava como NUTRICAO
-    "ODONTOLOGIA",
-    "PSICOLOGIA",
-    "TERAPIA_OCUPACIONAL" // Atenção: na API estava como TERAPIA_OCUPACIONAL
-  ];
-  // Observação: Mantive os nomes como vieram da API (ex: MEDICINA_VETERINARIA).
-  // Se precisar exibir nomes mais amigáveis (ex: "Medicina Veterinária"),
-  // podemos usar um array de objetos { value: 'MEDICINA_VETERINARIA', display: 'Medicina Veterinária' }
+  cursosDisponiveis = CURSOS_LISTA;
 
   mensagemStatus: string = '';
   isLoading: boolean = false;
   private routeSubscription: Subscription | null = null;
+  
+  isSucessoModalVisible: boolean = false;
 
-  constructor(
+    constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private alunoService: AlunoService // <-- 2. Injetar AlunoService
+    private alunoService: AlunoService
   ) {}
+
 
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
@@ -69,60 +57,102 @@ export class CadastroAlunoComponent implements OnInit, OnDestroy {
   }
 
   cadastrarAluno(): void {
-    this.mensagemStatus = ''; // Limpa mensagens anteriores
-    // Validação básica
-    if (!this.nome || !this.email || !this.ra || !this.curso) {
-      this.mensagemStatus = 'Erro: Nome, E-mail, RA e Curso são obrigatórios.';
+    this.mensagemStatus = ''; // Limpa erros anteriores
+    if (!this.nome || !this.email || !this.ra || !this.curso || !this.telefone) {
+      this.mensagemStatus = 'Erro: Todos os campos (Nome, E-mail, Telefone, Curso) são obrigatórios.';
       return;
     }
 
-    this.isLoading = true; // Ativa o loading
+     // 4. Validação específica do E-mail
+     const emailLimpo = this.email.trim();
+     if (emailLimpo.includes(' ')) {
+       this.mensagemStatus = 'Erro: O e-mail não pode conter espaços.';
+       return;
+     }
+     if (!emailLimpo.toLowerCase().endsWith('@puccampinas.edu.br')) {
+       this.mensagemStatus = 'Erro: O e-mail deve ser institucional';
+       return;
+     }
+ 
+     // 5. Validação específica do Telefone (formato básico após máscara)
+     // A máscara ajuda muito, mas uma validação extra pode ser útil
+     // Ex: Verificar se tem o número esperado de dígitos após remover máscara (opcional)
+     const apenasDigitosTelefone = this.telefone.replace(/\D/g, ''); // Remove tudo que não for dígito
+     if (apenasDigitosTelefone.length !== 11) { // Verifica se tem 11 dígitos (DDD + 9 dígitos)
+        this.mensagemStatus = 'Erro: O formato do telefone parece inválido. Verifique os números.';
+        return;
+     }
 
-    // Monta o objeto de dados para enviar à API (sem o 'id')
+    this.isLoading = true;
     const alunoPayload: AlunoCreatePayload = {
       nome: this.nome.trim(),
-      ra: this.ra.trim(), // RA já veio da rota, mas faz trim por segurança
-      email: this.email.trim(),
-      telefone: this.telefone ? this.telefone.trim() : undefined, // Envia undefined se vazio
-      curso: this.curso // Valor selecionado no dropdown
+      ra: this.ra.trim(),
+      email: emailLimpo,
+      telefone: this.telefone,
+      curso: this.curso
     };
 
-    console.log('Enviando para cadastro:', alunoPayload);
-
-    // Chama o método do serviço para cadastrar
+    
     this.alunoService.cadastrarAluno(alunoPayload)
       .pipe(
-        finalize(() => this.isLoading = false) // Desativa o loading ao finalizar (sucesso ou erro)
+        finalize(() => this.isLoading = false)
       )
       .subscribe({
-        next: (response) => { // Callback de sucesso
-          console.log('Resposta do cadastro:', response);
-          // Verifica se a API retornou status OK e os dados do aluno criado
-          if (response && response.status === 'OK' && response.data) {
-            this.mensagemStatus = `Sucesso: Aluno "${response.data.nome}" (RA: ${response.data.ra}) cadastrado com ID: ${response.data.id}!`;
-            // Opcional: Limpar formulário ou redirecionar
-            // this.limparFormulario();
-            // this.router.navigate(['/']); // Ex: Volta para home após sucesso
+        next: (response: ApiResponse<Aluno> | unknown) => {
+          console.log('Cadastro - Resposta recebida (HTTP 2xx):', response);
+
+          // ---> SUCESSO: Abrir a Modal de Sucesso <---
+          // Removemos a definição de 'mensagemStatus' para sucesso
+          this.isSucessoModalVisible = true; // Ativa a nova modal
+
+          // Opcional: Limpar o formulário agora que o cadastro deu certo
+          // this.limparFormulario(false); // Passar false para não limpar o RA?
+
+          // Log de diagnóstico (opcional)
+          const typedResponse = response as ApiResponse<Aluno>;
+          if (typedResponse?.data) {
+             console.log(`Aluno ${typedResponse.data.nome} cadastrado com sucesso.`);
           } else {
-            // Caso a API retorne status OK mas sem dados, ou outro status inesperado
-            this.mensagemStatus = `Atenção: ${response?.message || 'Cadastro concluído, mas resposta inesperada da API.'}`;
+             console.log(`Aluno com RA ${this.ra} cadastrado com sucesso (corpo da resposta pode variar).`);
           }
         },
-        error: (error: Error) => { // Callback de erro (tratado no serviço)
-          console.error('Erro recebido no componente:', error);
-          // A mensagem de erro já vem tratada do serviço
+        error: (error: Error) => {
+          // Em caso de erro na API, ainda usamos mensagemStatus
+          console.error('Erro recebido no componente ao cadastrar:', error);
           this.mensagemStatus = `Erro: ${error.message || 'Não foi possível cadastrar o aluno.'}`;
+          this.isSucessoModalVisible = false; // Garante que modal de sucesso não apareça
         }
       });
   }
 
-  // Opcional: Método para limpar o formulário
-  limparFormulario(): void {
-    // Não limpa o RA, pois ele veio da rota e é identificador
+  // ---> NOVOS MÉTODOS PARA MODAL DE SUCESSO <---
+
+  /** Fecha a modal de sucesso. */
+  fecharSucessoModal(): void {
+    this.isSucessoModalVisible = false;
+  }
+
+  /** Fecha a modal e navega para a página inicial. */
+  irParaInicio(): void {
+    this.fecharSucessoModal();
+    this.router.navigate(['/']); // Navega para a rota raiz (Home)
+  }
+
+  /** Fecha a modal e navega para a página de empréstimo de notebook. */
+  irParaEmprestimo(): void {
+    this.fecharSucessoModal();
+    // Navega para a página de empréstimo.
+    // ATENÇÃO: Esta página atualmente não recebe o RA. Apenas navega.
+    this.router.navigate(['/emprestimo-notebook']);
+  }
+
+  // Limpa campos do formulário (exceto RA se keepRa for true)
+  limparFormulario(keepRa = false): void {
+    if (!keepRa) { this.ra = ''; } // Normalmente não limpamos RA vindo da rota
     this.nome = '';
     this.email = '';
     this.telefone = '';
-    this.curso = ''; // Volta para a opção default do select
-    this.mensagemStatus = '';
+    this.curso = '';
+    // Não limpa mensagemStatus aqui, pois pode ser um erro
   }
 }

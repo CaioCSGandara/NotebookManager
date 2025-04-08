@@ -20,48 +20,29 @@ export class AlunoService {
   };
 
   constructor(private http: HttpClient) {}
-
-  /**
-   * Busca todos os alunos da API.
-   * @returns Observable com a resposta da API contendo a lista de alunos.
-   */
-  getAlunos(): Observable<ApiResponse<Aluno[]>> {
-    return this.http.get<ApiResponse<Aluno[]>>(`${this.apiUrl}/alunos`)
-      .pipe(
-        catchError(this.handleError<ApiResponse<Aluno[]>>('getAlunos', { status: 'ERROR', data: [], message: 'Falha ao buscar alunos.' }))
-      );
-  }
-
-  /**
-   * Valida se um RA existe na lista de alunos obtida da API.
-   * @param ra - O RA a ser validado.
-   * @returns Observable<boolean> - true se o RA existe, false caso contrário ou se ocorrer erro.
-   */
-  validarRA(ra: string): Observable<boolean> {
-    const raParaValidar = ra.trim(); // Limpa espaços do RA de entrada
-
-    // Chama o método para obter todos os alunos
-    return this.getAlunos().pipe(
-      map(response => {
-        // Verifica se a resposta foi OK e se existem dados (e se data é um array)
-        if (response && response.status === 'OK' && Array.isArray(response.data)) {
-          // Usa .some() para verificar se algum aluno no array 'data' tem o RA correspondente
-          // Garante que aluno.ra existe, converte para string, remove espaços e compara
-          const encontrado = response.data.some(aluno =>
-             aluno.ra && aluno.ra.toString().trim() === raParaValidar
-          );
-          return encontrado; // Retorna true se encontrou, false caso contrário
-        }
-        // Se a resposta não for OK ou não houver dados válidos, considera inválido
-        return false;
-      }),
-      catchError(error => {
-        // Se ocorrer um erro na chamada HTTP, loga e retorna false
-        // Mantemos este log pois é útil para erros reais da API
-        console.error('[AlunoService] Erro ao validar RA via API:', error);
-        return of(false); // Retorna um Observable de 'false'
-      })
-    );
+  /*
+  * Busca os dados de um aluno específico pelo RA.
+  * Trata o erro 404 Not Found retornando uma estrutura ApiResponse específica.
+  * @param ra O RA do aluno a ser buscado.
+  * @returns Observable com a resposta da API (Aluno encontrado, Não encontrado ou Erro).
+  */
+ getAlunoPorRa(ra: string): Observable<ApiResponse<Aluno | null>> {
+   return this.http.get<ApiResponse<Aluno>>(`${this.apiUrl}/alunos/ra/${ra}`)
+     .pipe(
+       catchError((error: HttpErrorResponse) => {
+         if (error.status === 404) {
+           // Se API retornou 404, transforma em uma resposta 'normal' com status NOT_FOUND
+           console.log(`Aluno com RA ${ra} não encontrado (404).`);
+           return of({ status: 'NOT_FOUND', data: null, message: 'Aluno não encontrado.' });
+         } else {
+           // Para outros erros (500, rede, etc.), loga e retorna uma estrutura de erro genérica
+           console.error(`Erro ao buscar aluno por RA ${ra}: ${error.message}`);
+           return of({ status: 'ERROR', data: null, message: 'Erro ao conectar com o servidor para buscar aluno.' });
+           // Alternativa: Poderia usar throwError aqui se quisesse tratar no 'error' do subscribe no componente
+           // return throwError(() => new Error('Erro ao conectar com o servidor para buscar aluno.'));
+         }
+       })
+     );
   }
 
   cadastrarAluno(alunoData: AlunoCreatePayload): Observable<ApiResponse<Aluno>> {

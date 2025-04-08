@@ -118,3 +118,41 @@
   background-color: #218838;
   border-color: #1e7e34;
 }
+
+/* Estilos específicos para a nova modal de confirmação de aluno */
+.modal-confirm-aluno {
+  text-align: left; /* Alinha texto à esquerda */
+}
+
+.modal-confirm-aluno h2 {
+  text-align: center; /* Centraliza só o título */
+}
+
+.aluno-details {
+  background-color: var(--puc-light-gray); /* Fundo levemente cinza para destacar */
+  border: 1px solid var(--puc-border-gray);
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+.aluno-details div {
+  margin-bottom: 8px; /* Espaço entre as linhas de dados */
+  line-height: 1.4;
+}
+
+.aluno-details div:last-child {
+  margin-bottom: 0;
+}
+
+.aluno-details strong {
+  display: inline-block;
+  width: 80px; /* Largura fixa para o label (ajuste conforme necessário) */
+  color: var(--puc-text-medium);
+}
+
+.modal-confirm-aluno .modal-actions {
+  justify-content: space-between; /* Botões nas extremidades */
+}
