@@ -105,7 +105,7 @@ export class HomeComponent {
   }
   confirmarCadastro(): void { /* ... sem alterações ... */
     this.isCadastroModalVisible = false;
-    this.router.navigate(['/cadastro-usuario', this.raParaCadastrar]);
+    this.router.navigate(['/cadastro-aluno', this.raParaCadastrar]);
     this.raParaCadastrar = '';
   }
 }
