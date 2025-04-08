@@ -1,11 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http'; // <-- 1. Importar
 
-import { APP_ROUTES } from './app.routes'; // <-- Importar suas rotas
+import { APP_ROUTES } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(APP_ROUTES) // <-- Configurar as rotas aqui
-    // Outros providers globais podem vir aqui, ex: provideHttpClient()
+    provideRouter(APP_ROUTES, withComponentInputBinding()),
+    provideHttpClient() // <-- 2. Adicionar aqui
+    // Outros providers podem estar aqui
   ]
 };

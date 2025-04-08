@@ -1,8 +1,9 @@
-// src/app/home/home.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AlunoService } from '../core/services/aluno.service'; // <-- 1. Importar AlunoService
+import { finalize } from 'rxjs/operators'; // Importar finalize para parar o loading
 
 @Component({
   selector: 'app-home',
@@ -12,63 +13,78 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  // --- Fluxo de Registro de Empréstimo (via RA) ---
+  // --- Propriedades ---
   ra: string = '';
-  loginErrorMessage: string = ''; // Erro se o campo RA estiver vazio
+  loginErrorMessage: string = '';
   isLoadingRA: boolean = false;
-  private validRAs: string[] = ['111222', '333444', '555666', '777888']; // Simulação BD
-
-  // --- Fluxo de Ver Empréstimos Ativos (via Modal/Senha) ---
-  isModalVisible: boolean = false;
+  isModalVisible: boolean = false; // Modal senha
   enteredPassword: string = '';
-  modalErrorMessage: string = '';
+  modalErrorMessage: string = ''; // Erro modal senha
   private readonly CORRECT_PASSWORD = 'senha123';
+  isCadastroModalVisible: boolean = false; // Modal cadastro
+  raParaCadastrar: string = '';
 
-  // --- NOVO: Fluxo Modal Confirmação de Cadastro ---
-  isCadastroModalVisible: boolean = false;
-  raParaCadastrar: string = ''; // Armazena o RA inválido para possível cadastro
+  // --- REMOVER A LISTA SIMULADA ---
+  // private validRAs: string[] = ['111222', '333444', '555666', '777888'];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private alunoService: AlunoService // <-- 2. Injetar AlunoService
+  ) {}
 
-  // --- Métodos Fluxo RA ---
+  // --- Métodos Fluxo RA (Atualizado) ---
   validarRAeNavegar(): void {
-    this.loginErrorMessage = ''; // Limpa erro de campo vazio
-    this.modalErrorMessage = ''; // Limpa erro da outra modal também
-    this.isModalVisible = false; // Garante que modal de senha esteja fechada
-    this.isCadastroModalVisible = false; // Garante que modal de cadastro esteja fechada
+    this.loginErrorMessage = '';
+    this.modalErrorMessage = '';
+    this.isModalVisible = false;
+    this.isCadastroModalVisible = false;
 
     if (!this.ra || this.ra.trim() === '') {
       this.loginErrorMessage = 'Por favor, digite um RA.';
       return;
     }
-    this.isLoadingRA = true;
-    setTimeout(() => {
-      const raNormalizado = this.ra.trim();
-      if (this.validRAs.includes(raNormalizado)) {
-        // RA VÁLIDO: Navega para empréstimo notebook
-        console.log('RA válido:', raNormalizado);
-        this.router.navigate(['/emprestimo-notebook']);
-      } else {
-        // RA INVÁLIDO: Abre modal de confirmação de cadastro
-        console.warn('RA inválido:', raNormalizado);
-        this.raParaCadastrar = raNormalizado; // Guarda o RA inválido
-        this.abrirCadastroModal();          // Abre a nova modal
-        // Não definimos mais loginErrorMessage aqui
-      }
-      this.isLoadingRA = false;
-    }, 300);
+
+    this.isLoadingRA = true; // Inicia o loading
+    const raNormalizado = this.ra.trim();
+
+    // 3. Chamar o serviço para validar o RA
+    this.alunoService.validarRA(raNormalizado)
+      .pipe(
+        // 5. O finalize garante que o loading termine, ocorrendo sucesso ou erro
+        finalize(() => this.isLoadingRA = false)
+      )
+      .subscribe({
+        next: (isValid) => { // Callback para sucesso
+          if (isValid) {
+            // RA VÁLIDO: Navega para empréstimo notebook
+            console.log('RA válido (API):', raNormalizado);
+            this.router.navigate(['/emprestimo-notebook']);
+          } else {
+            // RA INVÁLIDO: Abre modal de confirmação de cadastro
+            console.warn('RA inválido (API):', raNormalizado);
+            this.raParaCadastrar = raNormalizado;
+            this.abrirCadastroModal();
+          }
+        },
+        error: (err) => { // Callback para erro na chamada (já tratado no service, mas pode adicionar mais aqui)
+          console.error('Erro na subscrição de validarRA:', err);
+          this.loginErrorMessage = 'Erro ao validar RA. Verifique a conexão ou tente mais tarde.';
+          // O loading já é parado pelo finalize
+        }
+        // complete: () => { // Opcional: Executa quando o Observable completa }
+      });
   }
 
   // --- Métodos Modal Senha (Empréstimos Ativos) ---
-  abrirModalSenha(): void {
-    this.loginErrorMessage = ''; // Limpa erros de RA
-    this.isCadastroModalVisible = false; // Garante que outra modal esteja fechada
+  abrirModalSenha(): void { /* ... sem alterações ... */
+    this.loginErrorMessage = '';
+    this.isCadastroModalVisible = false;
     this.enteredPassword = '';
     this.modalErrorMessage = '';
     this.isModalVisible = true;
   }
-  fecharModalSenha(): void { this.isModalVisible = false; }
-  verificarSenhaEEntrarEmprestimosAtivos(): void {
+  fecharModalSenha(): void { /* ... sem alterações ... */ this.isModalVisible = false; }
+  verificarSenhaEEntrarEmprestimosAtivos(): void { /* ... sem alterações ... */
     if (this.enteredPassword === this.CORRECT_PASSWORD) {
       this.fecharModalSenha();
       this.router.navigate(['/emprestimos-ativos']);
@@ -78,19 +94,18 @@ export class HomeComponent {
     }
   }
 
-  // --- NOVO: Métodos Modal Confirmação de Cadastro ---
-  abrirCadastroModal(): void {
-    this.isModalVisible = false; // Garante que outra modal esteja fechada
-    this.isCadastroModalVisible = true; // Abre a modal de cadastro
+  // --- Métodos Modal Confirmação de Cadastro ---
+  abrirCadastroModal(): void { /* ... sem alterações ... */
+    this.isModalVisible = false;
+    this.isCadastroModalVisible = true;
   }
-  cancelarCadastro(): void {
+  cancelarCadastro(): void { /* ... sem alterações ... */
     this.isCadastroModalVisible = false;
-    this.raParaCadastrar = ''; // Limpa o RA guardado
+    this.raParaCadastrar = '';
   }
-  confirmarCadastro(): void {
+  confirmarCadastro(): void { /* ... sem alterações ... */
     this.isCadastroModalVisible = false;
-    // Navega para a página de cadastro, passando o RA como parâmetro de rota
     this.router.navigate(['/cadastro-usuario', this.raParaCadastrar]);
-    this.raParaCadastrar = ''; // Limpa o RA guardado
+    this.raParaCadastrar = '';
   }
 }

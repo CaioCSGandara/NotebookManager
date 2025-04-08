@@ -1,0 +1,71 @@
+:host {
+    display: block; /* Alterado para block */
+    height: 100vh;
+    background-color: var(--puc-medium-gray);
+  }
+  
+  .app-header {
+    background-color: var(--puc-blue); /* Cabeçalho azul */
+    color: var(--puc-white);
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed; /* Fixar o cabeçalho */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ficar acima de outros elementos */
+    height: 60px; /* Definir altura fixa */
+    box-sizing: border-box;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espaçar itens */
+    height: 100%;
+  }
+  
+  .app-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  
+  .user-info {
+    font-size: 0.9rem;
+  }
+  
+  /* Estilos para a barra lateral (descomentar se implementar) */
+  /* .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px; // Abaixo do header
+    width: 60px; // Largura inicial (só ícones) ou maior
+    height: calc(100vh - 60px); // Altura restante
+    background-color: #e9ecef; // Exemplo de cor
+    padding-top: 20px;
+    z-index: 900;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  } */
+  
+  .app-main-content {
+    padding-top: 80px; /* Espaço para o header fixo + margem */
+    padding-left: 20px; /* Adicionar padding se não houver sidebar */
+    /* padding-left: 80px; // Adicionar padding se a sidebar estiver presente */
+    padding-right: 20px;
+    padding-bottom: 20px;
+    /* height: calc(100vh - 80px); // Se precisar controlar altura exata */
+    /* overflow-y: auto; // Para permitir rolagem do conteúdo principal */
+  }
+  
+  /* Estilos do footer (descomentar se implementar) */
+  /* .app-footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.85rem;
+    color: var(--puc-text-medium);
+    background-color: var(--puc-white);
+    border-top: 1px solid var(--puc-border-gray);
+    position: fixed; // Ou deixar fluxo normal
+    bottom: 0;
+    width: 100%;
+  } */

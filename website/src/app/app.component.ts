@@ -8,7 +8,7 @@ import { RouterOutlet } from '@angular/router'; // <-- Importar RouterOutlet
     RouterOutlet // <-- IMPORTAR RouterOutlet AQUI
   ],
   template: `
-    <h1>Meu App</h1>
+    <h1>Empréstimo Notebook</h1>
     <router-outlet></router-outlet> `,
   // styleUrls: ['./app.component.css'] // Se tiver estilos
 })
