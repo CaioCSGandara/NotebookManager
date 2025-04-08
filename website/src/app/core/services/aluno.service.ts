@@ -1,67 +1,75 @@
+// src/app/core/services/aluno.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs'; // Importar 'of' para retornar Observable em caso de erro
-import { catchError, map } from 'rxjs/operators'; // Importar operadores RxJS
-import { ApiResponse, Aluno } from '../models/aluno.model'; // Importar interfaces
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { ApiResponse, Aluno } from '../models/aluno.model';
 
 @Injectable({
-  providedIn: 'root' // Torna o serviço disponível em toda a aplicação
+  providedIn: 'root'
 })
 export class AlunoService {
-  private apiUrl = 'http://localhost:8080'; // Base URL da sua API
+  private apiUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Busca todos os alunos da API.
-   * @returns Observable com a resposta da API contendo a lista de alunos.
-   */
   getAlunos(): Observable<ApiResponse<Aluno[]>> {
+    // ... (código existente sem alterações) ...
     return this.http.get<ApiResponse<Aluno[]>>(`${this.apiUrl}/alunos`)
-      .pipe(
-        catchError(this.handleError<ApiResponse<Aluno[]>>('getAlunos', { status: 'ERROR', data: [], message: 'Falha ao buscar alunos.' }))
-      );
+        .pipe(
+          catchError(this.handleError<ApiResponse<Aluno[]>>('getAlunos', { status: 'ERROR', data: [], message: 'Falha ao buscar alunos.' }))
+        );
   }
 
-  /**
-   * Valida se um RA existe na lista de alunos obtida da API.
-   * @param ra - O RA a ser validado.
-   * @returns Observable<boolean> - true se o RA existe, false caso contrário ou se ocorrer erro.
-   */
   validarRA(ra: string): Observable<boolean> {
-    // Chama o método para obter todos os alunos
+    const raParaValidar = ra.trim(); // Garante que o RA de entrada está sem espaços extras
+    console.log(`[AlunoService] Iniciando validação para RA: "${raParaValidar}"`); // Log 1: RA a validar
+
     return this.getAlunos().pipe(
       map(response => {
-        // Verifica se a resposta foi OK e se existem dados
-        if (response && response.status === 'OK' && response.data) {
-          // Procura na lista 'data' se algum aluno tem o RA correspondente
-          // Usar trim() para remover espaços extras do RA da API, se necessário
-          return response.data.some(aluno => aluno.ra.trim() === ra.trim());
+        console.log('[AlunoService] Resposta da API recebida:', response); // Log 2: Resposta completa
+
+        if (response && response.status === 'OK' && Array.isArray(response.data)) {
+          console.log(`[AlunoService] Número de alunos na resposta: ${response.data.length}`); // Log 3: Quantos alunos vieram
+
+          // Log detalhado da comparação
+          let encontrado = false;
+          response.data.forEach((aluno, index) => {
+            const raDaApi = aluno.ra ? aluno.ra.toString().trim() : ''; // Converte para string e trim
+            const comparacao = raDaApi === raParaValidar;
+             console.log(`[AlunoService] Comparando[${index}]: API RA="${raDaApi}" (tipo: ${typeof raDaApi}) === Input RA="${raParaValidar}" (tipo: ${typeof raParaValidar}) -> ${comparacao}`); // Log 4: Detalhe da comparação
+            if (comparacao) {
+              encontrado = true;
+            }
+          });
+
+          // A lógica original com .some() é mais eficiente, mas vamos manter o log detalhado por enquanto
+          // const encontrado = response.data.some(aluno => {
+          //   const raDaApi = aluno.ra ? aluno.ra.toString().trim() : '';
+          //   const comparacao = raDaApi === raParaValidar;
+          //   console.log(`[AlunoService] Comparando: API RA="${raDaApi}" === Input RA="${raParaValidar}" -> ${comparacao}`); // Log dentro do some
+          //   return comparacao;
+          // });
+
+          console.log(`[AlunoService] RA "${raParaValidar}" foi encontrado? ${encontrado}`); // Log 5: Resultado da busca
+          return encontrado; // Retorna o resultado da busca
+        } else {
+          console.warn('[AlunoService] Resposta da API inválida ou sem dados.'); // Log 6: Problema na resposta
+          return false; // Retorna false se a resposta não for válida
         }
-        // Se a resposta não for OK ou não houver dados, considera inválido
-        return false;
       }),
       catchError(error => {
-        // Se ocorrer um erro na chamada HTTP (ex: API offline), loga e retorna false
-        console.error('Erro ao validar RA:', error);
-        return of(false); // Retorna um Observable de 'false'
+        console.error('[AlunoService] Erro no pipe de validarRA:', error); // Log 7: Erro no pipe
+        return of(false);
       })
     );
   }
 
-  /**
-   * Handler básico de erros para chamadas HTTP.
-   * @param operation - Nome da operação que falhou.
-   * @param result - Valor opcional para retornar como resultado do Observable.
-   */
   private handleError<T>(operation = 'operation', result?: T) {
-    return (error: HttpErrorResponse): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`); // Log do erro
-      // Retorna um resultado seguro para a aplicação continuar funcionando.
-      return of(result as T);
-    };
+    // ... (código existente sem alterações) ...
+     return (error: HttpErrorResponse): Observable<T> => {
+        console.error(`${operation} failed: ${error.message}`);
+        return of(result as T);
+      };
   }
-
-   // --- Futuros métodos ---
-   // cadastrarAluno(alunoData: Omit<Aluno, 'id'>): Observable<ApiResponse<Aluno>> { ... }
 }
