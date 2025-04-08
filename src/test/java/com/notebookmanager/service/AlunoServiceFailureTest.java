@@ -29,6 +29,7 @@ public class AlunoServiceFailureTest {
         assertThat(exception.getMessage()).isEqualTo("Aluno não encontrado.");
     }
 
+    @Test
     void naoRetornaAlunoComIdInvalido() {
 
         RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {
@@ -52,7 +53,7 @@ public class AlunoServiceFailureTest {
         assertThat(exceptionRa.getMessage()).isEqualTo("O Aluno com este RA e/ou e-mail já está cadastrado.");
 
         String raValido = "83415692";
-        String emailRepetido = "jcorrea@puccampinas.edu.br";
+        String emailRepetido = "jcorrea...@puccampinas.edu.br";
 
         alunoCreateFields.setRa(raValido);
         alunoCreateFields.setEmail(emailRepetido);

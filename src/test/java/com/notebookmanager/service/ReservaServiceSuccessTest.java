@@ -9,6 +9,7 @@ import com.notebookmanager.model.repositories.ReservaRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
+@MockBean(EmailService.class)
 public class ReservaServiceSuccessTest {
 
     @Autowired

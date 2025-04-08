@@ -7,9 +7,11 @@ import com.notebookmanager.model.dto.createfields.ReservaCreateFields;
 import com.notebookmanager.model.dto.updatefields.NotebookUpdateFields;
 import com.notebookmanager.model.dto.updatefields.ReservaUpdateFields;
 import com.notebookmanager.model.enums.StatusNotebook;
+import com.notebookmanager.service.EmailService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@MockBean(EmailService.class)
 public class ReservaControllerFailureTest {
 
     @Autowired
