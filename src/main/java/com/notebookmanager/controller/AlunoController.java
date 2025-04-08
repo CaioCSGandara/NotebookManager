@@ -33,6 +33,13 @@ public class AlunoController {
         return ResponseEntity.ok(new Payload(HttpStatus.OK, aluno, null));
     }
 
+    @GetMapping("/ra/{ra}")
+    private ResponseEntity<Payload> findAlunoByRa(@PathVariable String ra) {
+
+        Aluno aluno = alunoService.encontrarAlunoPorRa(ra);
+        return ResponseEntity.ok(new Payload(HttpStatus.OK, aluno, null));
+    }
+
     @PostMapping
     private ResponseEntity<Void> createAluno(@RequestBody @Valid AlunoCreateFields alunoCreateFields, BindingResult bindingResult, UriComponentsBuilder ucb) {
         if (bindingResult.hasErrors()) {
