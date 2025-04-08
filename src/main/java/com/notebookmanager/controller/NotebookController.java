@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.List;
 
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/notebooks")
 public class NotebookController {
