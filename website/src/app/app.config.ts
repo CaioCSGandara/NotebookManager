@@ -1,6 +1,6 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http'; // <-- 1. Importar
+import { provideHttpClient } from '@angular/common/http';
 
 import { APP_ROUTES } from './app.routes';
 import { provideNgxMask } from 'ngx-mask';

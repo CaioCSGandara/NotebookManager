@@ -9,7 +9,7 @@
     </div>
     <p *ngIf="loginErrorMessage" class="error-message">{{ loginErrorMessage }}</p> <div class="actions">
       <button (click)="validarRAeNavegar()" class="btn btn-primary" [disabled]="isLoadingRA || !ra || ra.trim() === ''">
-        <span *ngIf="!isLoadingRA">Verificar RA e Registrar Empréstimo</span>
+        <span *ngIf="!isLoadingRA">Verificar RA</span>
         <span *ngIf="isLoadingRA">Verificando RA...</span>
       </button>
     </div>

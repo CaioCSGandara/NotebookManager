@@ -1,31 +1,51 @@
 <div class="emprestimo-container">
-    <h2>Registrar Empréstimo de Notebook</h2>
-    <p>Insira o número de patrimônio do notebook a ser emprestado.</p>
-  
-    <div class="form-group">
-      <label for="patrimonio">Número do Patrimônio:</label>
+  <h2>Registrar Empréstimo de Notebook</h2>
+  <p>Digite ou selecione o número de patrimônio do notebook disponível.</p>
+
+  <div *ngIf="isLoadingNotebooks" class="loading-indicator">
+     <mat-spinner diameter="30"></mat-spinner> <span>Carregando notebooks disponíveis...</span>
+     </div>
+
+  <p *ngIf="!isLoadingNotebooks && erroAoCarregarNotebooks" class="status-message status-error">
+     {{ erroAoCarregarNotebooks }}
+   </p>
+
+  <form #emprestimoForm="ngForm" (ngSubmit)="registrarEmprestimo()" *ngIf="!isLoadingNotebooks && !erroAoCarregarNotebooks">
+
+    <mat-form-field appearance="outline" class="full-width"> <mat-label>Número do Patrimônio</mat-label>
       <input
         type="text"
+        matInput                     
         id="patrimonio"
         name="patrimonio"
         [(ngModel)]="numeroPatrimonio"
-        placeholder="Digite o nº de patrimônio"
-        class="form-control"
         required
+        placeholder="Digite ou selecione o patrimônio"
+        [matAutocomplete]="autoPatrimonio"
+        (input)="filtrarNotebooks()" 
       />
-    </div>
-  
+      <mat-autocomplete #autoPatrimonio="matAutocomplete">
+        <mat-option *ngFor="let notebook of notebooksFiltrados" [value]="notebook.patrimonio">
+          {{ notebook.patrimonio }}
+          </mat-option>
+        <mat-option *ngIf="notebooksFiltrados.length === 0 && numeroPatrimonio" disabled>
+           Nenhum patrimônio disponível encontrado.
+         </mat-option>
+      </mat-autocomplete>
+
+    </mat-form-field>
     <p *ngIf="mensagemStatus"
-        [ngClass]="{'status-success': mensagemStatus.startsWith('Sucesso'), 'status-error': mensagemStatus.startsWith('Erro')}"
-        class="status-message">
-       {{ mensagemStatus }}
-     </p>
-  
+       [ngClass]="{'status-success': mensagemStatus.startsWith('Sucesso'), 'status-error': mensagemStatus.startsWith('Erro')}"
+       class="status-message">
+      {{ mensagemStatus }}
+    </p>
+
     <div class="actions">
       <a routerLink="/" class="btn btn-light">Voltar</a>
-      <button (click)="registrarEmprestimo()" class="btn btn-primary" [disabled]="!numeroPatrimonio || numeroPatrimonio.trim() === ''">
-        Registrar Empréstimo
+      <button type="submit" class="btn btn-primary" [disabled]="isLoadingNotebooks || !emprestimoForm.valid || isRegistering">
+        <span *ngIf="!isRegistering">Registrar Empréstimo</span>
+        <span *ngIf="isRegistering">Registrando...</span>
       </button>
     </div>
-  
-  </div>
+
+  </form> </div>

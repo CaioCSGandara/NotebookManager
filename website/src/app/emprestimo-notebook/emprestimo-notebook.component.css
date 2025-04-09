@@ -110,3 +110,33 @@
     color: #721c24; /* Vermelho escuro */
     border: 1px solid #f5c6cb;
   }
+
+  /* Ajuste para Material Form Field ocupar largura total */
+.full-width {
+  width: 100%;
+}
+
+/* Estilo para o indicador de loading */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--puc-text-medium); /* Usando variável de cor global */
+  font-size: 0.95em;
+}
+.loading-indicator span {
+    margin-left: 10px;
+}
+
+/* Ajustes de espaçamento se necessário */
+mat-form-field {
+  margin-bottom: 15px; /* Adiciona espaço abaixo do campo */
+}
+
+.status-message { /* Reutilizar/Ajustar estilos anteriores */
+  /* ... */
+}
+.status-error { /* Reutilizar/Ajustar estilos anteriores */
+ /* ... */
+}

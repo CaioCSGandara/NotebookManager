@@ -218,8 +218,15 @@ export class HomeComponent {
   }
 
   confirmarAlunoENavegar(): void {
-    // Navega para a página de empréstimo APÓS confirmação
-    this.fecharConfirmacaoAlunoModal(); // Fecha a modal primeiro
-    this.router.navigate(['/emprestimo-notebook']);
+    if (this.alunoConfirmado?.ra) { // Garante que temos o RA
+       const raDoAluno = this.alunoConfirmado.ra;
+       this.fecharConfirmacaoAlunoModal();
+       // ---> Passa o RA na navegação <---
+       this.router.navigate(['/emprestimo-notebook', raDoAluno]);
+    } else {
+       console.error("Erro: Não foi possível obter o RA do aluno confirmado para navegar.");
+       this.fecharConfirmacaoAlunoModal();
+       // Talvez mostrar uma mensagem de erro aqui
+    }
   }
 }
