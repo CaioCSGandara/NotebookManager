@@ -6,6 +6,8 @@ import com.notebookmanager.model.mapper.ReservaMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -69,18 +71,20 @@ public class ReservaRepositoryImpl implements ReservaRepository {
     @Override
     public Reserva save(Reserva reserva) {
 
-        String sql  = "INSERT INTO reserva (INICIO_EM, TERMINO_EM, ALUNO, NOTEBOOK) VALUES (?, ?, ?, ?) RETURNING ID";
+        String sql  = "INSERT INTO reserva (INICIO_EM, TERMINO_EM, ALUNO, NOTEBOOK) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        Long id = jdbcClient
+        jdbcClient
                 .sql(sql)
                 .param(reserva.getInicioEm())
                 .param(reserva.getTerminoEm())
                 .param(reserva.getAluno().getId())
                 .param(reserva.getNotebook().getId())
-                .query(Long.class)
-                .single();
+                .update(keyHolder);
 
-        return findById((Integer.parseInt(id.toString()))).get();
+
+        Integer id = (Integer) keyHolder.getKey();
+        return findById(id).get();
     }
 
 
