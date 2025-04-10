@@ -15,7 +15,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 @SpringBootTest
@@ -28,6 +30,8 @@ public class ReservaServiceSuccessTest {
     private NotebookService notebookService;
     @Autowired
     private ReservaRepositoryImpl reservaRepository;
+    @Autowired
+    private EmailService emailService;
 
     @Test
     public void retornaReservaPorNotebook() {
@@ -45,6 +49,9 @@ public class ReservaServiceSuccessTest {
 
         assertThat(reserva.getAluno().getId()).isEqualTo(7);
         assertThat(reserva.getNotebook().getId()).isEqualTo(1);
+        verify(emailService, times(1)).enviarEmail(eq("rodrigo.oliveira...@puccampinas.edu.br"),
+                eq("Comprovante de Empréstimo de Notebook"),
+                any());
     }
 
 
@@ -66,6 +73,9 @@ public class ReservaServiceSuccessTest {
         System.out.println(reserva);
         assertThat(reserva.getTerminoEm()).isNotNull();
         assertThat(notebook.getStatus()).isEqualTo(StatusNotebook.DISPONIVEL);
+        verify(emailService, times(1)).enviarEmail(eq("carlos.mendes...@puccampinas.edu.br"),
+                eq("Comprovante de Devolução de Notebook"),
+                any());
     }
 
 
@@ -79,5 +89,6 @@ public class ReservaServiceSuccessTest {
 
         Reserva reservaAtualizada = reservaRepository.findByNotebook(1).get();
         assertThat(reservaAtualizada.getNotebook().getId()).isEqualTo(1);
+        verify(emailService, times(2)).enviarEmail(any(), any(), any());
     }
 }
