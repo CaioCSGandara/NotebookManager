@@ -25,6 +25,7 @@ public class ReservaService {
     private ReservaRepository reservaRepository;
     private AlunoService alunoService;
     private NotebookService notebookService;
+    private EmailService emailService;
 
 
     public Reserva encontrarReservaPorId(Integer id) {
@@ -58,7 +59,16 @@ public class ReservaService {
 
         Reserva reserva = new Reserva(aluno, notebook, LocalDateTime.now(), null);
 
-        return reservaRepository.save(reserva);
+        Reserva reservaSalva = reservaRepository.save(reserva);
+
+        String emailMessage = emailService.criaMsgEmprestimo(reserva.getAluno().getNome(),
+         reserva.getNotebook().getPatrimonio());
+
+        emailService.enviarEmail(reserva.getAluno().getEmail(),
+        "Comprovante de Empréstimo de Notebook",
+        emailMessage);
+        
+        return reservaSalva;
     }
 
 
@@ -78,6 +88,12 @@ public class ReservaService {
         notebookService.alteraStatusNotebook(notebookId, notebookUpdateFields);
         reservaRepository.update(id, LocalDateTime.now());
 
+        String emailMessage = emailService.criaMsgDevolucao(reserva.getAluno().getNome(),
+         reserva.getNotebook().getPatrimonio());
+
+        emailService.enviarEmail(reserva.getAluno().getEmail(),
+        "Comprovante de Devolução de Notebook",
+        emailMessage);
     }
 
     public void trocarNotebookDuranteReserva(Integer id, ReservaUpdateFields reservaUpdateFields) {
