@@ -80,7 +80,7 @@ public class ReservaRepositoryImpl implements ReservaRepository {
                 .param(reserva.getTerminoEm())
                 .param(reserva.getAluno().getId())
                 .param(reserva.getNotebook().getId())
-                .update(keyHolder);
+                .update(keyHolder, new String[]{"id"});
 
 
         Integer id = (Integer) keyHolder.getKey();
