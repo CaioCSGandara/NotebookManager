@@ -8,6 +8,15 @@ VALUES
     ('Ana Paula Lima', '56781234', 'ana.lima...@puccampinas.edu.br', '(19)93456-7890', 'PSICOLOGIA'),
     ('Rodrigo Oliveira', '43218765', 'rodrigo.oliveira...@puccampinas.edu.br', '(19)94567-3210', 'BIOLOGIA');
 
+
+INSERT INTO FUNCIONARIO (NOME, RF, EMAIL, SENHA)
+VALUES
+    ('João Silva', '12345678', 'joao.silva@empresa.com', 'senha123'),
+    ('Maria Oliveira', '87654321', 'maria.oliveira@empresa.com', 'senha456'),
+    ('Carlos Souza', '11223344', 'carlos.souza@empresa.com', 'senha789'),
+    ('Ana Lima', '44332211', 'ana.lima@empresa.com', 'senha321');
+
+
 INSERT INTO notebook (patrimonio, status)
 VALUES
     ('491034', 'DISPONIVEL'),
