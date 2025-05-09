@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class Funcionario implements Cloneable {
     @Id
-    private String id;
+    private Integer id;
 
     private String nome;
 

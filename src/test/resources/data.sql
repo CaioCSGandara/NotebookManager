@@ -11,10 +11,10 @@ VALUES
 
 INSERT INTO FUNCIONARIO (NOME, RF, EMAIL, SENHA)
 VALUES
-    ('João Silva', '12345678', 'joao.silva@empresa.com', 'senha123'),
-    ('Maria Oliveira', '87654321', 'maria.oliveira@empresa.com', 'senha456'),
-    ('Carlos Souza', '11223344', 'carlos.souza@empresa.com', 'senha789'),
-    ('Ana Lima', '44332211', 'ana.lima@empresa.com', 'senha321');
+    ('João Silva', '123456', 'joao.silva@empresa.com', 'senha123'),
+    ('Maria Oliveira', '876543', 'maria.oliveira@empresa.com', 'senha456'),
+    ('Carlos Souza', '112233', 'carlos.souza@empresa.com', 'senha789'),
+    ('Ana Lima', '443322', 'ana.lima@empresa.com', 'senha321');
 
 
 INSERT INTO notebook (patrimonio, status)
