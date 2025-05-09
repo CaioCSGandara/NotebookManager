@@ -45,7 +45,7 @@ public class AlunoService {
         }
         
         Aluno aluno = new Aluno(alunoCreateFields.getNome(), alunoCreateFields.getRa(), alunoCreateFields.getEmail(),
-                alunoCreateFields.getTelefone(), alunoCreateFields.getCurso());
+                alunoCreateFields.getTelefone(), alunoCreateFields.getCurso(), alunoCreateFields.getSenha());
         return alunoRepository.save(aluno);
     }
 

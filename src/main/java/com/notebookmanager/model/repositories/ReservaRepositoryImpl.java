@@ -31,6 +31,7 @@ public class ReservaRepositoryImpl implements ReservaRepository {
                                 aluno.email,
                                 aluno.telefone,
                                 aluno.curso,
+                                aluno.senha,
                                 notebook.id as notebook_id,
                                 notebook.patrimonio,
                                 notebook.status

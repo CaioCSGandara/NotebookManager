@@ -38,7 +38,7 @@ public class AlunoControllerFailureTest {
     @Test
     void cadastrarAlunoStatus409() {
         AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Jonathan Luciano", "09135616", "jonathanluciano@puccampinas.edu.br",
-                "(19)94291-7013", Curso.NUTRICAO);
+                "(19)94291-7013", Curso.NUTRICAO, "senha123");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/alunos", alunoCreateFields, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -51,7 +51,7 @@ public class AlunoControllerFailureTest {
 
     @Test
     void atualizarAlunoPorIdStatus404() {
-        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA);
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA, "senha123");
         HttpEntity<AlunoUpdateFields> request = new HttpEntity<>(alunoUpdateFields);
 
         ResponseEntity<String> response = restTemplate.exchange("/alunos/90", HttpMethod.PUT,
@@ -87,11 +87,11 @@ public class AlunoControllerFailureTest {
         for (String nomeInvalido : nomesInvalidos) {
 
             AlunoCreateFields alunoCreateFields = new AlunoCreateFields (nomeInvalido, "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
-                    Curso.NUTRICAO);
+                    Curso.NUTRICAO, "senha123");
 
             HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-            AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields(nomeInvalido, "(19)99182-4125", Curso.NUTRICAO);
+            AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields(nomeInvalido, "(19)99182-4125", Curso.NUTRICAO, "senha123");
 
             HttpEntity<AlunoUpdateFields> requestUpdate = new  HttpEntity<>(alunoUpdateFields);
 
@@ -108,7 +108,7 @@ public class AlunoControllerFailureTest {
 
         for (String raInvalido : rasInvalidos) {
             AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", raInvalido, "jorgefdlass@puccampinas.edu.br", "(19)99182-4125",
-                    Curso.NUTRICAO);
+                    Curso.NUTRICAO, "senha123");
 
             HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
@@ -124,7 +124,7 @@ public class AlunoControllerFailureTest {
 
         for (String emailInvalido : emailsInvalidos) {
             AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", emailInvalido, "(19)99182-4125",
-                    Curso.NUTRICAO);
+                    Curso.NUTRICAO, "senha123");
 
             HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
@@ -139,11 +139,11 @@ public class AlunoControllerFailureTest {
         String[] telefonesInvalidos = {"(d9)12345-0987", "(19)1$345-0987", "(11)12345-0h87", "(19)123450987", "11 12345-0987", "", " ", null};
 
         for (String telefoneInvalido : telefonesInvalidos) {
-            AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", "jorgefdlass@puccampinas.edu.br", telefoneInvalido, Curso.NUTRICAO);
+            AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", "jorgefdlass@puccampinas.edu.br", telefoneInvalido, Curso.NUTRICAO, "senha123");
 
             HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-            AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Jorge Flavio Silva", telefoneInvalido, Curso.NUTRICAO);
+            AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Jorge Flavio Silva", telefoneInvalido, Curso.NUTRICAO, "senha123");
 
             HttpEntity<AlunoUpdateFields> requestUpdate = new  HttpEntity<>(alunoUpdateFields);
 
@@ -156,11 +156,11 @@ public class AlunoControllerFailureTest {
 
     @Test
     void naoAceitaCursoNulo() {
-        AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125", null);
+        AlunoCreateFields alunoCreateFields = new AlunoCreateFields ("Jorge Flavio Silva", "13279102", "jorgefdlass@puccampinas.edu.br", "(19)99182-4125", null, "senha123");
 
         HttpEntity<AlunoCreateFields> requestCreate = new HttpEntity<>(alunoCreateFields);
 
-        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Jorge Flavio Silva", "(19)99182-4125", null);
+        AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Jorge Flavio Silva", "(19)99182-4125", null, "senha123");
 
         HttpEntity<AlunoUpdateFields> requestUpdate = new  HttpEntity<>(alunoUpdateFields);
 

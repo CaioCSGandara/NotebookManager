@@ -31,4 +31,8 @@ public class AlunoCreateFields {
 
     @NotNull
     private Curso curso;
+
+    @NotBlank
+    @Size(min = 5, max = 25)
+    private String senha;
 }

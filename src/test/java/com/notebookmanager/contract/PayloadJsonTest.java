@@ -23,7 +23,7 @@ public class PayloadJsonTest {
     void payloadSerializationTest() throws IOException {
 
         AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Caio Gandara", "22415616", "caio.cgs@puccampinas.edu.br", "(19)99414-8554",
-                Curso.ENFERMAGEM);
+                Curso.ENFERMAGEM, "senha123");
 
         Payload payload = new Payload(HttpStatus.OK, alunoCreateFields, null);
 

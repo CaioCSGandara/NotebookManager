@@ -21,6 +21,7 @@ public class ReservaMapper implements RowMapper<Reserva> {
         aluno.setEmail(rs.getString("email"));
         aluno.setTelefone(rs.getString("telefone"));
         aluno.setCurso(Curso.valueOf(rs.getString("curso")));
+        aluno.setSenha(rs.getString("senha"));
 
         Notebook notebook = new Notebook();
         notebook.setId(rs.getInt("notebook_id"));

@@ -41,7 +41,7 @@ public class AlunoServiceSuccessTest {
     @DirtiesContext
     void cadastraAluno() {
         AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Mario Souza", "09318492", "marios2@puccampinas.edu.br", "(19)99083-2415",
-                Curso.MEDICINA_VETERINARIA);
+                Curso.MEDICINA_VETERINARIA, "senha123");
 
         Aluno alunoCadastrado = alunoService.cadastrarAluno(alunoCreateFields);
 
@@ -62,7 +62,7 @@ public class AlunoServiceSuccessTest {
     @DirtiesContext
     void atualizaAlunoPorId() {
         AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Julio Correa das Neves", "(19)98312-3215",
-                Curso.ODONTOLOGIA);
+                Curso.ODONTOLOGIA, "senha123");
 
         alunoService.atualizaDadosDoAlunoPorId(1, alunoUpdateFields);
 
