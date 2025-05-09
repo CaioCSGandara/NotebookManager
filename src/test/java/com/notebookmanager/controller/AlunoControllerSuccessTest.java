@@ -42,7 +42,7 @@ public class AlunoControllerSuccessTest {
     @DirtiesContext
     void cadastraAlunoStatus201() {
         AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Oscar Moura", "87019341", "oscarmoura@puccampinas.edu.br", "(19)98017-7111",
-                Curso.NUTRICAO);
+                Curso.NUTRICAO, "senha123");
 
         ResponseEntity<Void> response = restTemplate.postForEntity("/alunos", alunoCreateFields, Void.class);
 
@@ -75,7 +75,7 @@ public class AlunoControllerSuccessTest {
     void atualizaAlunoPorIdStatus204() {
 
         AlunoUpdateFields alunoUpdateFields = new AlunoUpdateFields("Julio Correa da Silva", "(19)91831-5123",
-                Curso.MEDICINA);
+                Curso.MEDICINA, "senha123");
 
         HttpEntity<AlunoUpdateFields> request = new HttpEntity<>(alunoUpdateFields);
 

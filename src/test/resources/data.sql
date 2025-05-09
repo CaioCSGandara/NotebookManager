@@ -1,12 +1,12 @@
-INSERT INTO aluno (nome, ra, email, telefone, curso)
+INSERT INTO aluno (nome, ra, email, telefone, curso, senha)
 VALUES
-    ('Julio Correa', '09135616', 'jcorrea...@puccampinas.edu.br', '(19)90914-3014', 'MEDICINA'),
-    ('Maria Ferreira', '03781923', 'maria.ferreira...@puccampinas.edu.br', '(19)90814-2314', 'TERAPIA_OCUPACIONAL'),
-    ('Fernando Pontes', '90174823', 'fernandohpontes...@puccampinas.edu.br', '(19)83914-0945', 'BIOMEDICINA'),
-    ('Mariana Souza', '12345678', 'mariana.souza...@puccampinas.edu.br', '(19)99876-5432', 'MEDICINA_VETERINARIA'),
-    ('Carlos Mendes', '87654321', 'carlos.mendes...@puccampinas.edu.br', '(19)91234-5678', 'ODONTOLOGIA'),
-    ('Ana Paula Lima', '56781234', 'ana.lima...@puccampinas.edu.br', '(19)93456-7890', 'PSICOLOGIA'),
-    ('Rodrigo Oliveira', '43218765', 'rodrigo.oliveira...@puccampinas.edu.br', '(19)94567-3210', 'BIOLOGIA');
+    ('Julio Correa', '09135616', 'jcorrea...@puccampinas.edu.br', '(19)90914-3014', 'MEDICINA', 'senha123'),
+    ('Maria Ferreira', '03781923', 'maria.ferreira...@puccampinas.edu.br', '(19)90814-2314', 'TERAPIA_OCUPACIONAL', 'senha1234'),
+    ('Fernando Pontes', '90174823', 'fernandohpontes...@puccampinas.edu.br', '(19)83914-0945', 'BIOMEDICINA', 'senha1412'),
+    ('Mariana Souza', '12345678', 'mariana.souza...@puccampinas.edu.br', '(19)99876-5432', 'MEDICINA_VETERINARIA', 'senha3123'),
+    ('Carlos Mendes', '87654321', 'carlos.mendes...@puccampinas.edu.br', '(19)91234-5678', 'ODONTOLOGIA', 'senha2345'),
+    ('Ana Paula Lima', '56781234', 'ana.lima...@puccampinas.edu.br', '(19)93456-7890', 'PSICOLOGIA', 'senha3821'),
+    ('Rodrigo Oliveira', '43218765', 'rodrigo.oliveira...@puccampinas.edu.br', '(19)94567-3210', 'BIOLOGIA', 'senha3812');
 
 
 INSERT INTO FUNCIONARIO (NOME, RF, EMAIL, SENHA)

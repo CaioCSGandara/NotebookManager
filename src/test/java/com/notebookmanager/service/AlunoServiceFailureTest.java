@@ -43,7 +43,7 @@ public class AlunoServiceFailureTest {
     void naoCadastraAlunoRepetido() {
 
         AlunoCreateFields alunoCreateFields = new AlunoCreateFields("Julio Correa", "09135616", "jcorrea@puccampinas.edu.br",
-                "(19)90914-3014", Curso.MEDICINA);
+                "(19)90914-3014", Curso.MEDICINA, "senha123");
 
         RecursoJaExistenteException exceptionRa =  Assertions.assertThrows(RecursoJaExistenteException.class, () -> {
 
@@ -73,7 +73,7 @@ public class AlunoServiceFailureTest {
 
         RecursoNaoEncontradoException exception =  Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> {
             alunoService.atualizaDadosDoAlunoPorId(90,
-                    new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA));
+                    new AlunoUpdateFields("Josue Nao Existe No Banco", "(19)93123-4231", Curso.ODONTOLOGIA, "senha123"));
         });
 
         assertThat(exception.getMessage()).isEqualTo("Aluno não encontrado.");

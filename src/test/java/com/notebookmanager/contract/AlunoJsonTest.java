@@ -37,7 +37,7 @@ public class AlunoJsonTest {
     void alunoSerializationTest() throws IOException {
 
         Aluno aluno = new Aluno(1,"Caio Gandara", "22415616", "caio.cgs@puccampinas.edu.br", "(19)99414-8554",
-                Curso.ENFERMAGEM);
+                Curso.ENFERMAGEM, "senha123");
 
 
         assertThat(json.write(aluno)).isStrictlyEqualToJson("aluno.json");
@@ -49,11 +49,11 @@ public class AlunoJsonTest {
         List<Aluno>listaAlunos = new ArrayList<Aluno>();
 
         listaAlunos.add(new Aluno(1,"Julio Correa", "09135616", "jcorrea@puccampinas.edu.br", "(19)90914-3014",
-                Curso.MEDICINA));
+                Curso.MEDICINA, "senha123"));
         listaAlunos.add(new Aluno(2,"Maria Ferreira", "03781923", "maria.ferreira@puccampinas.edu.br", "(19)90814-2314",
-                Curso.TERAPIA_OCUPACIONAL));
+                Curso.TERAPIA_OCUPACIONAL, "senha123"));
         listaAlunos.add(new Aluno(3,"Fernando Pontes", "90174823", "fernandohpontes@puccampinas.edu.br", "(19)83914-0945",
-                Curso.BIOMEDICINA));
+                Curso.BIOMEDICINA, "senha123"));
 
         assertThat(jsonList.write(listaAlunos)).isStrictlyEqualToJson("aluno-list.json");
 
@@ -67,11 +67,12 @@ public class AlunoJsonTest {
                 "ra": "22415616",
                 "email": "caio.cgs@puccampinas.edu.br",
                 "telefone": "(19)99414-8554",
-                "curso": "ENFERMAGEM"
+                "curso": "ENFERMAGEM",
+                "senha": "senha123"
                 }""";
 
         assertThat(jsonCreate.parseObject(expected)).isEqualTo(new AlunoCreateFields("Caio Gandara", "22415616", "caio.cgs@puccampinas.edu.br",
-                "(19)99414-8554", Curso.ENFERMAGEM));
+                "(19)99414-8554", Curso.ENFERMAGEM, "senha123"));
 
     }
 
@@ -82,10 +83,11 @@ public class AlunoJsonTest {
                 {
                 "nome": "Caio Gandara",
                 "telefone": "(19)99414-8554",
-                "curso": "ENFERMAGEM"
+                "curso": "ENFERMAGEM",
+                "senha": "senha123"
                 }""";
 
-        assertThat(jsonUpdate.parseObject(expected)).isEqualTo(new AlunoUpdateFields("Caio Gandara", "(19)99414-8554", Curso.ENFERMAGEM));
+        assertThat(jsonUpdate.parseObject(expected)).isEqualTo(new AlunoUpdateFields("Caio Gandara", "(19)99414-8554", Curso.ENFERMAGEM, "senha123"));
 
     }
 

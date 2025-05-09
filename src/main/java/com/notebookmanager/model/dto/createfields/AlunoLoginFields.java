@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FuncionarioLoginFields {
+public class AlunoLoginFields {
 
     @NotBlank
-    @Size(min = 6, max = 6)
-    private String rf;
+    @Size(min = 8, max = 8)
+    private String ra;
 
     @NotBlank
     @Size(min = 5, max = 25)
