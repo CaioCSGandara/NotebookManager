@@ -2,6 +2,7 @@ package com.notebookmanager.infra.exceptionhandler;
 
 import com.notebookmanager.infra.exception.RecursoJaExistenteException;
 import com.notebookmanager.infra.exception.RecursoNaoEncontradoException;
+import com.notebookmanager.infra.exception.SenhaInvalidaException;
 import com.notebookmanager.infra.exception.ValidationException;
 import com.notebookmanager.model.dto.Payload;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Payload> recursoNaoEncontradoHandler(RecursoNaoEncontradoException exception) {
         Payload payload = new Payload(HttpStatus.NOT_FOUND, null, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(payload);
+    }
+
+    @ExceptionHandler(value = {SenhaInvalidaException.class})
+    private ResponseEntity<Payload> senhaInvalidaHandler(SenhaInvalidaException exception) {
+        Payload payload = new Payload(HttpStatus.UNAUTHORIZED, null, "Senha inválida.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(payload);
     }
 
     @ExceptionHandler(value = {RuntimeException.class})
